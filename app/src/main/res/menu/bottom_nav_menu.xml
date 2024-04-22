@@ -17,8 +17,9 @@
         android:enabled="false"
         android:title="" />
     <item
-        android:id="@+id/navigation_notifications"
-        android:title="@string/title_notifications" />
+        android:id="@+id/navigation_schedule"
+        android:icon="@drawable/ic_schedule_selector"
+        android:title="Schedule" />
 
     <item
         android:id="@+id/navigation_profile"

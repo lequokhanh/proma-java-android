@@ -22,6 +22,6 @@ dependencyResolutionManagement {
 
 }
 
-rootProject.name = "TaskManager"
+rootProject.name = "proma"
 include(":app")
  

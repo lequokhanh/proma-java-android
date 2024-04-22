@@ -22,4 +22,22 @@
     <style name="Normal_Drawable">
         <item name="android:textSize">16sp</item>
     </style>
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">@drawable/rounded_corner_menu</item>
+        <item name="android:popupElevation">20dp</item>
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+    <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">cut</item>
+    </style>
+
+    <style name="ShapeAppearance.App.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerSize">16dp</item>
+    </style>
+    <style name="NumberPickerCustomText">
+        <item name="android:textSize">20sp</item> // add if you want to change size
+        <item name="android:fontFamily">@font/roboto_bold</item> // add font (this font folder is present in res folder)
+        <item name="colorControlNormal">#8B8B8B</item>
+    </style>
 </resources>

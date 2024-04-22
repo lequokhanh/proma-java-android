@@ -8,7 +8,7 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.nt118.taskmanager" />
+                  <option name="appId" value="com.nt118.proma" />
                   <option name="mobileSdkAppId" value="1:120478044367:android:ea8eaa6ebeaf5a645f27ba" />
                   <option name="projectId" value="test-4d6be" />
                   <option name="projectNumber" value="120478044367" />

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="160dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:elevation="10dp"
+    android:outlineAmbientShadowColor="#4BFFFFFF"
+    android:outlineProvider="background"
+    android:outlineSpotShadowColor="#56FFFFFF"
+    card_view:cardBackgroundColor="@color/white"
+    card_view:cardCornerRadius="24dp"
+    card_view:cardElevation="10dp"
+    card_view:cardPreventCornerOverlap="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rounded_corner_24_white"
+        android:outlineProvider="none"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="16dp">
+
+        <ImageView
+            android:id="@+id/imageView22"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_task_square" />
+
+        <ImageView
+            android:id="@+id/threeDot"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            card_view:layout_constraintBottom_toBottomOf="@+id/imageView22"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintTop_toTopOf="@+id/imageView22"
+            android:src="@drawable/three_dot" />
+
+        <TextView
+            android:id="@+id/taskName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_bold"
+            android:letterSpacing="-0.0408"
+            android:maxLines="2"
+            android:text="Meeting Project 123"
+            android:textColor="#000"
+            android:textSize="17sp"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toBottomOf="@+id/imageView22" />
+
+        <TextView
+            android:id="@+id/deadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/roboto_regular"
+            android:letterSpacing="-0.024"
+            android:text="Tomorow - 13.00 PM"
+            android:textColor="#8E8E93"
+            android:textSize="15sp"
+            card_view:layout_constraintStart_toStartOf="@+id/taskName"
+            card_view:layout_constraintTop_toBottomOf="@+id/taskName" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/rounded_corner_24_on_going"
+            android:fontFamily="@font/roboto_bold"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:text="On Going"
+            android:textColor="#34C759"
+            android:textSize="12sp"
+            android:visibility="gone"
+            card_view:layout_constraintStart_toStartOf="@+id/deadline"
+            card_view:layout_constraintTop_toBottomOf="@+id/deadline"
+            tools:visibility="gone" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

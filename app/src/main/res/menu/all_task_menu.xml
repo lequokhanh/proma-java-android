@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/rounded_corner_12_blue">
+    <item
+        android:id="@+id/action_schedule"
+        android:icon="@drawable/ic_calendar"
+        android:iconTint="#000"
+        android:title="Schedule" />
+
+    <item
+        android:id="@+id/action_sort"
+        android:icon="@drawable/ic_sort"
+        android:title="A - Z" />
+</menu>

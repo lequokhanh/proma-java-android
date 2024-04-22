@@ -3,18 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="#F9FAFF"
     android:backgroundTint="#F9FAFF"
     android:outlineProvider="background"
-    android:paddingHorizontal="22dp"
+    android:paddingHorizontal="14dp"
     android:paddingTop="22dp"
     android:paddingBottom="55dp"
     tools:context=".ui.project.ProjectFragment">
 
-    <EditText
-        android:id="@+id/editTextText"
-        style="@style/Normal_Drawable"
+    <TextView
+        android:id="@+id/search_field"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:background="@drawable/rounded_corner_8"
@@ -23,10 +22,13 @@
         android:drawableTint="#8E8E93"
         android:ems="10"
         android:fontFamily="@font/roboto_regular"
+        android:gravity="center_vertical"
         android:hint="Search Here"
         android:inputType="text"
         android:paddingHorizontal="8dp"
         android:textColorHint="#8E8E93"
+        android:textColorLink="#000"
+        android:textCursorDrawable="@drawable/black_cursor"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,15 +42,16 @@
         android:scrollbars="none"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText">
+        app:layout_constraintTop_toBottomOf="@+id/search_field">
 
         <LinearLayout
+            android:id="@+id/tabContainer"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textView12"
+                android:id="@+id/ProjectBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="4dp"
@@ -62,7 +65,7 @@
                 android:textColor="#FFFFFF" />
 
             <TextView
-                android:id="@+id/textView13"
+                android:id="@+id/TaskBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="4dp"
@@ -71,12 +74,12 @@
                 android:fontFamily="@font/roboto_medium"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="8dp"
-                android:text="Project"
+                android:text="Task"
                 android:textAlignment="center"
                 android:textColor="#007AFF" />
 
             <TextView
-                android:id="@+id/textView14"
+                android:id="@+id/CompletedBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="4dp"
@@ -85,12 +88,12 @@
                 android:fontFamily="@font/roboto_medium"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="8dp"
-                android:text="Project"
+                android:text="Completed"
                 android:textAlignment="center"
                 android:textColor="#007AFF" />
 
             <TextView
-                android:id="@+id/textView15"
+                android:id="@+id/OnGoingBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="4dp"
@@ -99,63 +102,7 @@
                 android:fontFamily="@font/roboto_medium"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="8dp"
-                android:text="Project"
-                android:textAlignment="center"
-                android:textColor="#007AFF" />
-
-            <TextView
-                android:id="@+id/textView16"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_corner_24_bw"
-                android:fontFamily="@font/roboto_medium"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:text="Project"
-                android:textAlignment="center"
-                android:textColor="#007AFF" />
-
-            <TextView
-                android:id="@+id/textView17"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_corner_24_bw"
-                android:fontFamily="@font/roboto_medium"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:text="Project"
-                android:textAlignment="center"
-                android:textColor="#007AFF" />
-
-            <TextView
-                android:id="@+id/textView18"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_corner_24_bw"
-                android:fontFamily="@font/roboto_medium"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:text="Project"
-                android:textAlignment="center"
-                android:textColor="#007AFF" />
-
-            <TextView
-                android:id="@+id/textView19"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_corner_24_bw"
-                android:fontFamily="@font/roboto_medium"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:text="Project"
+                android:text="On Going"
                 android:textAlignment="center"
                 android:textColor="#007AFF" />
 
@@ -163,11 +110,12 @@
     </HorizontalScrollView>
 
     <ScrollView
-        android:id="@+id/scrollView2"
+        android:id="@+id/AllProject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:scrollbars="none"
+        android:visibility="visible"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -181,43 +129,43 @@
             android:orientation="vertical">
 
             <include
-                layout="@layout/card_view"
+                layout="@layout/project_card"
                 android:layout_width="wrap_content"
                 android:layout_height="220dp"
                 android:layout_marginVertical="8dp" />
 
             <include
-                layout="@layout/card_view"
+                layout="@layout/project_card"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:layout_marginVertical="8dp" />
 
             <include
-                layout="@layout/card_view"
+                layout="@layout/project_card"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:layout_marginVertical="8dp" />
 
             <include
-                layout="@layout/card_view"
+                layout="@layout/project_card"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:layout_marginVertical="8dp" />
 
             <include
-                layout="@layout/card_view"
+                layout="@layout/project_card"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:layout_marginVertical="8dp" />
 
             <include
-                layout="@layout/card_view"
+                layout="@layout/project_card"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:layout_marginVertical="8dp" />
 
             <include
-                layout="@layout/card_view"
+                layout="@layout/project_card"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:layout_marginVertical="8dp" />
@@ -225,13 +173,86 @@
         </LinearLayout>
     </ScrollView>
 
-    <com.anychart.AnyChartView
-        android:id="@+id/anychartview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:elevation="10dp"
+    <ScrollView
+        android:id="@+id/AllTask"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:scrollbars="none"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView">
+
+        <LinearLayout
+            android:id="@+id/horizontalLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="fill_horizontal"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView8">
+
+            <LinearLayout
+                android:id="@+id/linearLayout4"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    layout="@layout/task_card1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
+
+                <include
+                    android:id="@+id/card_view2"
+                    layout="@layout/task_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
+
+                <include
+                    layout="@layout/task_card1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout5"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    layout="@layout/task_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
+
+                <include
+                    layout="@layout/task_card1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

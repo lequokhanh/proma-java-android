@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.nt118.taskmanager"
+    namespace = "com.nt118.proma"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.nt118.taskmanager"
+        applicationId = "com.nt118.proma"
         minSdk = 29
         targetSdk = 34
         versionCode = 1
@@ -30,6 +30,10 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    dataBinding {
+        enable = true
+    }
 }
 dependencies {
     implementation(libs.appcompat)
@@ -46,4 +50,6 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation ("com.github.AnyChart:AnyChart-Android:1.1.5")
     implementation("com.google.firebase:firebase-messaging")
+    implementation("androidx.core:core-splashscreen:1.0.0")
+    implementation ("com.akexorcist:snap-time-picker:1.0.3")
 }

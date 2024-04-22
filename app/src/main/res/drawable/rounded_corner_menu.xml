@@ -1,0 +1,9 @@
+<inset android:insetTop="15dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient android:startColor="#fffdf4" android:endColor="#fdfdfe" android:angle="45"/>
+    <corners android:radius="12dp" android:topRightRadius="0dp" />
+    <padding android:left="6dp" android:top="0dp" android:right="0dp" android:bottom="0dp" />
+</shape>
+</inset>

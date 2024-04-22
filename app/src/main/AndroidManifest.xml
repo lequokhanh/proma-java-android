@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,7 +14,7 @@
         android:theme="@style/Theme.TaskManager"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.login.Login"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
@@ -22,8 +23,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:windowSoftInputMode="stateVisible|adjustResize" android:name=".ui.ProjectDetail.ProjectDetail" />
-
+        <activity android:name=".ui.task.TaskDetail" />
+        <activity android:name=".ui.task.AllTask" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".ui.search.SearchView" />
+        <activity android:name=".ui.project.ProjectDetail"/>
+        <activity android:name=".ui.profile.MyProfile"/>
     </application>
 
 </manifest>

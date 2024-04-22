@@ -5,21 +5,27 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:elevation="10dp"
     android:paddingTop="30dp"
-    android:paddingBottom="20dp"
-    android:clipChildren="false">
+    android:paddingBottom="15dp">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?android:attr/windowBackground"
+        android:defaultFocusHighlightEnabled="false"
+        android:focusedByDefault="true"
         android:outlineProvider="none"
+        app:elevation="10dp"
         app:itemTextAppearanceActiveBoldEnabled="true"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:itemActiveIndicatorStyle="@android:color/transparent"
+        app:itemRippleColor="@android:color/transparent"
         app:menu="@menu/bottom_nav_menu">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -33,7 +39,7 @@
             android:theme="@style/Widget.FloatingActionButton"
             app:backgroundTint="#0066FF"
             app:borderWidth="0dp"
-            app:elevation="6dp" />
+            app:elevation="0dp" />
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
     <fragment
