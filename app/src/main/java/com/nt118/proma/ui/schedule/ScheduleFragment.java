@@ -86,7 +86,7 @@ public class ScheduleFragment extends Fragment {
             yearPickerNumber.setMaxValue(2100);
             yearPickerNumber.setValue(currentDate.getValue().getYear() + 1900);
             yearPickerNumber.setWrapSelectorWheel(false);
-            Button applyBtn = monthPickerView.findViewById(R.id.applyBtn);
+            Button applyBtn = monthPickerView.findViewById(R.id.signoutBtn);
             applyBtn.setOnClickListener(v1 -> {
                 currentDate.setValue(new Date(yearPickerNumber.getValue() - 1900, monthPickerNumber.getValue() - 1, 1));
                 monthPicker.dismiss();
@@ -99,7 +99,6 @@ public class ScheduleFragment extends Fragment {
         currentDate.observe(getViewLifecycleOwner(), date -> {
             setupCalendar(dayOfWeek, date, rangeDay, month);
             scrollToCurrentDay(scrollView, dayOfWeek, date.getDay() == 0 ? 6 : date.getDay() - 1);
-
         });
         return root;
     }

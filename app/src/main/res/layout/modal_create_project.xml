@@ -8,22 +8,6 @@
     android:paddingBottom="30dp">
 
     <TextView
-        android:id="@+id/deadlineView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:background="@drawable/rounded_corner_24_red"
-        android:fontFamily="@font/roboto_bold"
-        android:paddingHorizontal="8dp"
-        android:paddingVertical="4dp"
-        android:textColor="#FF3B30"
-        android:textSize="12sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/deadlineBtn"
-        app:layout_constraintEnd_toStartOf="@+id/deadlineBtn"
-        app:layout_constraintTop_toTopOf="@+id/deadlineBtn" />
-
-    <TextView
         android:id="@+id/textView4"
         android:layout_width="321dp"
         android:layout_height="37dp"
@@ -120,7 +104,7 @@
         app:layout_constraintTop_toTopOf="@+id/imageView2" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/addMemberBtn"
         android:layout_width="68dp"
         android:layout_height="24dp"
         android:background="@drawable/rounded_corner_24_blue"
@@ -168,8 +152,24 @@
         app:iconGravity="start"
         app:iconPadding="2dp"
         app:iconSize="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="@+id/addMemberBtn"
         app:layout_constraintTop_toTopOf="@+id/imageView3" />
+
+    <TextView
+        android:id="@+id/deadlineView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/rounded_corner_24_red"
+        android:fontFamily="@font/roboto_bold"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
+        android:textColor="#FF3B30"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/deadlineBtn"
+        app:layout_constraintEnd_toStartOf="@+id/deadlineBtn"
+        app:layout_constraintTop_toTopOf="@+id/deadlineBtn" />
 
     <ImageView
         android:id="@+id/imageView3"
@@ -177,7 +177,7 @@
         android:layout_height="24dp"
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="@+id/imageView2"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout7"
         app:srcCompat="@drawable/ic_calendar" />
 
     <TextView
@@ -193,7 +193,7 @@
         app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
     <Button
-        android:id="@+id/applyBtn"
+        android:id="@+id/signoutBtn"
         android:layout_width="331dp"
         android:layout_height="56dp"
         android:layout_marginTop="24dp"
@@ -207,6 +207,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout7"
+        android:layout_width="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="12dp"
+        android:maxHeight="92dp"
+        android:minWidth="24dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/addMemberBtn"
+        app:layout_constraintEnd_toStartOf="@+id/addMemberBtn"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
+        app:layout_constraintTop_toTopOf="@+id/addMemberBtn"></LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

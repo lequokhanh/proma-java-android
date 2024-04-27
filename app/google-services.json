@@ -1,36 +1,26 @@
 {
   "project_info": {
-    "project_number": "120478044367",
-    "project_id": "test-4d6be",
-    "storage_bucket": "test-4d6be.appspot.com"
+    "project_number": "403285143448",
+    "project_id": "proma-4ca44",
+    "storage_bucket": "proma-4ca44.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:120478044367:android:ea8eaa6ebeaf5a645f27ba",
+        "mobilesdk_app_id": "1:403285143448:android:0cd288b59dd933c816c5ed",
         "android_client_info": {
           "package_name": "com.nt118.proma"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "120478044367-cnpvo3vlu786nnvg08p3ngcuo85p0hvb.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC1dP1yEGmXqdjhzQu74J4A1Cb0_qs76oo"
+          "current_key": "AIzaSyD-6pyLY8TPFgi6aJzMUtkajPwNes_GJG8"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "120478044367-cnpvo3vlu786nnvg08p3ngcuo85p0hvb.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/applyBtn"
+        android:id="@+id/signoutBtn"
         android:layout_width="150dp"
         android:layout_height="56dp"
         android:layout_marginTop="23dp"
@@ -50,7 +50,7 @@
         android:textColor="#FF3B30"
         app:cornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="@+id/textView3"
-        app:layout_constraintTop_toTopOf="@+id/applyBtn"
+        app:layout_constraintTop_toTopOf="@+id/signoutBtn"
         app:strokeColor="#FF3B30"
         app:strokeWidth="1dp" />
 

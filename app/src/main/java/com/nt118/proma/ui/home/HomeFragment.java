@@ -64,7 +64,7 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(getActivity(), AllTask.class);
             startActivity(intent);
         });
-        LinearLayout leftSide = root.findViewById(R.id.linearLayout4);
+        LinearLayout leftSide = root.findViewById(R.id.leftSide);
         LinearLayout rightSide = root.findViewById(R.id.linearLayout5);
         LinearLayout taskLayout = root.findViewById(R.id.horizontalLayout1);
         // set width of left and right side to 50% of screen width - 14dp * 2(padding) - 10dp
@@ -87,14 +87,13 @@ public class HomeFragment extends Fragment {
             View taskView = inflater.inflate(R.layout.task_card, null);
             TextView taskName = taskView.findViewById(R.id.taskName);
             taskName.setText(task.getName());
-            // convert Date to String with format "dd MMM yyyy - HH.MM PM" and if the duedate is today, show "Today - 13.00 PM", if the duedate is tomorrow, show "Tomorrow - 13.00 PM"
             String deadline = Optional.ofNullable(task.getDueDate()).map(date -> {
                 if (date.getDate() == new Date().getDate()) {
                     return "Today - " + date.getHours() + "." + date.getMinutes() + " PM";
                 } else if (date.getDate() == new Date().getDate() + 1) {
                     return "Tomorrow - " + date.getHours() + "." + date.getMinutes() + " PM";
                 } else {
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy - hh.mm a", Locale.ENGLISH);
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy - hh.mm a", Locale.ENGLISH);
                     return formatter.format(date);
                 }
             }).orElse("");

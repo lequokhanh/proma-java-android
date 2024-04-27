@@ -275,7 +275,7 @@
                 app:layout_constraintVertical_bias="1.0" />
 
             <Button
-                android:id="@+id/applyBtn"
+                android:id="@+id/signoutBtn"
                 android:layout_width="68dp"
                 android:layout_height="24dp"
                 android:background="@drawable/rounded_corner_24_blue"

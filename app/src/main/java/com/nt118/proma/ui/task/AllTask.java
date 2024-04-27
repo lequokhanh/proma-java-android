@@ -45,7 +45,7 @@ public class AllTask extends AppCompatActivity {
             }
             popup.show();
         });
-        LinearLayout leftSide = findViewById(R.id.linearLayout4);
+        LinearLayout leftSide = findViewById(R.id.leftSide);
         LinearLayout rightSide = findViewById(R.id.linearLayout5);
         LinearLayout taskLayout = findViewById(R.id.horizontalLayout1);
         // set width of left and right side to 50% of screen width - 14dp * 2(padding) - 10dp

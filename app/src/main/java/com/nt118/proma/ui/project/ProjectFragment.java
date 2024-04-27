@@ -57,7 +57,7 @@ public class ProjectFragment extends Fragment {
                 }
             });
         }
-        LinearLayout leftSide = root.findViewById(R.id.linearLayout4);
+        LinearLayout leftSide = root.findViewById(R.id.leftSide);
         LinearLayout rightSide = root.findViewById(R.id.linearLayout5);
         LinearLayout taskLayout = root.findViewById(R.id.horizontalLayout1);
         // set width of left and right side to 50% of screen width - 14dp * 2(padding) - 10dp

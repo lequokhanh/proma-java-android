@@ -52,4 +52,6 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging")
     implementation("androidx.core:core-splashscreen:1.0.0")
     implementation ("com.akexorcist:snap-time-picker:1.0.3")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.android.gms:play-services-auth:21.1.0")
 }

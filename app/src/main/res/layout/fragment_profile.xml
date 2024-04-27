@@ -339,7 +339,7 @@
             android:fontFamily="@font/roboto_medium"
             android:paddingHorizontal="22dp"
             android:paddingVertical="12dp"
-            android:text="Logout"
+            android:text="Sign Out"
             android:textColor="#FF3B30"
             android:textSize="17sp" />
 

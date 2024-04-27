@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.auth.FirebaseAuth;
 import com.nt118.proma.R;
 import com.nt118.proma.databinding.FragmentProfileBinding;
 
@@ -45,10 +47,26 @@ public class ProfileFragment extends Fragment {
             bottomSheetDialog.setOnCancelListener(dialog -> {
                 isDialogShowing.set(false);
             });
+            Button singoutBtn = view1.findViewById(R.id.signoutBtn);
+            singoutBtn.setOnClickListener(v1 -> {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(requireContext(), com.nt118.proma.ui.login.Login.class);
+                startActivity(intent);
+                bottomSheetDialog.dismiss();
+            });
+            Button cancelBtn = view1.findViewById(R.id.cancelBtn);
+            cancelBtn.setOnClickListener(v1 -> {
+                bottomSheetDialog.dismiss();
+            });
         });
         TextView myProfileBtn = binding.myProfileBtn;
         myProfileBtn.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), MyProfile.class);
+            startActivity(intent);
+        });
+        TextView notification = binding.notification;
+        notification.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), NotificationSetting.class);
             startActivity(intent);
         });
         return root;

@@ -6,16 +6,17 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/imageView24"
+        android:id="@+id/removeBtn"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:tint="#8E8E93"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_close_circle_2" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
@@ -24,7 +25,7 @@
         android:textColor="#000"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageView24"
+        app:layout_constraintEnd_toStartOf="@+id/removeBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

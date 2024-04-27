@@ -4,4 +4,6 @@
     <string name="title_project">Project</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_create">Create</string>
+    <string name="item_schedule">Schedule</string>
+    <string name="item_profile">Profile</string>
 </resources>

@@ -29,7 +29,7 @@
         app:layout_constraintTop_toBottomOf="@+id/bottomSheetDragHandleView" />
 
     <Button
-        android:id="@+id/applyBtn"
+        android:id="@+id/signoutBtn"
         android:layout_width="120dp"
         android:layout_height="40dp"
         android:layout_marginStart="45dp"
@@ -58,7 +58,7 @@
         android:textColor="#007AFF"
         app:cornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/applyBtn"
+        app:layout_constraintTop_toTopOf="@+id/signoutBtn"
         app:strokeColor="#007AFF"
         app:strokeWidth="1dp" />
 

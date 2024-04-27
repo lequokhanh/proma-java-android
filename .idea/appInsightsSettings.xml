@@ -9,9 +9,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.nt118.proma" />
-                  <option name="mobileSdkAppId" value="1:120478044367:android:ea8eaa6ebeaf5a645f27ba" />
-                  <option name="projectId" value="test-4d6be" />
-                  <option name="projectNumber" value="120478044367" />
+                  <option name="mobileSdkAppId" value="1:403285143448:android:0cd288b59dd933c816c5ed" />
+                  <option name="projectId" value="proma-4ca44" />
+                  <option name="projectNumber" value="403285143448" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

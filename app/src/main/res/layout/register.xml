@@ -221,29 +221,6 @@
         app:layout_constraintStart_toStartOf="@+id/googleLoginBtn"
         app:layout_constraintTop_toBottomOf="@id/googleLoginBtn" />
 
-    <TextView
-        android:id="@+id/textView46"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:text="Don't have account?"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView47"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:fontFamily="@font/roboto_medium"
-        android:text="Sign Up"
-        android:textColor="#007aff"
-        app:layout_constraintBottom_toBottomOf="@+id/textView46"
-        app:layout_constraintStart_toEndOf="@+id/textView46"
-        app:layout_constraintTop_toTopOf="@+id/textView46" />
-
     <ImageView
         android:id="@+id/imageView9"
         android:layout_width="wrap_content"
@@ -260,7 +237,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="-20dp"
         android:fontFamily="@font/roboto_bold"
-        android:text="Sign in to your account"
+        android:text="Create your account"
         android:textColor="#474747"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/imageView9"

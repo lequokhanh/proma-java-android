@@ -5,13 +5,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/signoutBtn"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/rounded_corner_12_blue"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:letterSpacing="0.01"
+        android:text="Apply"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/cancelBtn"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="45dp"
+        android:backgroundTint="#fff"
+        android:elevation="0dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:letterSpacing="0.01"
+        android:text="Cancel"
+        android:textAllCaps="false"
+        android:textColor="#007AFF"
+        app:cornerRadius="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/signoutBtn"
+        app:strokeColor="#007AFF"
+        app:strokeWidth="1dp" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="50dp"
+        android:elevation="10dp"
+        android:src="@drawable/ic_arrow_left"
+        android:tint="#000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
+        android:elevation="10dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="My Profile"
+        android:textColor="#000"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView6" />
+
     <TextView
         android:id="@+id/textView37"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/roboto_bold"
-        android:text="Recent"
+        android:text="Project members (0)"
         android:textColor="#000"
         android:textSize="17sp"
         app:layout_constraintStart_toStartOf="@+id/search_field"
@@ -23,7 +84,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/rounded_corner_8"
         android:drawableStart="@drawable/ic_search"
@@ -31,7 +92,7 @@
         android:drawableTint="#8E8E93"
         android:ems="10"
         android:fontFamily="@font/roboto_regular"
-        android:hint="Search Here"
+        android:hint="Invite by email"
         android:inputType="text"
         android:paddingVertical="12dp"
         android:paddingStart="8dp"
@@ -42,7 +103,7 @@
         android:textSize="15sp"
         app:layout_constraintEnd_toStartOf="@+id/cancel_btn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView20" />
 
     <TextView
         android:id="@+id/cancel_btn"
@@ -51,7 +112,7 @@
         android:layout_marginEnd="21dp"
         android:fontFamily="@font/roboto_bold"
         android:gravity="center_vertical"
-        android:text="Cancel"
+        android:text="Add"
         android:textColor="#105CDB"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="@+id/search_field"
@@ -72,10 +133,12 @@
 
     <ScrollView
         android:layout_width="0dp"
-        android:layout_height="579dp"
+        android:layout_height="0dp"
         android:layout_marginStart="21dp"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="21dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/signoutBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView37">

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -26,9 +27,10 @@
         <activity android:name=".ui.task.TaskDetail" />
         <activity android:name=".ui.task.AllTask" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".ui.search.SearchView" />
+        <activity android:windowSoftInputMode="stateAlwaysVisible" android:name=".ui.search.SearchView" />
         <activity android:name=".ui.project.ProjectDetail"/>
         <activity android:name=".ui.profile.MyProfile"/>
+        <activity android:name=".ui.profile.NotificationSetting"/>
     </application>
 
 </manifest>
