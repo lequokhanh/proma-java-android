@@ -91,20 +91,9 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextText4"
         app:useMaterialThemeColors="true" />
 
-    <TextView
-        android:id="@+id/textView38"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto_medium"
-        android:text="Forgot password?"
-        android:textColor="#006EE9"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/checkBox"
-        app:layout_constraintEnd_toEndOf="@+id/editTextText4"
-        app:layout_constraintTop_toTopOf="@+id/checkBox" />
 
     <Button
-        android:id="@+id/login_button"
+        android:id="@+id/sign_up_button"
         android:layout_width="0dp"
         android:layout_height="51dp"
         android:layout_marginTop="36dp"
@@ -112,7 +101,7 @@
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:letterSpacing="0"
-        android:text="Login"
+        android:text="Sign Up"
         android:textAllCaps="false"
         android:textSize="17sp"
         app:cornerRadius="10dp"
@@ -127,9 +116,9 @@
         android:layout_marginTop="40dp"
         android:layout_marginEnd="8dp"
         android:background="#e5e5ea"
-        app:layout_constraintEnd_toEndOf="@+id/login_button"
-        app:layout_constraintStart_toStartOf="@+id/login_button"
-        app:layout_constraintTop_toBottomOf="@+id/login_button" />
+        app:layout_constraintEnd_toEndOf="@+id/sign_up_button"
+        app:layout_constraintStart_toStartOf="@+id/sign_up_button"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_button" />
 
     <TextView
         android:id="@+id/textView45"
@@ -167,8 +156,8 @@
         app:icon="@drawable/ic_apple"
         app:iconGravity="textStart"
         app:iconTint="@color/black"
-        app:layout_constraintEnd_toEndOf="@+id/login_button"
-        app:layout_constraintStart_toStartOf="@+id/login_button"
+        app:layout_constraintEnd_toEndOf="@+id/sign_up_button"
+        app:layout_constraintStart_toStartOf="@+id/sign_up_button"
         app:layout_constraintTop_toBottomOf="@+id/textView45" />
 
     <Button
