@@ -3,43 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#f9faff"
+    android:backgroundTint="#f9faff">
 
     <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="50dp"
-        android:elevation="10dp"
-        android:src="@drawable/ic_arrow_left"
-        android:tint="#000"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView20"
+        android:id="@+id/imageView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
-        android:elevation="10dp"
-        android:fontFamily="@font/roboto_bold"
-        android:text="My Profile"
-        android:textColor="#000"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+        app:layout_constraintBottom_toTopOf="@+id/imageView23"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView6" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_launcher_foreground" />
+
+    <TextView
+        android:id="@+id/CompletedBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-20dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="Create your account"
+        android:textColor="#474747"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageView9"
+        app:layout_constraintStart_toStartOf="@+id/imageView9"
+        app:layout_constraintTop_toBottomOf="@+id/imageView9" />
 
     <ImageView
         android:id="@+id/imageView23"
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:layout_marginTop="38dp"
-        app:layout_constraintEnd_toEndOf="@+id/textView20"
-        app:layout_constraintStart_toStartOf="@+id/textView20"
-        app:layout_constraintTop_toBottomOf="@+id/textView20"
+        app:layout_constraintEnd_toEndOf="@+id/CompletedBtn"
+        app:layout_constraintStart_toStartOf="@+id/CompletedBtn"
+        app:layout_constraintTop_toBottomOf="@+id/CompletedBtn"
         app:srcCompat="@drawable/avatar" />
 
     <ImageView
@@ -50,8 +49,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/imageView23"
         app:layout_constraintEnd_toEndOf="@+id/imageView23"
         app:srcCompat="@drawable/ic_camera" />
-
-
 
     <EditText
         android:id="@+id/etFullName"
@@ -69,18 +66,17 @@
         android:inputType="text"
         android:paddingHorizontal="14dp"
         android:paddingVertical="16dp"
-        android:text="Fahmi Haecal"
+        android:hint="Full Name"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView23" />
-
     <EditText
         android:id="@+id/etDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="21dp"
         android:background="@drawable/rounded_corner_10"
         android:drawableStart="@drawable/ic_calendar"
@@ -91,42 +87,21 @@
         android:inputType="datetime|date"
         android:paddingHorizontal="14dp"
         android:paddingVertical="16dp"
-        android:text="02/09/2003"
+        android:hint="Date of birth"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etFullName" />
 
-    <EditText
-        android:id="@+id/editTextText7"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="21dp"
-        android:background="@drawable/rounded_corner_10"
-        android:drawableStart="@drawable/ic_email"
-        android:drawablePadding="9dp"
-        android:drawableTint="#000"
-        android:ems="10"
-        android:fontFamily="@font/roboto_regular"
-        android:inputType="text|textEmailAddress"
-        android:paddingHorizontal="14dp"
-        android:paddingVertical="16dp"
-        android:text="lequockhanhkt03@gmail.com"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etDate" />
+
 
     <EditText
-        android:id="@+id/editTextText8"
+        android:id="@+id/etPhoneNumber"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="21dp"
         android:background="@drawable/rounded_corner_10"
         android:drawableStart="@drawable/ic_phone"
@@ -136,15 +111,15 @@
         android:inputType="phone"
         android:paddingHorizontal="14dp"
         android:paddingVertical="16dp"
-        android:text="0843450209"
+        android:hint="Phone Number"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText7" />
+        app:layout_constraintTop_toBottomOf="@+id/etDate" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btn_Sign_Up"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginStart="21dp"
@@ -154,12 +129,17 @@
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:letterSpacing="0.06"
-        android:text="Update"
+        android:text="Sign Up"
         android:textAllCaps="false"
         android:textSize="17sp"
         app:cornerRadius="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
