@@ -14,3 +14,5 @@
 .cxx
 local.properties
 /.idea/copilot/chatSessions/xd.lck
+/.idea/shelf/*
+/.idea/shelf/*/shelved.patch

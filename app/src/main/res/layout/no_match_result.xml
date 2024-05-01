@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="330dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_corner_24_white"
+    android:paddingHorizontal="32dp"
+    android:paddingVertical="32dp">
+
+    <TextView
+        android:id="@+id/textView39"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto_regular"
+        android:text="Try another search"
+        android:textColor="#99000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView34"
+        app:layout_constraintStart_toStartOf="@+id/textView34"
+        app:layout_constraintTop_toBottomOf="@+id/textView34" />
+
+    <ImageView
+        android:id="@+id/imageView27"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_close_circle_red" />
+
+    <TextView
+        android:id="@+id/textView34"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="No matching results"
+        android:textColor="#FF3B30"
+        android:textSize="28sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageView27"
+        app:layout_constraintStart_toStartOf="@+id/imageView27"
+        app:layout_constraintTop_toBottomOf="@+id/imageView27" />
+</androidx.constraintlayout.widget.ConstraintLayout>

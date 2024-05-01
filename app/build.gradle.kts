@@ -36,6 +36,7 @@ android {
     }
 }
 dependencies {
+    implementation("com.facebook.android:facebook-android-sdk:[4,5)")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
@@ -49,10 +50,14 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
-    implementation ("com.github.AnyChart:AnyChart-Android:1.1.5")
+    implementation("com.github.AnyChart:AnyChart-Android:1.1.5")
     implementation("com.google.firebase:firebase-messaging")
     implementation("androidx.core:core-splashscreen:1.0.0")
-    implementation ("com.akexorcist:snap-time-picker:1.0.3")
+    implementation("com.akexorcist:snap-time-picker:1.0.3")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.android.gms:play-services-auth:21.1.0")
+    implementation("com.facebook.android:facebook-android-sdk:12.3.0")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
 }

@@ -11,41 +11,42 @@
         android:id="@+id/textView4"
         android:layout_width="321dp"
         android:layout_height="37dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginBottom="32dp"
         android:fontFamily="@font/roboto_regular"
         android:text="Let’s Collaborate and Create exciting new project together!"
         android:textAlignment="center"
         android:textColor="#8E8E93"
         android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/etNameProject"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.bottomsheet.BottomSheetDragHandleView
         android:id="@+id/bottomSheetDragHandleView"
         android:layout_width="645dp"
         android:layout_height="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:fontFamily="@font/roboto_bold"
         android:text="Create New Project"
         android:textColor="#000000"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bottomSheetDragHandleView" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editTextText2"
+        android:id="@+id/etNameProject"
         android:layout_width="331dp"
         android:layout_height="56dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/rounded_corner_10"
         android:ems="10"
         android:fontFamily="@font/roboto_medium"
@@ -57,15 +58,15 @@
         android:paddingBottom="16dp"
         android:textAlignment="textStart"
         android:textSize="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/etDescProject"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editTextText3"
+        android:id="@+id/etDescProject"
         android:layout_width="331dp"
         android:layout_height="56dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/rounded_corner_10"
         android:ems="10"
         android:fontFamily="@font/roboto_medium"
@@ -77,17 +78,17 @@
         android:paddingBottom="16dp"
         android:textAlignment="textStart"
         android:textSize="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/memberList2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText2" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="@+id/editTextText3"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText3"
+        app:layout_constraintBottom_toBottomOf="@+id/textView5"
+        app:layout_constraintStart_toStartOf="@+id/etDescProject"
+        app:layout_constraintTop_toTopOf="@+id/textView5"
         app:srcCompat="@drawable/ic_team_modal" />
 
     <TextView
@@ -99,9 +100,8 @@
         android:text="Team"
         android:textColor="#8E8E93"
         android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+        app:layout_constraintTop_toTopOf="@+id/memberList2" />
 
     <Button
         android:id="@+id/addMemberBtn"
@@ -126,8 +126,8 @@
         app:iconGravity="start"
         app:iconPadding="2dp"
         app:iconSize="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextText3"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+        app:layout_constraintEnd_toEndOf="@+id/etDescProject"
+        app:layout_constraintTop_toTopOf="@+id/memberList2" />
 
     <Button
         android:id="@+id/deadlineBtn"
@@ -175,9 +175,9 @@
         android:id="@+id/imageView3"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="14dp"
+        app:layout_constraintBottom_toTopOf="@+id/createProjectBtn"
         app:layout_constraintStart_toStartOf="@+id/imageView2"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout7"
         app:srcCompat="@drawable/ic_calendar" />
 
     <TextView
@@ -193,10 +193,9 @@
         app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
     <Button
-        android:id="@+id/signoutBtn"
+        android:id="@+id/createProjectBtn"
         android:layout_width="331dp"
         android:layout_height="56dp"
-        android:layout_marginTop="24dp"
         android:background="@drawable/rounded_corner_12_blue"
         android:fontFamily="@font/roboto_bold"
         android:letterSpacing="0.02"
@@ -204,23 +203,24 @@
         android:text="Create Project"
         android:textAllCaps="false"
         android:textSize="17sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
-        android:id="@+id/linearLayout7"
+        android:id="@+id/memberList2"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="2dp"
         android:layout_marginEnd="12dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="right|top"
         android:maxHeight="92dp"
-        android:minWidth="24dp"
+        android:minHeight="24dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/addMemberBtn"
+        app:layout_constraintBottom_toTopOf="@+id/imageView3"
         app:layout_constraintEnd_toStartOf="@+id/addMemberBtn"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
-        app:layout_constraintTop_toTopOf="@+id/addMemberBtn"></LinearLayout>
+        app:layout_constraintStart_toEndOf="@+id/textView5" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

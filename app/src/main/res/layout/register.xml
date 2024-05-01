@@ -20,7 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.26999998">
+        app:layout_constraintVertical_bias="0.37">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etEmail"
@@ -70,33 +70,42 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tipRePassword"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:backgroundTint="#00FFFFFF"
-        android:button="@drawable/ic_checkbox_selector"
-        android:clickable="true"
-        android:fontFamily="@font/roboto_regular"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
-        android:paddingStart="8dp"
-        android:text="Remember me"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/black"
-        android:textSize="15sp"
-        app:buttonIconTint="#ffffff"
-        app:layout_constraintStart_toStartOf="@+id/editTextText4"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText4"
-        app:useMaterialThemeColors="true" />
+        android:layout_marginTop="21dp"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:hintEnabled="false"
+        app:layout_constraintEnd_toEndOf="@id/editTextText4"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@id/editTextText4"
+        app:layout_constraintTop_toBottomOf="@id/editTextText4"
+        app:passwordToggleDrawable="@drawable/ic_password_toggle"
+        app:passwordToggleEnabled="true">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etRePassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corner_10"
+            android:drawableStart="@drawable/ic_password"
+            android:drawablePadding="8dp"
+            android:ems="10"
+            android:fontFamily="@font/roboto_regular"
+            android:hint="Re-enter your password"
+            android:inputType="text"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="16dp"
+            android:textSize="15sp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/sign_up_button"
         android:layout_width="0dp"
         android:layout_height="51dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="38dp"
         android:fontFamily="@font/roboto_medium"
         android:insetTop="0dp"
         android:insetBottom="0dp"
@@ -105,110 +114,9 @@
         android:textAllCaps="false"
         android:textSize="17sp"
         app:cornerRadius="10dp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextText4"
-        app:layout_constraintStart_toStartOf="@+id/editTextText4"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox" />
-
-    <View
-        android:id="@+id/view5"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="8dp"
-        android:background="#e5e5ea"
-        app:layout_constraintEnd_toEndOf="@+id/sign_up_button"
-        app:layout_constraintStart_toStartOf="@+id/sign_up_button"
-        app:layout_constraintTop_toBottomOf="@+id/sign_up_button" />
-
-    <TextView
-        android:id="@+id/textView45"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#f9faff"
-        android:fontFamily="@font/roboto_regular"
-        android:gravity="center"
-        android:paddingHorizontal="10dp"
-        android:text="or"
-        android:textColor="#939397"
-        android:textSize="17sp"
-        app:layout_constraintBottom_toBottomOf="@+id/view5"
-        app:layout_constraintEnd_toEndOf="@+id/view5"
-        app:layout_constraintStart_toStartOf="@+id/view5"
-        app:layout_constraintTop_toTopOf="@+id/view5" />
-
-    <Button
-        android:id="@+id/button7"
-        android:layout_width="0dp"
-        android:layout_height="51dp"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="#fff"
-        android:elevation="100dp"
-        android:fontFamily="@font/roboto_medium"
-        android:gravity="center"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:letterSpacing="0.03"
-        android:text="Login with Apple"
-        android:textAllCaps="false"
-        android:textColor="#000"
-        android:textSize="18sp"
-        app:cornerRadius="10dp"
-        app:icon="@drawable/ic_apple"
-        app:iconGravity="textStart"
-        app:iconTint="@color/black"
-        app:layout_constraintEnd_toEndOf="@+id/sign_up_button"
-        app:layout_constraintStart_toStartOf="@+id/sign_up_button"
-        app:layout_constraintTop_toBottomOf="@+id/textView45" />
-
-    <Button
-        android:id="@+id/googleLoginBtn"
-        android:layout_width="0dp"
-        android:layout_height="51dp"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="#fff"
-        android:elevation="100dp"
-        android:fontFamily="@font/roboto_medium"
-        android:gravity="center"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:letterSpacing="0.03"
-        android:text="Login with Google"
-        android:textAllCaps="false"
-        android:textColor="#000"
-        android:textSize="18sp"
-        app:cornerRadius="10dp"
-        app:icon="@drawable/ic_google"
-        app:iconGravity="textStart"
-        app:iconTint="@null"
-        app:layout_constraintEnd_toEndOf="@+id/button7"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/button7"
-        app:layout_constraintTop_toBottomOf="@+id/button7" />
-
-    <Button
-        android:id="@+id/button8"
-        android:layout_width="0dp"
-        android:layout_height="51dp"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="#fff"
-        android:elevation="100dp"
-        android:fontFamily="@font/roboto_medium"
-        android:gravity="center"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:letterSpacing="0.03"
-        android:text="Login with Facebook"
-        android:textAllCaps="false"
-        android:textColor="#000"
-        android:textSize="18sp"
-        app:cornerRadius="10dp"
-        app:icon="@drawable/ic_facebook"
-        app:iconGravity="textStart"
-        app:iconTint="@null"
-        app:layout_constraintEnd_toEndOf="@+id/googleLoginBtn"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/googleLoginBtn"
-        app:layout_constraintTop_toBottomOf="@id/googleLoginBtn" />
+        app:layout_constraintEnd_toEndOf="@id/tipRePassword"
+        app:layout_constraintStart_toStartOf="@id/editTextText4"
+        app:layout_constraintTop_toBottomOf="@id/tipRePassword" />
 
     <ImageView
         android:id="@+id/imageView9"

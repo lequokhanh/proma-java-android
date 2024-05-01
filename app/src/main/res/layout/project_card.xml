@@ -30,7 +30,6 @@
             android:fontFamily="@font/roboto_bold"
             android:maxEms="10"
             android:maxLines="2"
-            android:text="LinCop Mobile App"
             android:textColor="#000000"
             android:textSize="20sp"
             card_view:layout_constraintBottom_toTopOf="@+id/projectDescription"
@@ -48,15 +47,14 @@
             android:fontFamily="@font/roboto_regular"
             android:maxEms="10"
             android:maxLines="4"
-            android:text="UI Design"
             android:textColor="#8E8E93"
             android:textSize="15sp"
             card_view:layout_constraintBottom_toBottomOf="parent"
-            card_view:layout_constraintEnd_toStartOf="@+id/textView9"
+            card_view:layout_constraintEnd_toStartOf="@+id/deadline"
             card_view:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/textView9"
+            android:id="@+id/deadline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
@@ -65,14 +63,13 @@
             android:fontFamily="@font/roboto_bold"
             android:paddingHorizontal="8dp"
             android:paddingVertical="4dp"
-            android:text="12 Oct 2023"
             android:textColor="#FF3B30"
             android:textSize="12sp"
-            card_view:layout_constraintEnd_toStartOf="@+id/textView10"
+            card_view:layout_constraintEnd_toStartOf="@+id/progressProject"
             card_view:layout_constraintTop_toBottomOf="@+id/projectName" />
 
         <TextView
-            android:id="@+id/textView10"
+            android:id="@+id/progressProject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
@@ -80,12 +77,11 @@
             android:fontFamily="@font/roboto_bold"
             android:paddingHorizontal="8dp"
             android:paddingVertical="4dp"
-            android:text="65 / 100"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
-            card_view:layout_constraintBottom_toBottomOf="@+id/textView9"
+            card_view:layout_constraintBottom_toBottomOf="@+id/deadline"
             card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintTop_toTopOf="@+id/textView9" />
+            card_view:layout_constraintTop_toTopOf="@+id/deadline" />
 
         <ImageView
             android:id="@+id/imageView7"

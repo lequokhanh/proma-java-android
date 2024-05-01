@@ -6,4 +6,10 @@
     <string name="title_create">Create</string>
     <string name="item_schedule">Schedule</string>
     <string name="item_profile">Profile</string>
+
+    <string name="facebook_app_id">818484886999786</string>
+    <string name="fb_login_protocol_scheme">fb818484886999786</string>
+    <string name="facebook_client_token">2a5f833006ae9651c134e93b1b30d604</string>
+
+    <string name="default_web_client_id">403285143448-j01v05qcri2j2gjkivhave9iugc0asg9.apps.googleusercontent.com</string>
 </resources>

@@ -39,9 +39,10 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        app:hintEnabled="false"
         app:passwordToggleEnabled="true"
         android:id="@+id/editTextText4"
+        app:hintEnabled="false"
+        android:inputType="text|textPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="21dp"
@@ -63,7 +64,7 @@
             android:ems="10"
             android:fontFamily="@font/roboto_regular"
             android:hint="Your password"
-            android:inputType="text"
+            android:inputType="text|textPassword"
             android:paddingHorizontal="14dp"
             android:paddingVertical="16dp"
             android:textSize="15sp"/>
@@ -148,30 +149,6 @@
         app:layout_constraintTop_toTopOf="@+id/view5" />
 
     <Button
-        android:id="@+id/button7"
-        android:layout_width="0dp"
-        android:layout_height="51dp"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="#fff"
-        android:elevation="100dp"
-        android:fontFamily="@font/roboto_medium"
-        android:gravity="center"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:letterSpacing="0.03"
-        android:text="Login with Apple"
-        android:textAllCaps="false"
-        android:textColor="#000"
-        android:textSize="18sp"
-        app:cornerRadius="10dp"
-        app:icon="@drawable/ic_apple"
-        app:iconGravity="textStart"
-        app:iconTint="@color/black"
-        app:layout_constraintEnd_toEndOf="@+id/login_button"
-        app:layout_constraintStart_toStartOf="@+id/login_button"
-        app:layout_constraintTop_toBottomOf="@+id/textView45" />
-
-    <Button
         android:id="@+id/googleLoginBtn"
         android:layout_width="0dp"
         android:layout_height="51dp"
@@ -182,7 +159,7 @@
         android:gravity="center"
         android:insetTop="0dp"
         android:insetBottom="0dp"
-        android:letterSpacing="0.03"
+        android:letterSpacing="0.003"
         android:text="Login with Google"
         android:textAllCaps="false"
         android:textColor="#000"
@@ -191,13 +168,12 @@
         app:icon="@drawable/ic_google"
         app:iconGravity="textStart"
         app:iconTint="@null"
-        app:layout_constraintEnd_toEndOf="@+id/button7"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/button7"
-        app:layout_constraintTop_toBottomOf="@+id/button7" />
+        app:layout_constraintEnd_toEndOf="@+id/login_button"
+        app:layout_constraintStart_toStartOf="@+id/login_button"
+        app:layout_constraintTop_toBottomOf="@+id/textView45" />
 
     <Button
-        android:id="@+id/button8"
+        android:id="@+id/facebookLoginBtn"
         android:layout_width="0dp"
         android:layout_height="51dp"
         android:layout_marginTop="20dp"
@@ -207,7 +183,7 @@
         android:gravity="center"
         android:insetTop="0dp"
         android:insetBottom="0dp"
-        android:letterSpacing="0.03"
+        android:letterSpacing="0.003"
         android:text="Login with Facebook"
         android:textAllCaps="false"
         android:textColor="#000"
@@ -233,12 +209,12 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView47"
+        android:id="@+id/registerBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:fontFamily="@font/roboto_medium"
-        android:text="Sign Up"
+        android:text="Register"
         android:textColor="#007aff"
         app:layout_constraintBottom_toBottomOf="@+id/textView46"
         app:layout_constraintStart_toEndOf="@+id/textView46"
@@ -260,7 +236,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="-20dp"
         android:fontFamily="@font/roboto_bold"
-        android:text="Sign in to your account"
+        android:text="Login to your account"
         android:textColor="#474747"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/imageView9"

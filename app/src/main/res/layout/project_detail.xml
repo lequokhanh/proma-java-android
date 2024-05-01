@@ -28,9 +28,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="fill_horizontal"
             android:adjustViewBounds="false"
-            android:background="#80D3D3D3"
-            android:scaleType="centerCrop"
-            android:src="@drawable/thumbnail" />
+            android:background="#AEAEB2"
+            android:scaleType="centerCrop" />
 
     </androidx.cardview.widget.CardView>
 
@@ -115,7 +114,7 @@
 
 
     <TextView
-        android:id="@+id/textView22"
+        android:id="@+id/nameProjectView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -128,7 +127,7 @@
         app:layout_constraintTop_toBottomOf="@id/cardView" />
 
     <TextView
-        android:id="@+id/textView21"
+        android:id="@+id/descProjectView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
@@ -140,8 +139,8 @@
         android:textColor="#8E8E93"
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="@+id/memberAvatars"
-        app:layout_constraintStart_toStartOf="@+id/textView22"
-        app:layout_constraintTop_toBottomOf="@+id/textView22" />
+        app:layout_constraintStart_toStartOf="@+id/nameProjectView"
+        app:layout_constraintTop_toBottomOf="@+id/nameProjectView" />
 
     <TextView
         android:id="@+id/deadlineView"
@@ -155,8 +154,8 @@
         android:text="12 Oct 2023"
         android:textColor="#FF3B30"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@+id/textView21"
-        app:layout_constraintTop_toBottomOf="@+id/textView21" />
+        app:layout_constraintStart_toStartOf="@+id/descProjectView"
+        app:layout_constraintTop_toBottomOf="@+id/descProjectView" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progressBar"
@@ -173,7 +172,7 @@
         app:trackThickness="8dp" />
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/progressProjectView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_corner_24_blue"
@@ -198,12 +197,13 @@
         app:layout_constraintTop_toBottomOf="@id/progressBar">
 
         <LinearLayout
+            android:id="@+id/tabContainer"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/resultTab"
+                android:id="@+id/taskTab"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="8dp"
@@ -217,7 +217,7 @@
                 android:textColor="#FFFFFF" />
 
             <TextView
-                android:id="@+id/informationTab"
+                android:id="@+id/processTaskTab"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="8dp"
@@ -231,7 +231,7 @@
                 android:textColor="#007AFF" />
 
             <TextView
-                android:id="@+id/subtaskTab"
+                android:id="@+id/completedTaskTab"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="8dp"
@@ -245,7 +245,7 @@
                 android:textColor="#007AFF" />
 
             <TextView
-                android:id="@+id/subtaskTab2"
+                android:id="@+id/informationTab"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="8dp"
@@ -261,6 +261,7 @@
     </HorizontalScrollView>
 
     <ScrollView
+        android:id="@+id/projectDetailContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="14dp"
@@ -268,78 +269,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/create_task_btn"
         app:layout_constraintEnd_toEndOf="@+id/horizontalScrollView2"
         app:layout_constraintStart_toStartOf="@+id/horizontalScrollView2"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView2">
-
-        <LinearLayout
-            android:id="@+id/horizontalLayout1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="fill_horizontal"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView8">
-
-            <LinearLayout
-                android:id="@+id/leftSide"
-                android:layout_width="160dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <include
-                    layout="@layout/task_card1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
-
-                <include
-                    android:id="@+id/card_view2"
-                    layout="@layout/task_card"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
-
-                <include
-                    layout="@layout/task_card1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <LinearLayout
-                android:id="@+id/linearLayout5"
-                android:layout_width="160dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <include
-                    layout="@layout/task_card"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
-
-                <include
-                    layout="@layout/task_card1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-        </LinearLayout>
-    </ScrollView>
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView2"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/create_task_btn"

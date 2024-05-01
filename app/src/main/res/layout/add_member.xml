@@ -5,8 +5,119 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="50dp"
+        android:elevation="10dp"
+        android:src="@drawable/ic_arrow_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="#000" />
+
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
+        android:elevation="10dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="Add Member"
+        android:textColor="#000"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView6" />
+
+    <TextView
+        android:id="@+id/memberCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="Project members (0)"
+        android:textColor="#000"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="@+id/invite_field"
+        app:layout_constraintTop_toBottomOf="@+id/invite_field" />
+
+    <EditText
+        android:id="@+id/invite_field"
+        style="@style/Normal_Drawable"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/rounded_corner_8"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="8dp"
+        android:drawableTint="#8E8E93"
+        android:ems="10"
+        android:fontFamily="@font/roboto_regular"
+        android:hint="Invite by email"
+        android:inputType="text"
+        android:paddingVertical="12dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="28dp"
+        android:textColorHint="#8E8E93"
+        android:textColorLink="#000"
+        android:textCursorDrawable="@drawable/black_cursor"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toStartOf="@+id/add_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView20" />
+
+    <TextView
+        android:id="@+id/add_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="21dp"
+        android:fontFamily="@font/roboto_bold"
+        android:gravity="center_vertical"
+        android:text="Add"
+        android:textColor="#105CDB"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/invite_field"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/invite_field" />
+
+    <ImageView
+        android:id="@+id/close_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/invite_field"
+        app:layout_constraintEnd_toEndOf="@+id/invite_field"
+        app:layout_constraintTop_toTopOf="@+id/invite_field"
+        app:srcCompat="@drawable/ic_close_circle"
+        tools:visibility="invisible" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="21dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/saveBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/memberCount">
+
+        <LinearLayout
+            android:id="@+id/memberList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
     <Button
-        android:id="@+id/signoutBtn"
+        android:id="@+id/saveBtn"
         android:layout_width="120dp"
         android:layout_height="40dp"
         android:layout_marginStart="45dp"
@@ -35,119 +146,8 @@
         android:textColor="#007AFF"
         app:cornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/signoutBtn"
+        app:layout_constraintTop_toTopOf="@+id/saveBtn"
         app:strokeColor="#007AFF"
         app:strokeWidth="1dp" />
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="50dp"
-        android:elevation="10dp"
-        android:src="@drawable/ic_arrow_left"
-        android:tint="#000"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView20"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
-        android:elevation="10dp"
-        android:fontFamily="@font/roboto_bold"
-        android:text="My Profile"
-        android:textColor="#000"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView6" />
-
-    <TextView
-        android:id="@+id/textView37"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="@font/roboto_bold"
-        android:text="Project members (0)"
-        android:textColor="#000"
-        android:textSize="17sp"
-        app:layout_constraintStart_toStartOf="@+id/search_field"
-        app:layout_constraintTop_toBottomOf="@+id/search_field" />
-
-    <EditText
-        android:id="@+id/search_field"
-        style="@style/Normal_Drawable"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/rounded_corner_8"
-        android:drawableStart="@drawable/ic_search"
-        android:drawablePadding="8dp"
-        android:drawableTint="#8E8E93"
-        android:ems="10"
-        android:fontFamily="@font/roboto_regular"
-        android:hint="Invite by email"
-        android:inputType="text"
-        android:paddingVertical="12dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="28dp"
-        android:textColorHint="#8E8E93"
-        android:textColorLink="#000"
-        android:textCursorDrawable="@drawable/black_cursor"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toStartOf="@+id/cancel_btn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView20" />
-
-    <TextView
-        android:id="@+id/cancel_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginEnd="21dp"
-        android:fontFamily="@font/roboto_bold"
-        android:gravity="center_vertical"
-        android:text="Add"
-        android:textColor="#105CDB"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="@+id/search_field"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/search_field" />
-
-    <ImageView
-        android:id="@+id/close_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/search_field"
-        app:layout_constraintEnd_toEndOf="@+id/search_field"
-        app:layout_constraintTop_toTopOf="@+id/search_field"
-        app:srcCompat="@drawable/ic_close_circle"
-        tools:visibility="invisible" />
-
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="21dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/signoutBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView37">
-
-        <LinearLayout
-            android:id="@+id/searchRecentContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

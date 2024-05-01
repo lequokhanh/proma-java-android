@@ -130,7 +130,7 @@ public class ProjectDetail extends AppCompatActivity {
                     bottomSheetDialog2.setOnDismissListener(v3 -> {
                         isTimePickerShow.set(false);
                     });
-                    Button applyBtn1 = view3.findViewById(R.id.signoutBtn);
+                    Button applyBtn1 = view3.findViewById(R.id.applyBtn);
                     Button cancelBtn1 = view3.findViewById(R.id.cancelBtn);
                     applyBtn1.setOnClickListener(v3 -> {
                         timeBtn.setText(String.format(new Locale("en"), "%02d:%02d %s", hourPicker.getValue() > 12 ? hourPicker.getValue() - 12 : hourPicker.getValue() == 0 ? 12 : hourPicker.getValue(), minutePicker.getValue(), amPm.get(amPmPicker.getValue())));
@@ -164,7 +164,7 @@ public class ProjectDetail extends AppCompatActivity {
                     yearPicker.setMaxValue(2100);
                     yearPicker.setValue(new Date().getYear() + 1900);
                     yearPicker.setWrapSelectorWheel(false);
-                    Button applyBtn = monthPickerView.findViewById(R.id.signoutBtn);
+                    Button applyBtn = monthPickerView.findViewById(R.id.applyBtn);
                     Button cancelBtn = view2.findViewById(R.id.cancelBtn);
                     applyBtn.setOnClickListener(v3 -> {
                         Date date = new Date(yearPicker.getValue() - 1900, monthPickerNumber.getValue() - 1, 1);
@@ -178,7 +178,7 @@ public class ProjectDetail extends AppCompatActivity {
                 deadlineDate.observe(this, date -> {
                     datePicker.setDate(date.getTime());
                 });
-                Button applyBtn = view2.findViewById(R.id.signoutBtn);
+                Button applyBtn = view2.findViewById(R.id.applyBtn);
                 Button cancelBtn = view2.findViewById(R.id.cancelBtn);
                 applyBtn.setOnClickListener(v2 -> {
                     String deadline = Optional.of(deadlineDate.getValue()).map(date -> {

@@ -2,6 +2,7 @@ package com.nt118.proma.ui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
 import com.nt118.proma.databinding.FragmentProfileBinding;
 
@@ -27,7 +34,6 @@ public class ProfileFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         ProfileViewModel profileViewModel =
                 new ViewModelProvider(this).get(ProfileViewModel.class);
-
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         TextView logout = binding.logout;
@@ -49,10 +55,22 @@ public class ProfileFragment extends Fragment {
             });
             Button singoutBtn = view1.findViewById(R.id.signoutBtn);
             singoutBtn.setOnClickListener(v1 -> {
+                remove_fcm_token();
                 FirebaseAuth.getInstance().signOut();
+                // logout from facebook
+                FacebookSdk.sdkInitialize(requireContext());
+                LoginManager.getInstance().logOut();
+                // logout from google
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(getString(R.string.default_web_client_id))
+                        .requestEmail()
+                        .build();
+                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(requireContext(), gso);
+                mGoogleSignInClient.signOut();
+
+                bottomSheetDialog.dismiss();
                 Intent intent = new Intent(requireContext(), com.nt118.proma.ui.login.Login.class);
                 startActivity(intent);
-                bottomSheetDialog.dismiss();
             });
             Button cancelBtn = view1.findViewById(R.id.cancelBtn);
             cancelBtn.setOnClickListener(v1 -> {
@@ -70,6 +88,35 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Intent intent = new Intent(requireContext(), com.nt118.proma.ui.login.Login.class);
+            startActivity(intent);
+        }
+        TextView username = binding.username;
+        String email = FirebaseAuth.getInstance().getCurrentUser().getProviderData().get(1).getEmail();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                username.setText(task.getResult().getDocuments().get(0).getString("name"));
+            }
+        });
+    }
+
+    public void remove_fcm_token() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String email = mAuth.getCurrentUser().getProviderData().get(1).getEmail();
+        Log.d("rft", "remove_fcm_token: " + email);
+        db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                task.getResult().getDocuments().get(0).getReference().update("fcm_token", null);
+            }
+        });
     }
 
     @Override

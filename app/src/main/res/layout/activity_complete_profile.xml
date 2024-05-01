@@ -7,38 +7,28 @@
     android:background="#f9faff"
     android:backgroundTint="#f9faff">
 
-    <ImageView
-        android:id="@+id/imageView9"
+    <TextView
+        android:id="@+id/textView24"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/imageView23"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/roboto_bold"
+        android:gravity="center"
+        android:text="Complete your &#xA;Profile Data"
+        android:textColor="#000"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_foreground" />
-
-    <TextView
-        android:id="@+id/CompletedBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-20dp"
-        android:layout_marginBottom="20dp"
-        android:fontFamily="@font/roboto_bold"
-        android:text="Create your account"
-        android:textColor="#474747"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView9"
-        app:layout_constraintStart_toStartOf="@+id/imageView9"
-        app:layout_constraintTop_toBottomOf="@+id/imageView9" />
+        app:layout_constraintTop_toBottomOf="@+id/signOutBtn" />
 
     <ImageView
         android:id="@+id/imageView23"
         android:layout_width="90dp"
         android:layout_height="90dp"
-        android:layout_marginTop="38dp"
-        app:layout_constraintEnd_toEndOf="@+id/CompletedBtn"
-        app:layout_constraintStart_toStartOf="@+id/CompletedBtn"
-        app:layout_constraintTop_toBottomOf="@+id/CompletedBtn"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/textView24"
+        app:layout_constraintStart_toStartOf="@+id/textView24"
+        app:layout_constraintTop_toBottomOf="@+id/textView24"
         app:srcCompat="@drawable/avatar" />
 
     <ImageView
@@ -129,7 +119,7 @@
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:letterSpacing="0.06"
-        android:text="Sign Up"
+        android:text="Complete"
         android:textAllCaps="false"
         android:textSize="17sp"
         app:cornerRadius="12dp"
@@ -137,9 +127,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-
-
-
+    <TextView
+        android:id="@+id/signOutBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="55dp"
+        android:drawableStart="@drawable/ic_arrow_left_black"
+        android:fontFamily="@font/roboto_regular"
+        android:gravity="center"
+        android:text="Sign out"
+        android:textColor="#000"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

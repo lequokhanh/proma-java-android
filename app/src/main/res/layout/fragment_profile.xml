@@ -22,7 +22,7 @@
         app:srcCompat="@drawable/avatar" />
 
     <TextView
-        android:id="@+id/textView33"
+        android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -49,7 +49,7 @@
         android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="@+id/imageView15"
         app:layout_constraintStart_toStartOf="@+id/imageView15"
-        app:layout_constraintTop_toBottomOf="@+id/textView33" />
+        app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <LinearLayout
         android:id="@+id/linearLayout3"

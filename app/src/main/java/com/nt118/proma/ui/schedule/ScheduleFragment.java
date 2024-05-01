@@ -86,7 +86,7 @@ public class ScheduleFragment extends Fragment {
             yearPickerNumber.setMaxValue(2100);
             yearPickerNumber.setValue(currentDate.getValue().getYear() + 1900);
             yearPickerNumber.setWrapSelectorWheel(false);
-            Button applyBtn = monthPickerView.findViewById(R.id.signoutBtn);
+            Button applyBtn = monthPickerView.findViewById(R.id.welcomeText);
             applyBtn.setOnClickListener(v1 -> {
                 currentDate.setValue(new Date(yearPickerNumber.getValue() - 1900, monthPickerNumber.getValue() - 1, 1));
                 monthPicker.dismiss();

@@ -21,7 +21,7 @@ import com.nt118.proma.R;
 
 public class Register extends AppCompatActivity {
 
-    private EditText etEmail, etPassword;
+    private EditText etEmail, etPassword, etRePassword;
     private Button btnSignUp;
     private FirebaseAuth mAuth;
 
@@ -39,13 +39,18 @@ public class Register extends AppCompatActivity {
     private void initUi(){
         etEmail = findViewById(R.id.etEmail);
         etPassword =findViewById(R.id.etPassword);
+        etRePassword = findViewById(R.id.etRePassword);
         btnSignUp = findViewById(R.id.sign_up_button);
     }
     private void initListener() {
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickSignUp();
+        btnSignUp.setOnClickListener(v -> onClickSignUp());
+        etRePassword.setOnFocusChangeListener((v, hasFocus) -> {
+            if(!hasFocus){
+                String password = etPassword.getText().toString();
+                String rePassword = etRePassword.getText().toString();
+                if(!password.equals(rePassword)){
+                    etRePassword.setError("Password not match");
+                }
             }
         });
     }
@@ -62,23 +67,28 @@ public class Register extends AppCompatActivity {
             etPassword.setError("Password is required");
             return;
         }
+        if(!password_text.equals(etRePassword.getText().toString())){
+            etRePassword.setError("Password not match");
+            return;
+        }
         mAuth.createUserWithEmailAndPassword(email_text, password_text)
-                .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Intent intent = new Intent(Register.this, CompleteProfile.class);
-                            startActivity(intent);
-                            finishAffinity();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(Register.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                .addOnCompleteListener(Register.this, task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(Register.this, "Register success",
+                                Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(Register.this, "Register failed: " + task.getException().getMessage(),
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
 }
