@@ -84,7 +84,7 @@
             card_view:layout_constraintTop_toTopOf="@+id/deadline" />
 
         <ImageView
-            android:id="@+id/imageView7"
+            android:id="@+id/cover_project"
             android:layout_width="match_parent"
             android:layout_height="140dp"
             android:layout_marginBottom="15dp"
@@ -92,10 +92,10 @@
             android:outlineAmbientShadowColor="#00FFFFFF"
             android:outlineSpotShadowColor="#00FFFFFF"
             android:scaleType="centerCrop"
+            android:background="#AEAEB2"
             card_view:layout_constraintBottom_toTopOf="@+id/projectName"
             card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintStart_toStartOf="parent"
-            card_view:srcCompat="@drawable/thumbnail" />
+            card_view:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

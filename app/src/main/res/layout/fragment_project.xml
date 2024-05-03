@@ -199,33 +199,7 @@
                 android:id="@+id/leftSide"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <include
-                    layout="@layout/task_card1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
-
-                <include
-                    android:id="@+id/card_view2"
-                    layout="@layout/task_card"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
-
-                <include
-                    layout="@layout/task_card1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
+                android:orientation="vertical"/>
 
             <Space
                 android:layout_width="match_parent"
@@ -236,22 +210,7 @@
                 android:id="@+id/linearLayout5"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <include
-                    layout="@layout/task_card"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
-
-                <include
-                    layout="@layout/task_card1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+                android:orientation="vertical"/>
 
         </LinearLayout>
     </ScrollView>

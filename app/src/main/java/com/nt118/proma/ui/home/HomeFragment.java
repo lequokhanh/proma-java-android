@@ -130,6 +130,7 @@ public class HomeFragment extends Fragment {
                     TextView projectDescription = cardView.findViewById(R.id.projectDescription);
                     TextView tvDeadline = cardView.findViewById(R.id.deadline);
                     TextView progressProject = cardView.findViewById(R.id.progressProject);
+                    ImageView projectCover = cardView.findViewById(R.id.cover_project);
                     // find a project in database owned by user or user is a member of that project and the deadline is the nearest today
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.US);
                     Date today = new Date();
@@ -168,9 +169,11 @@ public class HomeFragment extends Fragment {
                     } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }
+                    int coverID = task.getResult().getDocuments().get(index).getLong("cover").intValue();
                     String name = task.getResult().getDocuments().get(index).getString("name");
                     String description = task.getResult().getDocuments().get(index).getString("description");
                     String deadlineStr = task.getResult().getDocuments().get(index).getString("deadline");
+                    projectCover.setImageResource(coverID);
                     projectName.setText(name);
                     projectDescription.setText(description);
                     tvDeadline.setText(deadlineStr);

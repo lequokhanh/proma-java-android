@@ -53,74 +53,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView51">
 
-        <LinearLayout
-            android:id="@+id/horizontalLayout1"
+        <include
+            layout="@layout/task_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="fill_horizontal"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView8">
-
-            <LinearLayout
-                android:id="@+id/leftSide"
-                android:layout_width="160dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <include
-                    layout="@layout/task_card1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
-
-                <include
-                    android:id="@+id/card_view2"
-                    layout="@layout/task_card"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
-
-                <include
-                    layout="@layout/task_card1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <LinearLayout
-                android:id="@+id/linearLayout5"
-                android:layout_width="160dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <include
-                    layout="@layout/task_card"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
-
-                <include
-                    layout="@layout/task_card1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-        </LinearLayout>
+            android:layout_height="wrap_content" />
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
