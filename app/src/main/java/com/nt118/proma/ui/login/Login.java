@@ -1,10 +1,15 @@
 package com.nt118.proma.ui.login;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +28,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,6 +43,8 @@ public class Login extends AppCompatActivity {
     GoogleSignInClient googleSignInClient;
     FirebaseAuth mAuth;
     CallbackManager mCallbackManager;
+    LinearLayout loadingLogin;
+    CheckBox rememberMe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +52,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login);
         mAuth = FirebaseAuth.getInstance();
         Button login_button = findViewById(R.id.login_button);
+        loadingLogin = findViewById(R.id.loadingLogin);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             Intent intent = new Intent(Login.this, MainActivity.class);
@@ -58,7 +68,13 @@ public class Login extends AppCompatActivity {
         // Login with email and password
         EditText email = findViewById(R.id.etEmail);
         EditText password = findViewById(R.id.etPassword);
+        rememberMe = findViewById(R.id.rememberMe);
         login_button.setOnClickListener(v -> {
+            //hide keyboard
+            InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            if (inputMethodManager.isAcceptingText()) {
+                inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+            }
             // validate email and password
             String email_text = email.getText().toString();
             String password_text = password.getText().toString();
@@ -70,17 +86,8 @@ public class Login extends AppCompatActivity {
                 email.setError(null);
                 password.setError(null);
             }
-            mAuth.signInWithEmailAndPassword(email_text, password_text).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Intent intent = new Intent(Login.this, MainActivity.class);
-                    startActivity(intent);
-                    add_fcm_token();
-                } else {
-                    email.setError("Invalid email or password");
-                    password.setError("Invalid email or password");
-                    Toast.makeText(Login.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
-                }
-            });
+            AuthCredential credential = EmailAuthProvider.getCredential(email_text, password_text);
+            loginWithAuthCredential(credential);
         });
         // Google Sign In
         Button googleLoginBtn = findViewById(R.id.googleLoginBtn);
@@ -104,16 +111,7 @@ public class Login extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 Toast.makeText(Login.this, "Authentication successful", Toast.LENGTH_SHORT).show();
                 AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
-                mAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Intent intent = new Intent(Login.this, MainActivity.class);
-                        startActivity(intent);
-                        add_fcm_token();
-                        Toast.makeText(Login.this, "Firebase authentication successful", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(Login.this, "Authentication failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                loginWithAuthCredential(credential);
             }
 
             @Override
@@ -130,6 +128,7 @@ public class Login extends AppCompatActivity {
             loginButton.performClick();
         });
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -151,18 +150,7 @@ public class Login extends AppCompatActivity {
                         // When sign in account is not equal to null initialize auth credential
                         AuthCredential authCredential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null);
                         // Check credential
-                        mAuth.signInWithCredential(authCredential).addOnCompleteListener(this, task -> {
-                            // Check condition
-                            if (task.isSuccessful()) {
-                                Intent intent = new Intent(Login.this, MainActivity.class);
-                                startActivity(intent);
-                                add_fcm_token();
-                                displayToast("Firebase authentication successful");
-                            } else {
-                                // When task is unsuccessful display Toast
-                                displayToast("Authentication Failed :" + task.getException().getMessage());
-                            }
-                        });
+                        loginWithAuthCredential(authCredential);
                     }
                 } catch (ApiException e) {
                     e.printStackTrace();
@@ -171,6 +159,37 @@ public class Login extends AppCompatActivity {
         } else {
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    public void loginWithAuthCredential(AuthCredential credential) {
+        loadingLogin.setVisibility(LinearLayout.VISIBLE);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        mAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                db.collection("users").whereEqualTo("email", mAuth.getCurrentUser().getProviderData().get(1).getEmail()).get().addOnCompleteListener(task1 -> {
+                    if (task1.isSuccessful()) {
+                        if (!task1.getResult().isEmpty()) {
+                            task1.getResult().getDocuments().get(0).getReference().update("last_login", System.currentTimeMillis());
+                            editor.putString("email", mAuth.getCurrentUser().getProviderData().get(1).getEmail());
+                            editor.putString("name", task1.getResult().getDocuments().get(0).getString("name"));
+                            editor.putString("avatar", task1.getResult().getDocuments().get(0).getString("avatar"));
+                        }
+                        editor.putBoolean("isCompletedProfile", !(task1.getResult().isEmpty() || task1.getResult().getDocuments().get(0).getString("name") == null || task1.getResult().getDocuments().get(0).getString("dob") == null || task1.getResult().getDocuments().get(0).getString("phone_number") == null));
+                        editor.putBoolean("rememberMe", rememberMe.isChecked());
+                        editor.apply();
+                        Intent intent = new Intent(Login.this, MainActivity.class);
+                        startActivity(intent);
+                        add_fcm_token();
+                        displayToast("Login successful");
+                    }
+                });
+            } else {
+                displayToast("Authentication Failed :" + task.getException().getMessage());
+                loadingLogin.setVisibility(LinearLayout.GONE);
+            }
+        });
     }
 
     private void displayToast(String s) {

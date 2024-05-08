@@ -27,7 +27,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:fontFamily="@font/roboto_bold"
-        android:text="Fahmi Haecal"
         android:textColor="#242426"
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="@+id/imageView15"

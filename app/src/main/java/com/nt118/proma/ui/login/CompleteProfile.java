@@ -3,6 +3,7 @@ package com.nt118.proma.ui.login;
 import static android.app.PendingIntent.getActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -63,7 +64,8 @@ public class CompleteProfile extends AppCompatActivity {
                     .build();
             GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
             mGoogleSignInClient.signOut();
-
+            SharedPreferences.Editor editor = getSharedPreferences("user", MODE_PRIVATE).edit();
+            editor.clear().apply();
             Intent intent = new Intent(CompleteProfile.this, Login.class);
             startActivity(intent);
         });
@@ -124,6 +126,12 @@ public class CompleteProfile extends AppCompatActivity {
                 task.getResult().getDocuments().get(0).getReference().update("name", etFullname.getText().toString());
                 task.getResult().getDocuments().get(0).getReference().update("phone_number", etPhoneNumber.getText().toString());
                 task.getResult().getDocuments().get(0).getReference().update("dob", etDOB.getText().toString());
+                SharedPreferences.Editor editor = getSharedPreferences("user", MODE_PRIVATE).edit();
+                editor.putString("name", etFullname.getText().toString());
+                editor.putString("phone_number", etPhoneNumber.getText().toString());
+                editor.putString("dob", etDOB.getText().toString());
+                editor.putBoolean("isCompletedProfile", true);
+                editor.apply();
                 Intent intent = new Intent(CompleteProfile.this, MainActivity.class);
                 startActivity(intent);
             }

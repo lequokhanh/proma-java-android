@@ -1,6 +1,9 @@
 package com.nt118.proma.ui.profile;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +41,10 @@ public class ProfileFragment extends Fragment {
         View root = binding.getRoot();
         TextView logout = binding.logout;
         AtomicReference<Boolean> isDialogShowing = new AtomicReference<>(false);
+        TextView username = binding.username;
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("user", MODE_PRIVATE);
+        String name = sharedPreferences.getString("name", "");
+        username.setText(name);
         logout.setOnClickListener(v -> {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
             View view1 = LayoutInflater.from(requireContext()).inflate(R.layout.modal_logout, null);
@@ -67,7 +74,8 @@ public class ProfileFragment extends Fragment {
                         .build();
                 GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(requireContext(), gso);
                 mGoogleSignInClient.signOut();
-
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear().apply();
                 bottomSheetDialog.dismiss();
                 Intent intent = new Intent(requireContext(), com.nt118.proma.ui.login.Login.class);
                 startActivity(intent);
@@ -90,22 +98,6 @@ public class ProfileFragment extends Fragment {
         return root;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            Intent intent = new Intent(requireContext(), com.nt118.proma.ui.login.Login.class);
-            startActivity(intent);
-        }
-        TextView username = binding.username;
-        String email = FirebaseAuth.getInstance().getCurrentUser().getProviderData().get(1).getEmail();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                username.setText(task.getResult().getDocuments().get(0).getString("name"));
-            }
-        });
-    }
 
     public void remove_fcm_token() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();

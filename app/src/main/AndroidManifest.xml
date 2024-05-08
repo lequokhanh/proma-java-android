@@ -31,7 +31,7 @@
         <activity android:name=".ui.login.CompleteProfile" />
         <activity android:name=".ui.task.TaskDetail" />
         <activity android:name=".ui.task.AllTask" />
-        <activity android:name=".ui.login.Login" />
+        <activity android:name=".ui.login.Login" android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity android:name=".ui.search.SearchView"
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity android:name=".ui.project.ProjectDetail" />

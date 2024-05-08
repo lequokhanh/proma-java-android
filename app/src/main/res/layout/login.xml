@@ -7,6 +7,23 @@
     android:background="#f9faff"
     android:backgroundTint="#f9faff">
 
+    <LinearLayout
+        android:id="@+id/loadingLogin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="#28000000"
+        android:elevation="10dp"
+        android:visibility="gone"
+        >
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editTextText5"
         android:layout_width="0dp"
@@ -72,7 +89,7 @@
 
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/rememberMe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="9dp"
@@ -100,9 +117,9 @@
         android:text="Forgot password?"
         android:textColor="#006EE9"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/checkBox"
+        app:layout_constraintBottom_toBottomOf="@+id/rememberMe"
         app:layout_constraintEnd_toEndOf="@+id/editTextText4"
-        app:layout_constraintTop_toTopOf="@+id/checkBox" />
+        app:layout_constraintTop_toTopOf="@+id/rememberMe" />
 
     <Button
         android:id="@+id/login_button"
@@ -119,7 +136,7 @@
         app:cornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="@+id/editTextText4"
         app:layout_constraintStart_toStartOf="@+id/editTextText4"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+        app:layout_constraintTop_toBottomOf="@+id/rememberMe" />
 
     <View
         android:id="@+id/view5"

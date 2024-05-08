@@ -2,6 +2,7 @@ package com.nt118.proma.ui.home;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -62,30 +63,14 @@ public class HomeFragment extends Fragment {
                 new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) {
-            Intent intent = new Intent(getActivity(), com.nt118.proma.ui.login.Login.class);
-            startActivity(intent);
-        }
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", getActivity().MODE_PRIVATE);
         FloatingActionButton searchButton = root.findViewById(R.id.search_button);
         searchButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), SearchView.class);
             startActivity(intent);
         });
-        String email = user.getProviderData().get(1).getEmail();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         TextView username = root.findViewById(R.id.username);
-        ProgressBar loadingName = root.findViewById(R.id.loadingName);
-        loadingName.setVisibility(View.VISIBLE);
-        username.setVisibility(View.INVISIBLE);
-        db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                String name = task.getResult().getDocuments().get(0).getString("name");
-                username.setText(name);
-                username.setVisibility(View.VISIBLE);
-                loadingName.setVisibility(View.GONE);
-            }
-        });
+        username.setText(sharedPreferences.getString("name", ""));
         loadUI();
         handleFiresrtoreChange();
         SwipeRefreshLayout swipeRefresh = binding.swipeRefresh;
