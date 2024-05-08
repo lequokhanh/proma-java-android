@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // check status login
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String email = FirebaseAuth.getInstance().getCurrentUser().getProviderData().get(1).getEmail();
         db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(task -> {
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     finishAffinity();
                 } else {
+                    //init main acitivty
                     binding = ActivityMainBinding.inflate(getLayoutInflater());
                     setContentView(binding.getRoot());
                     BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
                     setupWithNavController(navView, navController);
                     navView.setItemIconTintList(null);
+                    // handle create project button
                     FloatingActionButton create_btn = findViewById(R.id.create_button);
                     AtomicReference<Boolean> isDialogShowing = new AtomicReference<>(false);
                     create_btn.setOnClickListener(v -> {
@@ -106,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                         Button deadlineBtn = view1.findViewById(R.id.deadlineBtn);
                         TextView deadlineView = view1.findViewById(R.id.deadlineView);
                         AtomicReference<Boolean> isDatePickerShowing = new AtomicReference<>(false);
+                        // handle set deadline button
                         deadlineBtn.setOnClickListener(v1 -> {
                             BottomSheetDialog bottomSheetDialog1 = new BottomSheetDialog(v.getContext());
                             View view2 = LayoutInflater.from(MainActivity.this).inflate(R.layout.modal_date_picker, null);

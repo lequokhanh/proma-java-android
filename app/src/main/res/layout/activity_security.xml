@@ -34,9 +34,11 @@
         app:layout_constraintTop_toTopOf="@+id/img_Back" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="23dp"
+        android:layout_marginEnd="22dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -52,8 +54,6 @@
             android:drawableEnd="@drawable/ic_arrow_right_blue"
             android:drawablePadding="24dp"
             android:fontFamily="@font/roboto_medium"
-            android:paddingHorizontal="22dp"
-            android:paddingVertical="12dp"
             android:text="Change Password"
             android:textColor="#000"
             android:textSize="17sp" />
