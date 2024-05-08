@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/img_Back"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="22dp"
@@ -27,10 +27,10 @@
         android:text="Add Member"
         android:textColor="#000"
         android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+        app:layout_constraintBottom_toBottomOf="@+id/img_Back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView6" />
+        app:layout_constraintTop_toTopOf="@+id/img_Back" />
 
     <TextView
         android:id="@+id/memberCount"

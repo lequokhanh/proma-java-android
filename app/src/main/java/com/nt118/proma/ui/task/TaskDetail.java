@@ -24,7 +24,7 @@ public class TaskDetail extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_detail);
-        ImageView imageView = findViewById(R.id.imageView6);
+        ImageView imageView = findViewById(R.id.img_Back);
         imageView.setOnClickListener(v -> {
             finish();
         });

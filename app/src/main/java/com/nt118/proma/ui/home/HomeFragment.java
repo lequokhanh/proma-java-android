@@ -56,6 +56,7 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
 
+    private View root;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
@@ -99,12 +100,16 @@ public class HomeFragment extends Fragment {
     @SuppressLint("ResourceType")
     public void loadUI() {
         LayoutInflater inflater = getLayoutInflater();
-        View root = binding.getRoot();
+        root = binding.getRoot();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             Intent intent = new Intent(getActivity(), com.nt118.proma.ui.login.Login.class);
             startActivity(intent);
         }
+
+        //xu ly su kien an nut thong bao
+        onClickNotification();
+
         FloatingActionButton searchButton = root.findViewById(R.id.search_button);
         searchButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), SearchView.class);
@@ -277,6 +282,15 @@ public class HomeFragment extends Fragment {
                     loadingHome.setVisibility(View.GONE);
                 }
             }
+        });
+    }
+
+    private void onClickNotification() {
+        root = binding.getRoot();
+        FloatingActionButton notificationButton = root.findViewById(R.id.notification_button);
+        notificationButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ViewNotification.class);
+            startActivity(intent);
         });
     }
 

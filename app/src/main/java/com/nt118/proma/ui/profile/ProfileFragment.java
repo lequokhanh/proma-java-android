@@ -87,6 +87,11 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(requireContext(), NotificationSetting.class);
             startActivity(intent);
         });
+        TextView sercurity = binding.security;
+        sercurity.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), Security.class);
+            startActivity(intent);
+        });
         return root;
     }
 
