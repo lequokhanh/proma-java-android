@@ -2,11 +2,13 @@ package com.nt118.proma.ui.project;
 
 import static com.nt118.proma.ui.task.TaskDetail.setWindowFlag;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -22,6 +24,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nt118.proma.R;
+import com.nt118.proma.ui.imageselectiton.ImageSelection;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -227,6 +230,13 @@ public class ProjectDetail extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            popup.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.action_change_cover){
+                    Intent intent = new Intent(this, ImageSelection.class);
+                    startActivity(intent);
+                }
+                return false;
+            });
             popup.show();
 
         });
