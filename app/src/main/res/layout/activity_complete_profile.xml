@@ -29,7 +29,7 @@
         app:layout_constraintEnd_toEndOf="@+id/textView24"
         app:layout_constraintStart_toStartOf="@+id/textView24"
         app:layout_constraintTop_toBottomOf="@+id/textView24"
-        app:srcCompat="@drawable/avatar" />
+        app:srcCompat="@drawable/avatar1" />
 
     <ImageView
         android:id="@+id/imageView25"

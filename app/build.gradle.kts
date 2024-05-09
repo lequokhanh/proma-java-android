@@ -60,5 +60,5 @@ dependencies {
     implementation("com.facebook.android:facebook-android-sdk:12.3.0")
     implementation("com.google.firebase:firebase-firestore")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
-
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 }

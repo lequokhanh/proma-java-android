@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -24,7 +23,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nt118.proma.R;
-import com.nt118.proma.ui.imageselectiton.ImageSelection;
+import com.nt118.proma.ui.image.SetImage;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -232,7 +231,7 @@ public class ProjectDetail extends AppCompatActivity {
             }
             popup.setOnMenuItemClickListener(item -> {
                 if (item.getItemId() == R.id.action_change_cover){
-                    Intent intent = new Intent(this, ImageSelection.class);
+                    Intent intent = new Intent(this, SetImage.class);
                     startActivity(intent);
                 }
                 return false;
