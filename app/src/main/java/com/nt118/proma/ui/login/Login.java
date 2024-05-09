@@ -173,7 +173,11 @@ public class Login extends AppCompatActivity {
                             task1.getResult().getDocuments().get(0).getReference().update("last_login", System.currentTimeMillis());
                             editor.putString("email", mAuth.getCurrentUser().getProviderData().get(1).getEmail());
                             editor.putString("name", task1.getResult().getDocuments().get(0).getString("name"));
-                            editor.putString("avatar", task1.getResult().getDocuments().get(0).getString("avatar"));
+                            editor.putString("dob", task1.getResult().getDocuments().get(0).getString("dob"));
+                            editor.putString("phone_number", task1.getResult().getDocuments().get(0).getString("phone_number"));
+                            editor.putInt("avatar", task1.getResult().getDocuments().get(0).getLong("avatar") == null
+                                    ? -1
+                                    : task1.getResult().getDocuments().get(0).getLong("avatar").intValue());
                         }
                         editor.putBoolean("isCompletedProfile", !(task1.getResult().isEmpty()
                                 || task1.getResult().getDocuments().get(0).getString("name") == null

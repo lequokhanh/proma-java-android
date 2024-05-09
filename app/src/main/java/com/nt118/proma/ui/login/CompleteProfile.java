@@ -89,6 +89,9 @@ public class CompleteProfile extends AppCompatActivity {
         etFullname.setText(sharedPreferences.getString("name", ""));
         etPhoneNumber.setText(sharedPreferences.getString("phone_number", ""));
         etDOB.setText(sharedPreferences.getString("dob", ""));
+        if (!etDOB.getText().toString().isEmpty()) {
+            etDOB.setTextColor(getResources().getColor(R.color.black));
+        }
         setImageBtn = findViewById(R.id.setImageBtn);
         avatarImage = findViewById(R.id.avatar2);
         selectedImage.setValue(sharedPreferences.getInt("avatar", -1));
@@ -175,7 +178,7 @@ public class CompleteProfile extends AppCompatActivity {
                 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
                 String dob = formatter.format(dobDate.getValue());
                 etDOB.setText(dob);
-                etDOB.setVisibility(View.VISIBLE);
+                etDOB.setTextColor(getResources().getColor(R.color.black));
                 datePickerDialog.dismiss();
                 isDatePickerShowing.set(false);
             });
