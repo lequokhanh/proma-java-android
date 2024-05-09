@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nt118.proma.R;
+import com.nt118.proma.model.ImageArray;
 import com.nt118.proma.ui.image.SetImage;
 
 import java.lang.reflect.Field;
@@ -36,7 +37,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ProjectDetail extends AppCompatActivity {
     private PopupMenu popup;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -232,6 +232,8 @@ public class ProjectDetail extends AppCompatActivity {
             popup.setOnMenuItemClickListener(item -> {
                 if (item.getItemId() == R.id.action_change_cover){
                     Intent intent = new Intent(this, SetImage.class);
+                    intent.putExtra("type", "cover");
+                    intent.putIntegerArrayListExtra("images", new ImageArray().getCoverProjectImage());
                     startActivity(intent);
                 }
                 return false;

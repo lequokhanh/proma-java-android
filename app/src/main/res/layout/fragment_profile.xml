@@ -11,15 +11,14 @@
     android:paddingBottom="55dp"
     tools:context=".ui.profile.ProfileFragment">
 
-    <ImageView
-        android:id="@+id/imageView15"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/avatar3"
         android:layout_width="66dp"
         android:layout_height="75dp"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/avatar1" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/username"
@@ -29,9 +28,9 @@
         android:fontFamily="@font/roboto_bold"
         android:textColor="#242426"
         android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView15"
-        app:layout_constraintStart_toStartOf="@+id/imageView15"
-        app:layout_constraintTop_toBottomOf="@+id/imageView15" />
+        app:layout_constraintEnd_toEndOf="@+id/avatar3"
+        app:layout_constraintStart_toStartOf="@+id/avatar3"
+        app:layout_constraintTop_toBottomOf="@+id/avatar3" />
 
     <TextView
         android:id="@+id/myProfileBtn"
@@ -46,8 +45,8 @@
         android:paddingVertical="2dp"
         android:text="My profile"
         android:textSize="12dp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView15"
-        app:layout_constraintStart_toStartOf="@+id/imageView15"
+        app:layout_constraintEnd_toEndOf="@+id/avatar3"
+        app:layout_constraintStart_toStartOf="@+id/avatar3"
         app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <LinearLayout

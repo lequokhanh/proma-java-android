@@ -1,9 +1,11 @@
 package com.nt118.proma.ui.image;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,8 +27,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SetImage extends AppCompatActivity {
     private ImageView imgBack;
     private GridLayout grid;
-    private MutableLiveData<Integer> selectedImage = new MutableLiveData<>();
+    private final MutableLiveData<Integer> selectedImage = new MutableLiveData<>();
     private TextView title_set_image;
+    private List<Integer> images = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,37 +40,10 @@ public class SetImage extends AppCompatActivity {
 
         onClickBack();
 
-//        putSquareImageToGrid();
-        putCircleImageToGrid();
     }
 
 
     private void putCircleImageToGrid() {
-
-        List<Integer> images = new ArrayList<>();
-        images.add(R.drawable.avatar1);
-        images.add(R.drawable.avatar2);
-        images.add(R.drawable.avatar3);
-        images.add(R.drawable.avatar4);
-        images.add(R.drawable.avatar5);
-        images.add(R.drawable.avatar6);
-        images.add(R.drawable.avatar7);
-        images.add(R.drawable.avatar8);
-        images.add(R.drawable.avatar9);
-        images.add(R.drawable.avatar10);
-        images.add(R.drawable.avatar11);
-        images.add(R.drawable.avatar12);
-        images.add(R.drawable.avatar13);
-        images.add(R.drawable.avatar14);
-        images.add(R.drawable.avatar15);
-        images.add(R.drawable.avatar16);
-        images.add(R.drawable.avatar17);
-        images.add(R.drawable.avatar18);
-        images.add(R.drawable.avatar19);
-        images.add(R.drawable.avatar20);
-        images.add(R.drawable.avatar21);
-        images.add(R.drawable.avatar22);
-        images.add(R.drawable.avatar23);
         selectedImage.setValue(-1);
         for (Integer image : images) {
             CircleImageView imageView = new CircleImageView(this);
@@ -86,10 +62,10 @@ public class SetImage extends AppCompatActivity {
                     selectedImage.setValue(-1);
                     return;
                 }
-                selectedImage.setValue(image);
+                selectedImage.setValue(images.indexOf(image));
             });
             selectedImage.observe(this, integer -> {
-                if (Objects.equals(integer, image)) {
+                if (Objects.equals(integer, images.indexOf(image))) {
                     imageView.setBorderColor(Color.parseColor("#007AFF"));
                     float pxBorderWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
                     imageView.setBorderWidth((int) pxBorderWidth);
@@ -101,25 +77,6 @@ public class SetImage extends AppCompatActivity {
     }
 
     private void putSquareImageToGrid() {
-        List<Integer> images = new ArrayList<>();
-        images.add(R.drawable.cover1);
-        images.add(R.drawable.cover2);
-        images.add(R.drawable.cover3);
-        images.add(R.drawable.cover4);
-        images.add(R.drawable.cover5);
-        images.add(R.drawable.cover6);
-        images.add(R.drawable.cover7);
-        images.add(R.drawable.cover8);
-        images.add(R.drawable.cover9);
-        images.add(R.drawable.cover10);
-        images.add(R.drawable.cover11);
-        images.add(R.drawable.cover12);
-        images.add(R.drawable.cover13);
-        images.add(R.drawable.cover14);
-        images.add(R.drawable.cover15);
-        images.add(R.drawable.cover16);
-        images.add(R.drawable.cover17);
-        images.add(R.drawable.cover18);
         selectedImage.setValue(-1);
         for (Integer image : images) {
             CardView img_card = (CardView) getLayoutInflater().inflate(R.layout.img_card, null);
@@ -140,10 +97,10 @@ public class SetImage extends AppCompatActivity {
                     selectedImage.setValue(-1);
                     return;
                 }
-                selectedImage.setValue(image);
+                selectedImage.setValue(images.indexOf(image));
                 });
             selectedImage.observe(this, integer -> {
-                if (Objects.equals(integer, image)) {
+                if (Objects.equals(integer, images.indexOf(image))) {
                     border.setVisibility(View.VISIBLE);
                 } else {
                     border.setVisibility(View.INVISIBLE);
@@ -157,9 +114,25 @@ public class SetImage extends AppCompatActivity {
     }
 
     private void InitUi() {
+        Intent intent = getIntent();
+        String type = intent.getStringExtra("type");
+        images = intent.getIntegerArrayListExtra("images");
         imgBack = findViewById(R.id.img_Back);
         grid = findViewById(R.id.grid);
         title_set_image = findViewById(R.id.title_set_image);
-        title_set_image.setText("Set avatar");
+        if (type.equals("avatar")) {
+            title_set_image.setText("Set avatar");
+            putCircleImageToGrid();
+        } else {
+            title_set_image.setText("Set cover");
+            putSquareImageToGrid();
+        }
+        Button apply = findViewById(R.id.applybtn);
+        apply.setOnClickListener(v -> {
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("image", selectedImage.getValue());
+            setResult(RESULT_OK, returnIntent);
+            finish();
+        });
     }
 }

@@ -35,7 +35,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.databinding.ActivityMainBinding;
-import com.nt118.proma.ui.home.HomeFragment;
 import com.nt118.proma.ui.login.CompleteProfile;
 import com.nt118.proma.ui.login.Login;
 import com.nt118.proma.ui.member.AddMember;
@@ -46,7 +45,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MainActivity extends AppCompatActivity {
@@ -117,18 +115,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                         CalendarView datePicker = view2.findViewById(R.id.datePicker);
                         if (deadlineView.getVisibility() == View.VISIBLE) {
-                            if (deadlineView.getText().toString().equals("Today")) {
-                                datePicker.setDate(new Date().getTime());
-                            } else if (deadlineView.getText().toString().equals("Tomorrow")) {
-                                datePicker.setDate(new Date().getTime() + 86400000);
-                            } else {
-                                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
-                                try {
-                                    Date date = formatter.parse(deadlineView.getText().toString());
-                                    datePicker.setDate(date.getTime());
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+                            try {
+                                Date date = formatter.parse(deadlineView.getText().toString());
+                                datePicker.setDate(date.getTime());
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
                         isDatePickerShowing.set(true);
@@ -179,16 +171,8 @@ public class MainActivity extends AppCompatActivity {
                             deadlineDate.setValue(new Date(year - 1900, month, dayOfMonth));
                         });
                         applyBtn.setOnClickListener(v2 -> {
-                            String deadline = Optional.of(deadlineDate.getValue()).map(date -> {
-                                if (date.getDate() == new Date().getDate()) {
-                                    return "Today";
-                                } else if (date.getDate() == new Date().getDate() + 1) {
-                                    return "Tomorrow";
-                                } else {
-                                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
-                                    return formatter.format(date);
-                                }
-                            }).orElse("");
+                            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+                            String deadline = formatter.format(deadlineDate.getValue());
                             deadlineView.setText(deadline);
                             deadlineView.setVisibility(View.VISIBLE);
                             bottomSheetDialog1.dismiss();

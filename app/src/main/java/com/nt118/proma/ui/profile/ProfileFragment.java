@@ -26,8 +26,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
 import com.nt118.proma.databinding.FragmentProfileBinding;
+import com.nt118.proma.model.ImageArray;
 
 import java.util.concurrent.atomic.AtomicReference;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
 
@@ -42,8 +45,10 @@ public class ProfileFragment extends Fragment {
         TextView logout = binding.logout;
         AtomicReference<Boolean> isDialogShowing = new AtomicReference<>(false);
         TextView username = binding.username;
+        CircleImageView avatar = binding.avatar3;
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("user", MODE_PRIVATE);
         String name = sharedPreferences.getString("name", "");
+        avatar.setImageResource(new ImageArray().getAvatarImage().get(sharedPreferences.getInt("avatar", 0)));
         username.setText(name);
         logout.setOnClickListener(v -> {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());

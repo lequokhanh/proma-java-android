@@ -28,7 +28,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -176,7 +175,11 @@ public class Login extends AppCompatActivity {
                             editor.putString("name", task1.getResult().getDocuments().get(0).getString("name"));
                             editor.putString("avatar", task1.getResult().getDocuments().get(0).getString("avatar"));
                         }
-                        editor.putBoolean("isCompletedProfile", !(task1.getResult().isEmpty() || task1.getResult().getDocuments().get(0).getString("name") == null || task1.getResult().getDocuments().get(0).getString("dob") == null || task1.getResult().getDocuments().get(0).getString("phone_number") == null));
+                        editor.putBoolean("isCompletedProfile", !(task1.getResult().isEmpty()
+                                || task1.getResult().getDocuments().get(0).getString("name") == null
+                                || task1.getResult().getDocuments().get(0).getString("dob") == null
+                                || task1.getResult().getDocuments().get(0).getString("phone_number") == null
+                                || task1.getResult().getDocuments().get(0).getLong("avatar") == null));
                         editor.putBoolean("rememberMe", rememberMe.isChecked());
                         editor.apply();
                         Intent intent = new Intent(Login.this, MainActivity.class);

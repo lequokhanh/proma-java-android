@@ -1,6 +1,7 @@
 package com.nt118.proma.ui.home;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -16,12 +17,10 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Space;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -33,7 +32,7 @@ import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
 import com.nt118.proma.databinding.FragmentHomeBinding;
-import com.nt118.proma.model.Task;
+import com.nt118.proma.model.ImageArray;
 import com.nt118.proma.ui.project.ProjectDetail;
 import com.nt118.proma.ui.search.SearchView;
 import com.nt118.proma.ui.task.AllTask;
@@ -43,15 +42,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HomeFragment extends Fragment {
 
@@ -64,14 +62,17 @@ public class HomeFragment extends Fragment {
                 new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", getActivity().MODE_PRIVATE);
+        getActivity();
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
         FloatingActionButton searchButton = root.findViewById(R.id.search_button);
         searchButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), SearchView.class);
             startActivity(intent);
         });
         TextView username = root.findViewById(R.id.username);
+        CircleImageView avatar = root.findViewById(R.id.avatarView);
         username.setText(sharedPreferences.getString("name", ""));
+        avatar.setImageResource(new ImageArray().getAvatarImage().get(sharedPreferences.getInt("avatar", -1)));
         loadUI();
         handleFiresrtoreChange();
         SwipeRefreshLayout swipeRefresh = binding.swipeRefresh;
