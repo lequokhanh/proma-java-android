@@ -221,22 +221,24 @@ public class CompleteProfile extends AppCompatActivity {
         }
         db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                if (task.getResult().getDocuments().size() == 0) {
+                if (task.getResult().getDocuments().isEmpty()) {
                     Map<String, Object> userMap = new HashMap<>();
                     userMap.put("email", email);
                     userMap.put("avatar", selectedImage.getValue());
                     userMap.put("name", etFullname.getText().toString());
                     userMap.put("phone_number", etPhoneNumber.getText().toString());
                     userMap.put("dob", etDOB.getText().toString());
+                    userMap.put("last_login", new Date());
                     db.collection("users").add(userMap);
                     Intent intent = new Intent(CompleteProfile.this, MainActivity.class);
                     startActivity(intent);
                     return;
+                } else {
+                    task.getResult().getDocuments().get(0).getReference().update("avatar", selectedImage.getValue());
+                    task.getResult().getDocuments().get(0).getReference().update("name", etFullname.getText().toString());
+                    task.getResult().getDocuments().get(0).getReference().update("phone_number", etPhoneNumber.getText().toString());
+                    task.getResult().getDocuments().get(0).getReference().update("dob", etDOB.getText().toString());
                 }
-                task.getResult().getDocuments().get(0).getReference().update("avatar", selectedImage.getValue());
-                task.getResult().getDocuments().get(0).getReference().update("name", etFullname.getText().toString());
-                task.getResult().getDocuments().get(0).getReference().update("phone_number", etPhoneNumber.getText().toString());
-                task.getResult().getDocuments().get(0).getReference().update("dob", etDOB.getText().toString());
                 SharedPreferences.Editor editor = getSharedPreferences("user", MODE_PRIVATE).edit();
                 editor.putInt("avatar", selectedImage.getValue());
                 editor.putString("name", etFullname.getText().toString());
