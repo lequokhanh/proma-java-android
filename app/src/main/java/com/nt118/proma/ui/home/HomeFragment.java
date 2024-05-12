@@ -44,6 +44,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -106,7 +107,11 @@ public class HomeFragment extends Fragment {
         ProgressBar loadingHome = root.findViewById(R.id.loadingHome);
         ScrollView homeLayout = root.findViewById(R.id.homeLayout);
         loadingHome.setVisibility(View.VISIBLE);
-        db.collection("projects").where(Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", email))).get().addOnCompleteListener(task -> {
+        //member : {email, isAccepted}
+        Map<String, Object> member = new HashMap<>();
+        member.put("email", email);
+        member.put("isAccepted", true);
+        db.collection("projects").where(Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", member))).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (!task.getResult().getDocuments().isEmpty()) {
                     View homeContainer = inflater.inflate(R.layout.home_container, null);
@@ -126,15 +131,6 @@ public class HomeFragment extends Fragment {
                     int index = 0;
                     for (int i = 1; i < task.getResult().getDocuments().size(); i++) {
                         try {
-                            if (task.getResult().getDocuments().get(i).getString("deadline").equals("Today")) {
-                                index = i;
-                                break;
-                            }
-                            if (task.getResult().getDocuments().get(i).getString("deadline").equals("Tomorrow")) {
-                                index = i;
-                                break;
-                            }
-
                             Date deadline = sdf.parse(task.getResult().getDocuments().get(i).getString("deadline"));
                             if (deadline.after(today) && deadline.before(sdf.parse(task.getResult().getDocuments().get(index).getString("deadline")))) {
                                 index = i;
@@ -144,7 +140,7 @@ public class HomeFragment extends Fragment {
                         }
                     }
                     try {
-                        if (index == 0 && !task.getResult().getDocuments().get(index).getString("deadline").equals("Today") && !task.getResult().getDocuments().get(index).getString("deadline").equals("Tomorrow") && sdf.parse(task.getResult().getDocuments().get(index).getString("deadline")).before(today)) {
+                        if (index == 0 && sdf.parse(task.getResult().getDocuments().get(index).getString("deadline")).before(today)) {
                             for (int i = 1; i < task.getResult().getDocuments().size(); i++) {
                                 try {
                                     Date deadline = sdf.parse(task.getResult().getDocuments().get(i).getString("deadline"));
