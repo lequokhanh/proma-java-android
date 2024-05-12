@@ -188,6 +188,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
+        android:id="@+id/textView44"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="The review date has not yet arrived !"
@@ -201,6 +202,23 @@
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
         android:background="@drawable/rounded_corner_14_gr"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/information" />
+    <Button
+        android:id="@+id/btn_review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Review"
+        android:layout_marginTop="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="17sp"
+        android:fontFamily="@font/roboto_bold"
+        android:gravity="center"
+        android:paddingVertical="17dp"
+        android:paddingHorizontal="21dp"
+        android:letterSpacing="0.001"
+        android:textAllCaps="false"
+        app:cornerRadius="12dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/information" />
 

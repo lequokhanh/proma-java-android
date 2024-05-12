@@ -70,7 +70,7 @@
         android:gravity="left"
         android:textFontWeight="400"
         android:lineHeight="20dp"
-        android:hint="Quite good"
+        android:text="Quite good"
         android:inputType="text"
         android:paddingStart="14dp"
         android:paddingTop="16dp"
