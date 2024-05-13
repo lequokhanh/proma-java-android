@@ -128,6 +128,7 @@
         app:iconGravity="start"
         app:iconPadding="2dp"
         app:iconSize="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
         app:layout_constraintEnd_toEndOf="@+id/editTextText3"
         app:layout_constraintTop_toTopOf="@+id/imageView2" />
 
@@ -135,7 +136,8 @@
         android:id="@+id/imageView2"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        app:layout_constraintStart_toStartOf="@+id/editTextText3"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="@+id/imageView21"
         app:layout_constraintTop_toBottomOf="@+id/imageView21"
         app:srcCompat="@drawable/ic_team_modal" />
 
@@ -145,7 +147,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:fontFamily="@font/roboto_medium"
-        android:text="Team"
+        android:text="Leader"
         android:textColor="#8E8E93"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView21"
