@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.nt118.proma.R;
 import com.nt118.proma.databinding.FragmentHomeBinding;
 import com.nt118.proma.model.ImageArray;
@@ -55,7 +56,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
-
+    private ListenerRegistration projectListener;
+    private ListenerRegistration taskListener;
     private View root;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -285,7 +287,7 @@ public class HomeFragment extends Fragment {
         }
         String email = user.getProviderData().get(1).getEmail();
         // listen to changes in projects collection
-        db.collection("projects").where(Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", email))).addSnapshotListener((value, error) -> {
+        projectListener = db.collection("projects").where(Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", email))).addSnapshotListener((value, error) -> {
             if (error != null) {
                 return;
             }
@@ -297,7 +299,7 @@ public class HomeFragment extends Fragment {
             if (task1.isSuccessful()) {
                 if (!task1.getResult().getDocuments().isEmpty()) {
                     String projectId = task1.getResult().getDocuments().get(0).getId();
-                    db.collection("tasks").whereEqualTo("project_id", projectId).addSnapshotListener((value, error) -> {
+                    taskListener = db.collection("tasks").whereEqualTo("project_id", projectId).addSnapshotListener((value, error) -> {
                         if (error != null) {
                             return;
                         }
@@ -310,10 +312,17 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    // remove addSnapshotListener when fragment is destroyed
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        if (projectListener != null) {
+            projectListener.remove();
+        }
+        if (taskListener != null) {
+            taskListener.remove();
+        }
     }
 
 }
