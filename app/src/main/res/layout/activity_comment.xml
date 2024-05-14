@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="#F9FAFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.task.Comment">
@@ -261,27 +262,39 @@
 <!--                app:layout_optimizationLevel="graph_wrap" />-->
 <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 <!--    </LinearLayout>-->
+    <ScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView20">
+    </ScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="22dp"
-        android:layout_marginVertical="8dp"
+        android:background="#FFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <EditText
             android:id="@+id/editTextText"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="40dp"
             android:background="@drawable/rounded_corner_8_gr"
             android:backgroundTint="#F2F2F7"
             android:drawableStart="@drawable/ic_edit"
             android:drawablePadding="8dp"
             android:fontFamily="@font/roboto"
+            android:layout_marginVertical="8dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="16dp"
             android:hint="Comment"
             android:inputType="text"
             android:lineHeight="20dp"
@@ -299,6 +312,7 @@
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="22dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -36,7 +36,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="18dp"
-        app:layout_constraintBottom_toTopOf="@+id/etDescProject"
+        app:layout_constraintBottom_toTopOf="@+id/etReviewProject"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -80,7 +80,7 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/etDescProject"
+        android:id="@+id/etReviewProject"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:minHeight="171dp"
