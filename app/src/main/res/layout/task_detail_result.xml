@@ -1,208 +1,459 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/project_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#F9FAFF"
-    android:backgroundTint="#F9FAFF"
-    android:scrollbars="none">
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="270dp"
-        android:layout_marginTop="-24dp"
-        android:outlineAmbientShadowColor="#00FFFFFF"
-        android:outlineSpotShadowColor="#00FFFFFF"
-        app:cardCornerRadius="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="fill_horizontal"
-            android:adjustViewBounds="false"
-            android:background="#80D3D3D3"
-            android:scaleType="centerCrop"
-            android:src="@drawable/cover1" />
-
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/rounded_corner_24_white"
+        >
 
     <ImageView
-        android:id="@+id/img_Back"
+        android:id="@+id/imageView10"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="50dp"
-        android:elevation="10dp"
-        android:src="@drawable/ic_arrow_left"
+        android:src="@drawable/ic_document"
+        android:layout_marginVertical="16dp"
+        android:layout_marginHorizontal="18dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView20"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
-        android:elevation="10dp"
-        android:fontFamily="@font/roboto_bold"
-        android:text="Task Detail"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="@+id/img_Back"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/img_Back" />
-
     <ImageView
-        android:id="@+id/menu_btn"
+        android:id="@+id/imageView11"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginEnd="22dp"
-        android:elevation="10dp"
-        android:foregroundTint="#FFFFFF"
-        android:src="@drawable/three_dot"
-        app:layout_constraintBottom_toBottomOf="@+id/textView20"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView20"
-        app:tint="#FFFFFF" />
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_link"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/imageView10"
+        app:layout_constraintTop_toBottomOf="@+id/imageView10" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/memberAvatars"
+    <TextView
+        android:id="@+id/textView25"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="22dp"
-        android:layout_marginBottom="15dp"
-        android:elevation="10dp"
-        app:layout_constraintBottom_toBottomOf="@id/cardView"
-        app:layout_constraintEnd_toEndOf="@id/cardView">
+        android:layout_marginStart="28dp"
+        android:fontFamily="@font/roboto_medium"
+        android:text="Attachment"
+        android:textColor="#8E8E93"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView10"
+        app:layout_constraintStart_toEndOf="@+id/imageView10"
+        app:layout_constraintTop_toTopOf="@+id/imageView10" />
 
-        <ImageView
-            android:id="@+id/imageView16"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="-12dp"
-            android:elevation="12dp"
-            android:src="@drawable/avatar1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView17" />
+    <TextView
+        android:id="@+id/textView26"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_medium"
+        android:text="Link"
+        android:textColor="#8E8E93"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView11"
+        app:layout_constraintStart_toStartOf="@+id/textView25"
+        app:layout_constraintTop_toTopOf="@+id/imageView11"
+        app:layout_constraintVertical_bias="1.0" />
 
-        <ImageView
-            android:id="@+id/imageView17"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="-12dp"
-            android:elevation="11dp"
-            android:src="@drawable/avatar2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView18" />
+    <Button
+        android:id="@+id/signoutBtn"
+        android:layout_width="68dp"
+        android:layout_height="24dp"
+        android:background="@drawable/rounded_corner_24_blue"
+        android:backgroundTint="#007AFF"
+        android:fontFamily="@font/roboto_bold"
+        android:gravity="center|start"
+        android:includeFontPadding="false"
+        android:outlineProvider="none"
+        android:padding="0dp"
+        android:layout_marginRight="18dp"
+        android:paddingStart="12dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:text="Add"
+        android:textAlignment="gravity"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        app:icon="@drawable/ic_add_circle"
+        app:iconGravity="start"
+        app:iconPadding="2dp"
+        app:iconSize="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView10" />
 
-        <ImageView
-            android:id="@+id/imageView18"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:elevation="10dp"
-            android:src="@drawable/avatar3"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="68dp"
+        android:layout_height="24dp"
+        android:background="@drawable/rounded_corner_24_blue"
+        android:backgroundTint="#007AFF"
+        android:fontFamily="@font/roboto_bold"
+        android:layout_marginRight="18dp"
+        android:gravity="center|start"
+        android:includeFontPadding="false"
+        android:outlineProvider="none"
+        android:padding="0dp"
+        android:paddingStart="12dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:text="Add"
+        android:textAlignment="gravity"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        app:icon="@drawable/ic_add_circle"
+        app:iconGravity="start"
+        app:iconPadding="2dp"
+        app:iconSize="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView11"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView11" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <TextView
-        android:id="@+id/textView22"
+        <TextView
+        android:id="@+id/textView27"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
         android:layout_marginTop="15dp"
         android:fontFamily="@font/roboto_bold"
-        android:text="Meeting With Client"
+        android:text="Comment (4)"
         android:textColor="#000000"
-        android:textSize="28sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardView" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
     <TextView
-        android:id="@+id/textView21"
+        android:id="@+id/textView28"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:fontFamily="@font/roboto_regular"
-        android:text="Brief Project LinCop with Client"
-        android:textColor="#8E8E93"
-        android:textSize="17sp"
-        app:layout_constraintStart_toStartOf="@+id/textView22"
-        app:layout_constraintTop_toBottomOf="@+id/textView22" />
-
-    <TextView
-        android:id="@+id/deadlineView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/rounded_corner_24_blue"
         android:fontFamily="@font/roboto_bold"
-        android:paddingHorizontal="8dp"
-        android:paddingVertical="4dp"
-        android:text="Date 12 Okt 2023"
-        android:textColor="#FFFFFF"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@+id/textView21"
-        app:layout_constraintTop_toBottomOf="@+id/textView21" />
+        android:text="More All"
+        android:textColor="#007AFF"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView27"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView27" />
 
-    <LinearLayout
-        android:id="@+id/tabContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="36dp"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="@+id/deadlineView"
-        app:layout_constraintTop_toBottomOf="@+id/deadlineView">
+    <ScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView27">
 
-        <TextView
-            android:id="@+id/resultTab"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_corner_24_blue"
-            android:fontFamily="@font/roboto_bold"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp"
-            android:text="Result"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/informationTab"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_corner_24_bw"
-            android:fontFamily="@font/roboto_medium"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp"
-            android:text="Information"
-            android:textAlignment="center"
-            android:textColor="#007AFF" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp">
 
-        <TextView
-            android:id="@+id/subtaskTab"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_corner_24_bw"
-            android:fontFamily="@font/roboto_medium"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp"
-            android:text="Sub - Task"
-            android:textAlignment="center"
-            android:textColor="#007AFF" />
+                <ImageView
+                    android:id="@+id/imageView123"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/avatar1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/textView293"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="Angel Vaccaro"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView123"
+                    app:layout_constraintStart_toEndOf="@+id/imageView123"
+                    app:layout_constraintTop_toTopOf="@+id/imageView123" />
+
+                <TextView
+                    android:id="@+id/textView313"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="1 Minutes Ago"
+                    android:textColor="#7C7C80"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView293"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/textView293" />
+
+                <TextView
+                    android:id="@+id/textView323"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto_regular"
+                    android:maxEms="10"
+                    android:maxLength="200"
+                    android:maxLines="2"
+                    android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"
+                    android:textColor="#444446"
+                    android:textSize="15sp"
+                    app:flow_wrapMode="chain"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/textView293"
+                    app:layout_constraintTop_toBottomOf="@+id/textView293"
+                    app:layout_optimizationLevel="graph_wrap" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:id="@+id/imageView121"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/avatar1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView291"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="Angel Vaccaro"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView121"
+                    app:layout_constraintStart_toEndOf="@+id/imageView121"
+                    app:layout_constraintTop_toTopOf="@+id/imageView121" />
+
+                <TextView
+                    android:id="@+id/textView311"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="1 Minutes Ago"
+                    android:textColor="#7C7C80"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView291"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/textView291" />
+
+                <TextView
+                    android:id="@+id/textView321"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto_regular"
+                    android:maxEms="10"
+                    android:maxLength="200"
+                    android:maxLines="2"
+                    android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"
+                    android:textColor="#444446"
+                    android:textSize="15sp"
+                    app:flow_wrapMode="chain"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/textView291"
+                    app:layout_constraintTop_toBottomOf="@+id/textView291"
+                    app:layout_optimizationLevel="graph_wrap" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:id="@+id/imageView122"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/avatar1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView292"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="Angel Vaccaro"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView122"
+                    app:layout_constraintStart_toEndOf="@+id/imageView122"
+                    app:layout_constraintTop_toTopOf="@+id/imageView122" />
+
+                <TextView
+                    android:id="@+id/textView312"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="1 Minutes Ago"
+                    android:textColor="#7C7C80"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView292"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/textView292" />
+                <TextView
+                    android:id="@+id/textView322"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto_regular"
+                    android:maxEms="10"
+                    android:maxLength="200"
+                    android:maxLines="2"
+                    android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"
+                    android:textColor="#444446"
+                    android:textSize="15sp"
+                    app:flow_wrapMode="chain"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/textView292"
+                    app:layout_constraintTop_toBottomOf="@+id/textView292"
+                    app:layout_optimizationLevel="graph_wrap" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:id="@+id/imageView124"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/avatar1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView294"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="Angel Vaccaro"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView124"
+                    app:layout_constraintStart_toEndOf="@+id/imageView124"
+                    app:layout_constraintTop_toTopOf="@+id/imageView124" />
+
+                <TextView
+                    android:id="@+id/textView314"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="1 Minutes Ago"
+                    android:textColor="#7C7C80"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView294"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/textView294" />
+
+                <TextView
+                    android:id="@+id/textView324"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto_regular"
+                    android:maxEms="10"
+                    android:maxLength="200"
+                    android:maxLines="2"
+                    android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"
+                    android:textColor="#444446"
+                    android:textSize="15sp"
+                    app:flow_wrapMode="chain"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/textView294"
+                    app:layout_constraintTop_toBottomOf="@+id/textView294"
+                    app:layout_optimizationLevel="graph_wrap" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:id="@+id/imageView12"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/avatar1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView29"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="Angel Vaccaro"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView12"
+                    app:layout_constraintStart_toEndOf="@+id/imageView12"
+                    app:layout_constraintTop_toTopOf="@+id/imageView12" />
+
+                <TextView
+                    android:id="@+id/textView31"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="1 Minutes Ago"
+                    android:textColor="#7C7C80"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView29"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/textView29" />
+
+                <TextView
+                    android:id="@+id/textView32"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto_regular"
+                    android:maxEms="10"
+                    android:maxLength="200"
+                    android:maxLines="2"
+                    android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"
+                    android:textColor="#444446"
+                    android:textSize="15sp"
+                    app:flow_wrapMode="chain"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/textView29"
+                    app:layout_constraintTop_toBottomOf="@+id/textView29"
+                    app:layout_optimizationLevel="graph_wrap" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

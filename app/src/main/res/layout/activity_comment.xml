@@ -49,239 +49,238 @@
         app:layout_constraintTop_toTopOf="@+id/textView20"
         />
 
-    <LinearLayout
-        android:id="@+id/list_comment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView20">
+<!--    <LinearLayout-->
+<!--        android:id="@+id/list_comment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        android:orientation="vertical"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textView20">-->
 
-        <include
-            layout="@layout/item_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+<!--        <include-->
+<!--            layout="@layout/item_comment"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            />-->
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="18dp"
-            android:layout_marginVertical="12dp"
-            android:layout_marginBottom="20dp">
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_marginHorizontal="18dp"-->
+<!--            android:layout_marginVertical="12dp"-->
+<!--            android:layout_marginBottom="20dp">-->
 
-            <ImageView
-                android:id="@+id/imageView121"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/avatar1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+<!--            <ImageView-->
+<!--                android:id="@+id/imageView121"-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:src="@drawable/avatar1"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
 
-            <TextView
-                android:id="@+id/textView291"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:fontFamily="@font/roboto_bold"
-                android:text="Angel Vaccaro"
-                android:textColor="#000000"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView121"
-                app:layout_constraintStart_toEndOf="@+id/imageView121"
-                app:layout_constraintTop_toTopOf="@+id/imageView121" />
+<!--            <TextView-->
+<!--                android:id="@+id/textView291"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="12dp"-->
+<!--                android:fontFamily="@font/roboto_bold"-->
+<!--                android:text="Angel Vaccaro"-->
+<!--                android:textColor="#000000"-->
+<!--                android:textSize="15sp"-->
+<!--                android:textStyle="bold"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/imageView121"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/imageView121"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/imageView121" />-->
 
-            <TextView
-                android:id="@+id/textView321"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/roboto_regular"
-                android:maxEms="10"
-                android:maxLength="200"
-                android:maxLines="2"
-                android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"
-                android:textColor="#444446"
-                android:textSize="15sp"
-                app:flow_wrapMode="chain"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView291"
-                app:layout_constraintTop_toBottomOf="@+id/textView291"
-                app:layout_optimizationLevel="graph_wrap" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+<!--            <TextView-->
+<!--                android:id="@+id/textView321"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="4dp"-->
+<!--                android:ellipsize="end"-->
+<!--                android:fontFamily="@font/roboto_regular"-->
+<!--                android:maxEms="10"-->
+<!--                android:maxLength="200"-->
+<!--                android:maxLines="2"-->
+<!--                android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"-->
+<!--                android:textColor="#444446"-->
+<!--                android:textSize="15sp"-->
+<!--                app:flow_wrapMode="chain"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/textView291"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/textView291"-->
+<!--                app:layout_optimizationLevel="graph_wrap" />-->
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="18dp"
-            android:layout_marginVertical="12dp"
-            android:layout_marginBottom="20dp">
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_marginHorizontal="18dp"-->
+<!--            android:layout_marginVertical="12dp"-->
+<!--            android:layout_marginBottom="20dp">-->
 
-            <ImageView
-                android:id="@+id/imageView122"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/avatar1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+<!--            <ImageView-->
+<!--                android:id="@+id/imageView122"-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:src="@drawable/avatar1"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
 
-            <TextView
-                android:id="@+id/textView292"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:fontFamily="@font/roboto_bold"
-                android:text="Angel Vaccaro"
-                android:textColor="#000000"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView122"
-                app:layout_constraintStart_toEndOf="@+id/imageView122"
-                app:layout_constraintTop_toTopOf="@+id/imageView122" />
+<!--            <TextView-->
+<!--                android:id="@+id/textView292"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="12dp"-->
+<!--                android:fontFamily="@font/roboto_bold"-->
+<!--                android:text="Angel Vaccaro"-->
+<!--                android:textColor="#000000"-->
+<!--                android:textSize="15sp"-->
+<!--                android:textStyle="bold"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/imageView122"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/imageView122"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/imageView122" />-->
 
-            <TextView
-                android:id="@+id/textView322"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/roboto_regular"
-                android:maxEms="10"
-                android:maxLength="200"
-                android:maxLines="2"
-                android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"
-                android:textColor="#444446"
-                android:textSize="15sp"
-                app:flow_wrapMode="chain"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView292"
-                app:layout_constraintTop_toBottomOf="@+id/textView292"
-                app:layout_optimizationLevel="graph_wrap" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+<!--            <TextView-->
+<!--                android:id="@+id/textView322"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="4dp"-->
+<!--                android:ellipsize="end"-->
+<!--                android:fontFamily="@font/roboto_regular"-->
+<!--                android:maxEms="10"-->
+<!--                android:maxLength="200"-->
+<!--                android:maxLines="2"-->
+<!--                android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"-->
+<!--                android:textColor="#444446"-->
+<!--                android:textSize="15sp"-->
+<!--                app:flow_wrapMode="chain"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/textView292"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/textView292"-->
+<!--                app:layout_optimizationLevel="graph_wrap" />-->
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="18dp"
-            android:layout_marginVertical="12dp"
-            android:layout_marginBottom="20dp">
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_marginHorizontal="18dp"-->
+<!--            android:layout_marginVertical="12dp"-->
+<!--            android:layout_marginBottom="20dp">-->
 
-            <ImageView
-                android:id="@+id/imageView124"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/avatar1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+<!--            <ImageView-->
+<!--                android:id="@+id/imageView124"-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:src="@drawable/avatar1"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
 
-            <TextView
-                android:id="@+id/textView294"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:fontFamily="@font/roboto_bold"
-                android:text="Angel Vaccaro"
-                android:textColor="#000000"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView124"
-                app:layout_constraintStart_toEndOf="@+id/imageView124"
-                app:layout_constraintTop_toTopOf="@+id/imageView124" />
+<!--            <TextView-->
+<!--                android:id="@+id/textView294"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="12dp"-->
+<!--                android:fontFamily="@font/roboto_bold"-->
+<!--                android:text="Angel Vaccaro"-->
+<!--                android:textColor="#000000"-->
+<!--                android:textSize="15sp"-->
+<!--                android:textStyle="bold"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/imageView124"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/imageView124"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/imageView124" />-->
 
-            <TextView
-                android:id="@+id/textView324"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/roboto_regular"
-                android:maxEms="10"
-                android:maxLength="200"
-                android:maxLines="2"
-                android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"
-                android:textColor="#444446"
-                android:textSize="15sp"
-                app:flow_wrapMode="chain"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView294"
-                app:layout_constraintTop_toBottomOf="@+id/textView294"
-                app:layout_optimizationLevel="graph_wrap" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+<!--            <TextView-->
+<!--                android:id="@+id/textView324"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="4dp"-->
+<!--                android:ellipsize="end"-->
+<!--                android:fontFamily="@font/roboto_regular"-->
+<!--                android:maxEms="10"-->
+<!--                android:maxLength="200"-->
+<!--                android:maxLines="2"-->
+<!--                android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"-->
+<!--                android:textColor="#444446"-->
+<!--                android:textSize="15sp"-->
+<!--                app:flow_wrapMode="chain"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/textView294"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/textView294"-->
+<!--                app:layout_optimizationLevel="graph_wrap" />-->
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="18dp"
-            android:layout_marginVertical="12dp"
-            android:layout_marginBottom="20dp">
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_marginHorizontal="18dp"-->
+<!--            android:layout_marginVertical="12dp"-->
+<!--            android:layout_marginBottom="20dp">-->
 
-            <ImageView
-                android:id="@+id/imageView12"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/avatar1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+<!--            <ImageView-->
+<!--                android:id="@+id/imageView12"-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:src="@drawable/avatar1"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
 
-            <TextView
-                android:id="@+id/textView29"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:fontFamily="@font/roboto_bold"
-                android:text="Angel Vaccaro"
-                android:textColor="#000000"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView12"
-                app:layout_constraintStart_toEndOf="@+id/imageView12"
-                app:layout_constraintTop_toTopOf="@+id/imageView12" />
+<!--            <TextView-->
+<!--                android:id="@+id/textView29"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="12dp"-->
+<!--                android:fontFamily="@font/roboto_bold"-->
+<!--                android:text="Angel Vaccaro"-->
+<!--                android:textColor="#000000"-->
+<!--                android:textSize="15sp"-->
+<!--                android:textStyle="bold"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/imageView12"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/imageView12"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/imageView12" />-->
 
-            <TextView
-                android:id="@+id/textView32"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/roboto_regular"
-                android:maxEms="10"
-                android:maxLength="200"
-                android:maxLines="2"
-                android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"
-                android:textColor="#444446"
-                android:textSize="15sp"
-                app:flow_wrapMode="chain"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView29"
-                app:layout_constraintTop_toBottomOf="@+id/textView29"
-                app:layout_optimizationLevel="graph_wrap" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </LinearLayout>
+<!--            <TextView-->
+<!--                android:id="@+id/textView32"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="4dp"-->
+<!--                android:ellipsize="end"-->
+<!--                android:fontFamily="@font/roboto_regular"-->
+<!--                android:maxEms="10"-->
+<!--                android:maxLength="200"-->
+<!--                android:maxLines="2"-->
+<!--                android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"-->
+<!--                android:textColor="#444446"-->
+<!--                android:textSize="15sp"-->
+<!--                app:flow_wrapMode="chain"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/textView29"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/textView29"-->
+<!--                app:layout_optimizationLevel="graph_wrap" />-->
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+<!--    </LinearLayout>-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="22dp"
-        android:paddingVertical="8dp"
+        android:layout_marginHorizontal="22dp"
+        android:layout_marginVertical="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <EditText
             android:id="@+id/editTextText"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="22dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="40dp"
             android:background="@drawable/rounded_corner_8_gr"
             android:backgroundTint="#F2F2F7"
             android:drawableStart="@drawable/ic_edit"
-            android:drawablePadding="6dp"
+            android:drawablePadding="8dp"
             android:fontFamily="@font/roboto"
             android:hint="Comment"
             android:inputType="text"
@@ -292,17 +291,14 @@
             android:textFontWeight="400"
             android:textSize="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="22dp"
-            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
