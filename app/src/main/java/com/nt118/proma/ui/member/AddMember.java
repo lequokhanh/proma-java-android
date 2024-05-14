@@ -21,14 +21,12 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -102,7 +100,7 @@ public class AddMember extends AppCompatActivity {
                 View item_member = getLayoutInflater().inflate(R.layout.item_member, null);
                 TextView email_member = item_member.findViewById(R.id.email);
                 TextView name_member = item_member.findViewById(R.id.name);
-                ImageView removeBtn = item_member.findViewById(R.id.removeBtn);
+                ImageView removeBtn = item_member.findViewById(R.id.tickBtn);
                 email_member.setText(email);
                 name_member.setText(names.getValue().get(strings.indexOf(email)));
                 removeBtn.setOnClickListener(v -> {
