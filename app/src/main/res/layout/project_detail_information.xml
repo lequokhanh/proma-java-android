@@ -217,7 +217,7 @@
         android:text="Review"
         android:textAllCaps="false"
         android:textSize="17sp"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:cornerRadius="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

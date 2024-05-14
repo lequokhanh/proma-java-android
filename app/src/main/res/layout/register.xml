@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f9faff"
@@ -41,6 +40,7 @@
     <com.google.android.material.textfield.TextInputLayout
         app:hintEnabled="false"
         app:passwordToggleEnabled="true"
+        android:inputType="text|textPassword"
         android:id="@+id/editTextText4"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
             android:ems="10"
             android:fontFamily="@font/roboto_regular"
             android:hint="Your password"
-            android:inputType="text"
+            android:inputType="text|textPassword"
             android:paddingHorizontal="14dp"
             android:paddingVertical="16dp"
             android:textSize="15sp"/>
@@ -72,6 +72,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tipRePassword"
+        android:inputType="text|textPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="21dp"
@@ -95,7 +96,7 @@
             android:ems="10"
             android:fontFamily="@font/roboto_regular"
             android:hint="Re-enter your password"
-            android:inputType="text"
+            android:inputType="text|textPassword"
             android:paddingHorizontal="14dp"
             android:paddingVertical="16dp"
             android:textSize="15sp" />

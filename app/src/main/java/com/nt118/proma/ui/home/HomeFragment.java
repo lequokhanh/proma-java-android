@@ -319,9 +319,11 @@ public class HomeFragment extends Fragment {
         binding = null;
         if (projectListener != null) {
             projectListener.remove();
+            projectListener = null;
         }
         if (taskListener != null) {
             taskListener.remove();
+            taskListener = null;
         }
     }
 
