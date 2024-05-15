@@ -19,17 +19,17 @@
         android:textColor="#FF3B30"
         android:textSize="12sp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/deadlineBtn"
-        app:layout_constraintEnd_toStartOf="@+id/deadlineBtn"
-        app:layout_constraintTop_toTopOf="@+id/deadlineBtn" />
+        app:layout_constraintBottom_toBottomOf="@+id/edit_deadlineBtn"
+        app:layout_constraintEnd_toStartOf="@+id/edit_deadlineBtn"
+        app:layout_constraintTop_toTopOf="@+id/edit_deadlineBtn" />
 
     <com.google.android.material.bottomsheet.BottomSheetDragHandleView
         android:id="@+id/bottomSheetDragHandleView"
         android:layout_width="645dp"
         android:layout_height="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView3"
@@ -37,11 +37,12 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto_bold"
         android:text="Edit Task Detail"
+        android:layout_marginBottom="32dp"
         android:textColor="#000000"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextText2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bottomSheetDragHandleView" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <EditText
         android:id="@+id/editTextText2"
@@ -55,13 +56,14 @@
         android:inputType="text"
         android:paddingStart="14dp"
         android:paddingTop="16dp"
+        android:layout_marginBottom="16dp"
         android:paddingEnd="14dp"
         android:paddingBottom="16dp"
         android:textAlignment="textStart"
         android:textSize="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextText3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <EditText
         android:id="@+id/editTextText3"
@@ -72,6 +74,7 @@
         android:ems="10"
         android:fontFamily="@font/roboto_medium"
         android:hint="Description"
+        android:layout_marginBottom="16dp"
         android:inputType="text"
         android:paddingStart="14dp"
         android:paddingTop="16dp"
@@ -79,17 +82,18 @@
         android:paddingBottom="16dp"
         android:textAlignment="textStart"
         android:textSize="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView21"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText2" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/imageView21"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView2"
+        android:layout_marginBottom="16dp"
         app:layout_constraintStart_toStartOf="@+id/editTextText3"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText3"
         app:srcCompat="@drawable/ic_team_modal" />
     <TextView
         android:id="@+id/textView5"
@@ -175,9 +179,10 @@
         android:id="@+id/imageView2"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView3"
         app:layout_constraintStart_toStartOf="@+id/imageView21"
-        app:layout_constraintTop_toBottomOf="@+id/imageView21"
         app:srcCompat="@drawable/ic_team_modal" />
     <LinearLayout
         android:id="@+id/memberList2"
@@ -191,15 +196,8 @@
         android:minHeight="24dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/imageView3"
-        app:layout_constraintEnd_toStartOf="@+id/addMemberBtn"
+        app:layout_constraintEnd_toStartOf="@+id/addMemberBtn2"
         app:layout_constraintStart_toEndOf="@+id/textView5" />
-
-
-
-
-
-
-
 
 
     <ImageView
@@ -207,8 +205,9 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView4"
         app:layout_constraintStart_toStartOf="@+id/imageView2"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
         app:srcCompat="@drawable/ic_category" />
 
     <Button
@@ -247,13 +246,14 @@
         app:layout_constraintBottom_toBottomOf="@+id/imageView3"
         app:layout_constraintStart_toStartOf="@+id/textView5"
         app:layout_constraintTop_toTopOf="@+id/imageView3" />
+
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/signoutBtn"
         app:layout_constraintStart_toStartOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3"
         app:srcCompat="@drawable/ic_calendar" />
     <Button
         android:id="@+id/edit_deadlineBtn"
@@ -292,11 +292,12 @@
         app:layout_constraintBottom_toBottomOf="@+id/imageView4"
         app:layout_constraintStart_toStartOf="@+id/textView5"
         app:layout_constraintTop_toTopOf="@+id/imageView4" />
+
     <Button
         android:id="@+id/signoutBtn"
         android:layout_width="331dp"
         android:layout_height="56dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginBottom="13dp"
         android:background="@drawable/rounded_corner_12_blue"
         android:fontFamily="@font/roboto_bold"
         android:letterSpacing="0.02"
@@ -304,9 +305,9 @@
         android:text="Save"
         android:textAllCaps="false"
         android:textSize="17sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
