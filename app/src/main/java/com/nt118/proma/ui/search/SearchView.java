@@ -82,7 +82,7 @@ public class SearchView extends AppCompatActivity {
                 params.setMargins(0, 0, 0, (int) px);
                 view.setLayoutParams(params);
                 TextView recentItem = view.findViewById(R.id.name);
-                ImageView removeBtn = view.findViewById(R.id.tickBtn);
+                ImageView removeBtn = view.findViewById(R.id.removeBtn);
                 recentItem.setText(string);
                 searchRecentContainer.addView(view);
                 view.setOnClickListener(v -> {

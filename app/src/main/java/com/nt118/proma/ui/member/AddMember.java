@@ -100,7 +100,7 @@ public class AddMember extends AppCompatActivity {
                 View item_member = getLayoutInflater().inflate(R.layout.item_member, null);
                 TextView email_member = item_member.findViewById(R.id.email);
                 TextView name_member = item_member.findViewById(R.id.name);
-                ImageView removeBtn = item_member.findViewById(R.id.tickBtn);
+                ImageView removeBtn = item_member.findViewById(R.id.removeBtn);
                 email_member.setText(email);
                 name_member.setText(names.getValue().get(strings.indexOf(email)));
                 removeBtn.setOnClickListener(v -> {
