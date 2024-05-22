@@ -20,6 +20,9 @@
         android:theme="@style/Theme.TaskManager"
         tools:targetApi="31">
         <activity
+            android:name=".ui.task.ChooseLeader"
+            android:exported="false" />
+        <activity
             android:name=".ui.task.Comment"
             android:exported="false" />
         <activity
