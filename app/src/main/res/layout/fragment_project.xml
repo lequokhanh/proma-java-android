@@ -34,6 +34,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ProgressBar
+        android:id="@+id/loadingProject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
         android:layout_width="match_parent"
@@ -109,109 +120,29 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <ScrollView
-        android:id="@+id/AllProject"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:scrollbars="none"
-        android:visibility="visible"
-        app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight="wrap_content_constrained"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <include
-                layout="@layout/project_card"
-                android:layout_width="wrap_content"
-                android:layout_height="220dp"
-                android:layout_marginVertical="8dp" />
-
-            <include
-                layout="@layout/project_card"
-                android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginVertical="8dp" />
-
-            <include
-                layout="@layout/project_card"
-                android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginVertical="8dp" />
-
-            <include
-                layout="@layout/project_card"
-                android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginVertical="8dp" />
-
-            <include
-                layout="@layout/project_card"
-                android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginVertical="8dp" />
-
-            <include
-                layout="@layout/project_card"
-                android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginVertical="8dp" />
-
-            <include
-                layout="@layout/project_card"
-                android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginVertical="8dp" />
-
-        </LinearLayout>
-    </ScrollView>
-
-    <ScrollView
-        android:id="@+id/AllTask"
-        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:scrollbars="none"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView">
 
-        <LinearLayout
-            android:id="@+id/horizontalLayout1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="fill_horizontal"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView8">
+    <ScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:scrollbars="none"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-            <LinearLayout
-                android:id="@+id/leftSide"
-                android:layout_width="160dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <LinearLayout
-                android:id="@+id/linearLayout5"
-                android:layout_width="160dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"/>
-
-        </LinearLayout>
-    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

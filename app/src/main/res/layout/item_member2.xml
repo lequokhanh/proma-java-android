@@ -16,7 +16,7 @@
         android:text="Name"
         android:textColor="#000"
         android:textSize="15sp"
-        app:layout_constraintEnd_toStartOf="@+id/radioGroup"
+        app:layout_constraintEnd_toStartOf="@+id/checkBox"
         app:layout_constraintStart_toEndOf="@+id/avatar"
         app:layout_constraintTop_toTopOf="@+id/avatar" />
 
@@ -40,37 +40,24 @@
         app:layout_constraintEnd_toEndOf="@+id/name"
         app:layout_constraintStart_toStartOf="@+id/name"
         app:layout_constraintTop_toBottomOf="@+id/name" />
-
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="27dp"
-        android:layout_height="wrap_content"
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:backgroundTint="#00FFFFFF"
+        android:button="@drawable/ic_checkbox_selector_2"
+        android:clickable="true"
+        android:fontFamily="@font/roboto_regular"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:buttonIconTint="#ffffff"
+        tools:layout_editor_absoluteX="223dp"
+        tools:layout_editor_absoluteY="26dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end">
-
-            <RadioButton
-                android:id="@+id/radioButton2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:visibility="visible"
-                app:srcCompat="@drawable/ic_ticked_inside" />
-
-            <RadioButton
-                android:id="@+id/radioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:visibility="invisible"
-                app:srcCompat="@drawable/ic_tick_cycle" />
-        </FrameLayout>
-
-    </RadioGroup>
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

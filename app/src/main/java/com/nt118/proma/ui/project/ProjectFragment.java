@@ -1,12 +1,22 @@
 package com.nt118.proma.ui.project;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
+import android.widget.Space;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,23 +24,30 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
 import com.nt118.proma.databinding.FragmentProjectBinding;
 import com.nt118.proma.ui.search.SearchView;
+import com.nt118.proma.ui.task.TaskDetail;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ProjectFragment extends Fragment {
 
     private FragmentProjectBinding binding;
-
+    private String email;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         ProjectViewModel projectViewModel =
                 new ViewModelProvider(this).get(ProjectViewModel.class);
-
         binding = FragmentProjectBinding.inflate(inflater, container, false);
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("user", MODE_PRIVATE);
+        email = sharedPreferences.getString("email", "");
         View root = binding.getRoot();
         TextView searchField = binding.searchField;
         searchField.setOnClickListener(v -> {
@@ -39,6 +56,9 @@ public class ProjectFragment extends Fragment {
         });
         LinearLayout tabContainer = binding.tabContainer;
         AtomicReference<TextView> currentTab = new AtomicReference<>(binding.ProjectBtn);
+        ProgressBar loading = binding.loadingProject;
+        ScrollView scrollview = binding.scrollview;
+        showProjectList(scrollview, loading);
         for (int i = 0; i < tabContainer.getChildCount(); i++) {
             TextView child = (TextView) tabContainer.getChildAt(i);
             child.setOnClickListener(v -> {
@@ -49,24 +69,166 @@ public class ProjectFragment extends Fragment {
                 currentTab.get().setBackground(ContextCompat.getDrawable(requireContext(),R.drawable.rounded_corner_24_bw));
                 currentTab.set(child);
                 if (child.getId() == R.id.TaskBtn) {
-                    binding.AllProject.setVisibility(View.GONE);
-                    binding.AllTask.setVisibility(View.VISIBLE);
+                    showTaskList(scrollview, 0, loading);
+                } else if (child.getId() == R.id.OnGoingBtn) {
+                    showTaskList(scrollview, 1, loading);
+                } else if (child.getId() == R.id.CompletedBtn) {
+                    showTaskList(scrollview, 2, loading);
                 } else {
-                    binding.AllTask.setVisibility(View.GONE);
-                    binding.AllProject.setVisibility(View.VISIBLE);
+                    showProjectList(scrollview, loading);
                 }
             });
         }
-        LinearLayout leftSide = root.findViewById(R.id.leftSide);
-        LinearLayout rightSide = root.findViewById(R.id.linearLayout5);
-        LinearLayout taskLayout = root.findViewById(R.id.horizontalLayout1);
-        // set width of left and right side to 50% of screen width - 14dp * 2(padding) - 10dp
-        leftSide.getLayoutParams().width = (int) (getResources().getDisplayMetrics().widthPixels * 0.5 - 68);
-        rightSide.getLayoutParams().width = (int) (getResources().getDisplayMetrics().widthPixels * 0.5 - 68);
         return root;
     }
 
+    private void showProjectList(ScrollView container, ProgressBar loading) {
+        loading.setVisibility(View.VISIBLE);
+        container.removeAllViews();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        LinearLayout containerLayout = new LinearLayout(getContext());
+        db.collection("projects").whereEqualTo("user_created", email).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().getDocuments().size() == 0) {
+                    loading.setVisibility(View.GONE);
+                    return;
+                }
+                for (int i = 0; i < task.getResult().getDocuments().size(); i++) {
+                    Map<String, Object> projectItem = task.getResult().getDocuments().get(i).getData();
+                    View projectView = LayoutInflater.from(getContext()).inflate(R.layout.project_card, null);
+                    TextView projectName = projectView.findViewById(R.id.projectName);
+                    TextView projectDescription = projectView.findViewById(R.id.projectDescription);
+                    TextView tvDeadline = projectView.findViewById(R.id.deadline);
+                    TextView progressProject = projectView.findViewById(R.id.progressProject);
+                    projectName.setText(projectItem.get("name").toString());
+                    projectDescription.setText(projectItem.get("description").toString());
+                    tvDeadline.setText(projectItem.get("deadline").toString());
+                    db.collection("tasks").whereEqualTo("project_id", task.getResult().getDocuments().get(i).getId()).get().addOnCompleteListener(task2 -> {
+                        if (task2.isSuccessful()) {
+                            int totalTask = task2.getResult().getDocuments().size();
+                            int doneTask = 0;
+                            for (int j = 0; j < totalTask; j++) {
+                                if (task2.getResult().getDocuments().get(j).getLong("status") == 3) {
+                                    doneTask++;
+                                }
+                            }
+                            progressProject.setText(doneTask + "/" + totalTask);
+                        }
+                    });
+                    projectView.setOnClickListener(v -> {
+                        Intent intent = new Intent(getContext(), ProjectDetail.class);
+                        startActivity(intent);
+                    });
 
+                    Space space = new Space(getContext());
+                    space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 20));
+                    projectView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                    containerLayout.addView(projectView);
+                }
+            }
+            container.addView(containerLayout);
+            loading.setVisibility(View.GONE);
+        });
+    }
+
+    private void showTaskList(ScrollView container, int status, ProgressBar loading) {
+        loading.setVisibility(View.VISIBLE);
+        container.removeAllViews();
+        View task_list = LayoutInflater.from(getContext()).inflate(R.layout.task_list, null);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        LinearLayout leftSide = task_list.findViewById(R.id.leftSide);
+        LinearLayout rightSide = task_list.findViewById(R.id.linearLayout5);
+        leftSide.getLayoutParams().width = (int) (getResources().getDisplayMetrics().widthPixels * 0.5 - 68);
+        rightSide.getLayoutParams().width = (int) (getResources().getDisplayMetrics().widthPixels * 0.5 - 68);
+        leftSide.removeAllViews();
+        rightSide.removeAllViews();
+        AtomicInteger count = new AtomicInteger(0);
+        db.collection("projects").whereEqualTo("user_created", email).get().addOnCompleteListener(task1 -> {
+            if (task1.isSuccessful()) {
+                if (task1.getResult().getDocuments().size() == 0) {
+                    loading.setVisibility(View.GONE);
+                    return;
+                }
+                for (int j = 0; j < task1.getResult().getDocuments().size(); j++) {
+                    Map<String, Object> projectItem = task1.getResult().getDocuments().get(j).getData();
+                    String projectId = task1.getResult().getDocuments().get(j).getId();
+                    db.collection("tasks").whereEqualTo("projectId", projectId).get().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().getDocuments().size() == 0) {
+                                loading.setVisibility(View.GONE);
+                                return;
+                            }
+                            for (int i = 0; i < task.getResult().getDocuments().size(); i++) {
+                                if (task.getResult().getDocuments().get(i).getLong("status") != status && status != 0) {
+                                    continue;
+                                }
+                                count.getAndIncrement();
+                                Map<String, Object> taskItem = task.getResult().getDocuments().get(i).getData();
+                                View taskView = LayoutInflater.from(getContext()).inflate(R.layout.task_card, null);
+                                TextView taskName = taskView.findViewById(R.id.taskName);
+                                taskName.setText(taskItem.get("name").toString());
+                                String deadline = (String) taskItem.get("deadline");
+                                TextView taskDeadline = taskView.findViewById(R.id.deadline);
+                                taskDeadline.setText(deadline);
+                                TextView taskStatus = taskView.findViewById(R.id.status);
+                                if ((int) taskItem.get("status") == 1) {
+                                    taskStatus.setVisibility(View.GONE);
+                                } else if ((int) taskItem.get("status") == 2) {
+                                    taskStatus.setVisibility(View.VISIBLE);
+                                    taskStatus.setText("On going");
+                                } else {
+                                    taskStatus.setBackgroundResource(R.drawable.rounded_corner_24_blue);
+                                    taskStatus.setVisibility(View.VISIBLE);
+                                    taskStatus.setText("Done");
+                                    taskStatus.setTextColor(getResources().getColor(R.color.white));
+                                }
+                                taskView.setOnClickListener(v -> {
+                                    Intent intent = new Intent(getContext(), TaskDetail.class);
+                                    startActivity(intent);
+                                });
+                                ImageView threeDot = taskView.findViewById(R.id.threeDot);
+                                threeDot.setOnClickListener(v -> {
+                                    PopupMenu popup = new PopupMenu(getContext(), v, 5);
+                                    popup.getMenuInflater().inflate(R.menu.task_menu, popup.getMenu());
+                                    SpannableString s = new SpannableString(popup.getMenu().getItem(2).getTitle());
+                                    s.setSpan(new ForegroundColorSpan(Color.parseColor("#FF3B30")), 0, s.length(), 0);
+                                    popup.getMenu().getItem(2).setTitle(s);
+                                    try {
+                                        Field[] fields = popup.getClass().getDeclaredFields();
+                                        for (Field field : fields) {
+                                            if ("mPopup".equals(field.getName())) {
+                                                field.setAccessible(true);
+                                                Object menuPopupHelper = field.get(popup);
+                                                Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                                                Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                                                setForceIcons.invoke(menuPopupHelper, true);
+                                                break;
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    popup.show();
+                                });
+                                Space space = new Space(getContext());
+                                space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 20));
+                                taskView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                                if (count.get() % 2 == 0) {
+                                    leftSide.addView(taskView);
+                                    leftSide.addView(space);
+                                } else {
+                                    rightSide.addView(taskView);
+                                    rightSide.addView(space);
+                                }
+                            }
+                        }
+                        container.addView(task_list);
+                        loading.setVisibility(View.GONE);
+                    });
+                }
+            }
+        });
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

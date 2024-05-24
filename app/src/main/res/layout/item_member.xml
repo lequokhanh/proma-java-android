@@ -9,11 +9,11 @@
         android:id="@+id/removeBtn"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:tint="#8E8E93"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_close_circle_2" />
+        app:srcCompat="@drawable/ic_close_circle_2"
+        app:tint="#8E8E93" />
 
     <TextView
         android:id="@+id/name"
