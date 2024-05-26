@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -34,6 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
 import com.nt118.proma.model.ImageArray;
 import com.nt118.proma.ui.image.SetImage;
+import com.nt118.proma.ui.member.AddMember;
 import com.nt118.proma.ui.task.TaskDetail;
 
 import java.lang.reflect.Field;
@@ -65,151 +67,7 @@ public class ProjectDetail extends AppCompatActivity {
         FloatingActionButton create_btn = findViewById(R.id.create_task_btn);
         AtomicReference<Boolean> isDialogShowing = new AtomicReference<>(false);
         create_btn.setOnClickListener(v -> {
-            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
-            View view1 = LayoutInflater.from(this).inflate(R.layout.modal_create_task, null);
-            bottomSheetDialog.setContentView(view1);
-            if (isDialogShowing.get()) {
-                return;
-            }
-            isDialogShowing.set(true);
-            bottomSheetDialog.show();
-            bottomSheetDialog.setOnDismissListener(dialog -> {
-                isDialogShowing.set(false);
-            });
-            bottomSheetDialog.setOnCancelListener(dialog -> {
-                isDialogShowing.set(false);
-            });
-            Button deadlineBtn = view1.findViewById(R.id.deadlineBtn);
-            TextView deadlineView = view1.findViewById(R.id.deadlineView);
-            AtomicReference<Boolean> isDatePickerShowing = new AtomicReference<>(false);
-            deadlineBtn.setOnClickListener(v1 -> {
-                BottomSheetDialog bottomSheetDialog1 = new BottomSheetDialog(this);
-                View view2 = LayoutInflater.from(this).inflate(R.layout.modal_date_picker, null);
-                bottomSheetDialog1.setContentView(view2);
-                if (isDatePickerShowing.get()) {
-                    return;
-                }
-                isDatePickerShowing.set(true);
-                bottomSheetDialog1.show();
-                bottomSheetDialog1.setOnDismissListener(dialog -> {
-                    isDatePickerShowing.set(false);
-                });
-                bottomSheetDialog1.setOnCancelListener(dialog -> {
-                    isDatePickerShowing.set(false);
-                });
-                TextView timeBtn = view2.findViewById(R.id.timeBtn);
-                AtomicReference<Boolean> isTimePickerShow = new AtomicReference<>(false);
-                CalendarView datePicker = view2.findViewById(R.id.datePicker);
-                if (deadlineView.getVisibility() == View.VISIBLE) {
-                    String deadlineDate = deadlineView.getText().toString().split(" - ")[0];
-                    String deadlineTime = deadlineView.getText().toString().split(" - ")[1].replace(".", ":");
-                    if (deadlineDate.equals("Today")) {
-                        datePicker.setDate(new Date().getTime());
-                    } else if (deadlineDate.equals("Tomorrow")) {
-                        datePicker.setDate(new Date().getTime() + 86400000);
-                    } else {
-                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
-                        try {
-                            Date date = formatter.parse(deadlineDate);
-                            datePicker.setDate(date.getTime());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    timeBtn.setText(deadlineTime);
-                }
-                timeBtn.setOnClickListener(v2 -> {
-                    if (isTimePickerShow.get()) {
-                        return;
-                    }
-                    isTimePickerShow.set(true);
-                    BottomSheetDialog bottomSheetDialog2 = new BottomSheetDialog(this);
-                    View view3 = LayoutInflater.from(this).inflate(R.layout.modal_time_picker, null);
-                    bottomSheetDialog2.setContentView(view3);
-                    NumberPicker hourPicker = view3.findViewById(R.id.hourPicker);
-                    NumberPicker minutePicker = view3.findViewById(R.id.monthPicker);
-                    NumberPicker amPmPicker = view3.findViewById(R.id.yearPicker);
-                    hourPicker.setMinValue(1);
-                    hourPicker.setMaxValue(12);
-                    hourPicker.setFormatter(value -> String.format(new Locale("en"), "%02d", value));
-                    minutePicker.setMinValue(0);
-                    minutePicker.setMaxValue(59);
-                    minutePicker.setFormatter(value -> String.format(new Locale("en"), "%02d", value));
-                    ArrayList<String> amPm = new ArrayList<>();
-                    amPm.add("AM");
-                    amPm.add("PM");
-                    amPmPicker.setDisplayedValues(amPm.toArray(new String[0]));
-                    amPmPicker.setMinValue(0);
-                    amPmPicker.setMaxValue(1);
-                    amPmPicker.setValue(timeBtn.getText().toString().contains("AM") ? 0 : 1);
-                    hourPicker.setValue(timeBtn.getText().toString().contains("AM") ? Integer.parseInt(timeBtn.getText().toString().split(":")[0]) : Integer.parseInt(timeBtn.getText().toString().split(":")[0]) + 12);
-                    minutePicker.setValue(Integer.parseInt(timeBtn.getText().toString().split(":")[1].split(" ")[0]));
-                    bottomSheetDialog2.show();
-                    bottomSheetDialog2.setOnDismissListener(v3 -> {
-                        isTimePickerShow.set(false);
-                    });
-                    Button applyBtn1 = view3.findViewById(R.id.applyBtn);
-                    Button cancelBtn1 = view3.findViewById(R.id.cancelBtn);
-                    applyBtn1.setOnClickListener(v3 -> {
-                        timeBtn.setText(String.format(new Locale("en"), "%02d:%02d %s", hourPicker.getValue() > 12 ? hourPicker.getValue() - 12 : hourPicker.getValue() == 0 ? 12 : hourPicker.getValue(), minutePicker.getValue(), amPm.get(amPmPicker.getValue())));
-                        bottomSheetDialog2.dismiss();
-                    });
-                    cancelBtn1.setOnClickListener(v3 -> {
-                        bottomSheetDialog2.dismiss();
-                    });
-                });
-                MutableLiveData<Date> deadlineDate = new MutableLiveData<>(new Date(datePicker.getDate()));
-                datePicker.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
-                    deadlineDate.setValue(new Date(year - 1900, month, dayOfMonth));
-                });
-                Button monthBtn = view2.findViewById(R.id.monthBtn);
-                AtomicReference<Boolean> isMonthPicker = new AtomicReference<>(false);
-                monthBtn.setOnClickListener(v2 -> {
-                    if (isMonthPicker.get()) {
-                        return;
-                    }
-                    isMonthPicker.set(true);
-                    BottomSheetDialog monthPicker = new BottomSheetDialog(this);
-                    View monthPickerView = getLayoutInflater().inflate(R.layout.modal_month_picker, null);
-                    monthPicker.setContentView(monthPickerView);
-                    NumberPicker monthPickerNumber = monthPickerView.findViewById(R.id.monthPicker);
-                    NumberPicker yearPicker = monthPickerView.findViewById(R.id.yearPicker);
-                    monthPickerNumber.setMinValue(1);
-                    monthPickerNumber.setMaxValue(12);
-                    monthPickerNumber.setDisplayedValues(new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
-                    monthPickerNumber.setValue(deadlineDate.getValue().getMonth() + 1);
-                    yearPicker.setMinValue(1970);
-                    yearPicker.setMaxValue(2100);
-                    yearPicker.setValue(new Date().getYear() + 1900);
-                    yearPicker.setWrapSelectorWheel(false);
-                    Button applyBtn = monthPickerView.findViewById(R.id.applyBtn);
-                    Button cancelBtn = view2.findViewById(R.id.cancelBtn);
-                    applyBtn.setOnClickListener(v3 -> {
-                        Date date = new Date(yearPicker.getValue() - 1900, monthPickerNumber.getValue() - 1, 1);
-                        deadlineDate.setValue(date);
-                        monthPicker.dismiss();
-                    });
-                    cancelBtn.setOnClickListener(v3 -> monthPicker.dismiss());
-                    monthPicker.setOnDismissListener(dialog -> isMonthPicker.set(false));
-                    monthPicker.show();
-                });
-                deadlineDate.observe(this, date -> {
-                    datePicker.setDate(date.getTime());
-                });
-                Button applyBtn = view2.findViewById(R.id.applyBtn);
-                Button cancelBtn = view2.findViewById(R.id.cancelBtn);
-                applyBtn.setOnClickListener(v2 -> {
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy - ", Locale.ENGLISH);
-                    String deadline = formatter.format(deadlineDate.getValue());
-                    deadline += timeBtn.getText().toString().replace(":", ".");
-                    deadlineView.setText(deadline);
-                    deadlineView.setVisibility(View.VISIBLE);
-                    bottomSheetDialog1.dismiss();
-                });
-                cancelBtn.setOnClickListener(v2 -> {
-                    bottomSheetDialog1.dismiss();
-                });
-            });
+            showPopupMenu(isDialogShowing);
         });
         ImageView menu_btn = findViewById(R.id.menu_btn);
         menu_btn.setOnClickListener(v -> {
@@ -439,8 +297,211 @@ public class ProjectDetail extends AppCompatActivity {
         return textView;
     }
 
-    private void showPopupMenu(){
-
+    private void showPopupMenu(AtomicReference<Boolean> isDialogShowing) {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        View view1 = LayoutInflater.from(this).inflate(R.layout.modal_create_task, null);
+        bottomSheetDialog.setContentView(view1);
+        if (isDialogShowing.get()) {
+            return;
+        }
+        isDialogShowing.set(true);
+        bottomSheetDialog.show();
+        bottomSheetDialog.setOnDismissListener(dialog -> {
+            isDialogShowing.set(false);
+        });
+        bottomSheetDialog.setOnCancelListener(dialog -> {
+            isDialogShowing.set(false);
+        });
+        Button deadlineBtn = view1.findViewById(R.id.deadlineBtn);
+        TextView deadlineView = view1.findViewById(R.id.deadlineView);
+        AtomicReference<Boolean> isDatePickerShowing = new AtomicReference<>(false);
+        deadlineBtn.setOnClickListener(v1 -> {
+            showDatePicker(isDatePickerShowing, deadlineView);
+        });
+        Button addCategoryBtn = view1.findViewById(R.id.addCategoryBtn);
+        TextView categoryView = view1.findViewById(R.id.categoryView);
+        addCategoryBtn.setOnClickListener(v1 -> {
+            showCategoryDialog(categoryView);
+        });
+//        Button addMemberBtn = view1.findViewById(R.id.addMemberBtn);
+//        TextView memberList = view1.findViewById(R.id.memberList2);
+//        addMemberBtn.setOnClickListener(v1 -> {
+//            Intent intent = new Intent(this, AddMember.class);
+//            intent.putExtra("projectId", projectId);
+//            startActivity(intent);
+//        });
     }
 
+    private void showCategoryDialog(TextView categoryView) {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.modal_task_category, null);
+        bottomSheetDialog.setContentView(view);
+        bottomSheetDialog.show();
+        LinearLayout meetingCategory = view.findViewById(R.id.meetingCategory);
+        LinearLayout taskCategory = view.findViewById(R.id.taskCategory);
+        CheckBox meetingCB = view.findViewById(R.id.meetingCB);
+        CheckBox taskCB = view.findViewById(R.id.taskCB);
+        if (categoryView.getText().toString().equals("Meeting")) {
+            meetingCB.setChecked(true);
+        } else if (categoryView.getText().toString().equals("Task")) {
+            taskCB.setChecked(true);
+        }
+        meetingCategory.setOnClickListener(v -> {
+            meetingCB.setChecked(true);
+            taskCB.setChecked(false);
+        });
+        taskCategory.setOnClickListener(v -> {
+            taskCB.setChecked(true);
+            meetingCB.setChecked(false);
+        });
+        bottomSheetDialog.setOnDismissListener(dialog -> {
+            if (meetingCB.isChecked()) {
+                categoryView.setBackground(ContextCompat.getDrawable(this, R.drawable.rounded_corner_24_purple));
+                categoryView.setTextColor(Color.parseColor("#5856D6"));
+                categoryView.setText("Meeting");
+                categoryView.setVisibility(View.VISIBLE);
+            } else if (taskCB.isChecked()) {
+                categoryView.setBackground(ContextCompat.getDrawable(this, R.drawable.rounded_corner_24_orange));
+                categoryView.setTextColor(Color.parseColor("#FFAF45"));
+                categoryView.setText("Task");
+                categoryView.setVisibility(View.VISIBLE);
+            }
+        });
+        bottomSheetDialog.setOnCancelListener(dialog -> {
+            bottomSheetDialog.dismiss();
+        });
+    }
+
+    private void showDatePicker(AtomicReference<Boolean> isDatePickerShowing, TextView deadlineView) {
+        BottomSheetDialog bottomSheetDialog1 = new BottomSheetDialog(this);
+        View view2 = LayoutInflater.from(this).inflate(R.layout.modal_date_picker, null);
+        bottomSheetDialog1.setContentView(view2);
+        if (isDatePickerShowing.get()) {
+            return;
+        }
+        isDatePickerShowing.set(true);
+        bottomSheetDialog1.show();
+        bottomSheetDialog1.setOnDismissListener(dialog -> {
+            isDatePickerShowing.set(false);
+        });
+        bottomSheetDialog1.setOnCancelListener(dialog -> {
+            isDatePickerShowing.set(false);
+        });
+        TextView timeBtn = view2.findViewById(R.id.timeBtn);
+        AtomicReference<Boolean> isTimePickerShow = new AtomicReference<>(false);
+        CalendarView datePicker = view2.findViewById(R.id.datePicker);
+        if (deadlineView.getVisibility() == View.VISIBLE) {
+            String deadlineDate = deadlineView.getText().toString().split(" - ")[0];
+            String deadlineTime = deadlineView.getText().toString().split(" - ")[1].replace(".", ":");
+            if (deadlineDate.equals("Today")) {
+                datePicker.setDate(new Date().getTime());
+            } else if (deadlineDate.equals("Tomorrow")) {
+                datePicker.setDate(new Date().getTime() + 86400000);
+            } else {
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+                try {
+                    Date date = formatter.parse(deadlineDate);
+                    datePicker.setDate(date.getTime());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            timeBtn.setText(deadlineTime);
+        }
+        timeBtn.setOnClickListener(v2 -> {
+            if (isTimePickerShow.get()) {
+                return;
+            }
+            isTimePickerShow.set(true);
+            BottomSheetDialog bottomSheetDialog2 = new BottomSheetDialog(this);
+            View view3 = LayoutInflater.from(this).inflate(R.layout.modal_time_picker, null);
+            bottomSheetDialog2.setContentView(view3);
+            NumberPicker hourPicker = view3.findViewById(R.id.hourPicker);
+            NumberPicker minutePicker = view3.findViewById(R.id.monthPicker);
+            NumberPicker amPmPicker = view3.findViewById(R.id.yearPicker);
+            hourPicker.setMinValue(1);
+            hourPicker.setMaxValue(12);
+            hourPicker.setFormatter(value -> String.format(new Locale("en"), "%02d", value));
+            minutePicker.setMinValue(0);
+            minutePicker.setMaxValue(59);
+            minutePicker.setFormatter(value -> String.format(new Locale("en"), "%02d", value));
+            ArrayList<String> amPm = new ArrayList<>();
+            amPm.add("AM");
+            amPm.add("PM");
+            amPmPicker.setDisplayedValues(amPm.toArray(new String[0]));
+            amPmPicker.setMinValue(0);
+            amPmPicker.setMaxValue(1);
+            amPmPicker.setValue(timeBtn.getText().toString().contains("AM") ? 0 : 1);
+            hourPicker.setValue(timeBtn.getText().toString().contains("AM") ? Integer.parseInt(timeBtn.getText().toString().split(":")[0]) : Integer.parseInt(timeBtn.getText().toString().split(":")[0]) + 12);
+            minutePicker.setValue(Integer.parseInt(timeBtn.getText().toString().split(":")[1].split(" ")[0]));
+            bottomSheetDialog2.show();
+            bottomSheetDialog2.setOnDismissListener(v3 -> {
+                isTimePickerShow.set(false);
+            });
+            Button applyBtn1 = view3.findViewById(R.id.applyBtn);
+            Button cancelBtn1 = view3.findViewById(R.id.cancelBtn);
+            applyBtn1.setOnClickListener(v3 -> {
+                timeBtn.setText(String.format(new Locale("en"), "%02d:%02d %s", hourPicker.getValue() > 12 ? hourPicker.getValue() - 12 : hourPicker.getValue() == 0 ? 12 : hourPicker.getValue(), minutePicker.getValue(), amPm.get(amPmPicker.getValue())));
+                bottomSheetDialog2.dismiss();
+            });
+            cancelBtn1.setOnClickListener(v3 -> {
+                bottomSheetDialog2.dismiss();
+            });
+        });
+        MutableLiveData<Date> deadlineDate = new MutableLiveData<>(new Date(datePicker.getDate()));
+        datePicker.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            deadlineDate.setValue(new Date(year - 1900, month, dayOfMonth));
+        });
+        Button monthBtn = view2.findViewById(R.id.monthBtn);
+        AtomicReference<Boolean> isMonthPicker = new AtomicReference<>(false);
+        monthBtn.setOnClickListener(v2 -> {
+            if (isMonthPicker.get()) {
+                return;
+            }
+            isMonthPicker.set(true);
+            BottomSheetDialog monthPicker = new BottomSheetDialog(this);
+            View monthPickerView = getLayoutInflater().inflate(R.layout.modal_month_picker, null);
+            monthPicker.setContentView(monthPickerView);
+            NumberPicker monthPickerNumber = monthPickerView.findViewById(R.id.monthPicker);
+            NumberPicker yearPicker = monthPickerView.findViewById(R.id.yearPicker);
+            monthPickerNumber.setMinValue(1);
+            monthPickerNumber.setMaxValue(12);
+            String[] months = new String[12];
+            for (int i = 0; i < 12; i++) {
+                months[i] = new SimpleDateFormat("MMMM", Locale.ENGLISH).format(new Date(0, i, 1));
+            }
+            monthPickerNumber.setDisplayedValues(months);
+            monthPickerNumber.setValue(deadlineDate.getValue().getMonth() + 1);
+            yearPicker.setMinValue(1970);
+            yearPicker.setMaxValue(2100);
+            yearPicker.setValue(new Date().getYear() + 1900);
+            yearPicker.setWrapSelectorWheel(false);
+            Button applyBtn = monthPickerView.findViewById(R.id.applyBtn);
+            Button cancelBtn = view2.findViewById(R.id.cancelBtn);
+            applyBtn.setOnClickListener(v3 -> {
+                Date date = new Date(yearPicker.getValue() - 1900, monthPickerNumber.getValue() - 1, 1);
+                deadlineDate.setValue(date);
+                monthPicker.dismiss();
+            });
+            cancelBtn.setOnClickListener(v3 -> monthPicker.dismiss());
+            monthPicker.setOnDismissListener(dialog -> isMonthPicker.set(false));
+            monthPicker.show();
+        });
+        deadlineDate.observe(this, date -> {
+            datePicker.setDate(date.getTime());
+        });
+        Button applyBtn = view2.findViewById(R.id.applyBtn);
+        Button cancelBtn = view2.findViewById(R.id.cancelBtn);
+        applyBtn.setOnClickListener(v2 -> {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy - ", Locale.ENGLISH);
+            String deadline = formatter.format(deadlineDate.getValue());
+            deadline += timeBtn.getText().toString().replace(":", ".");
+            deadlineView.setText(deadline);
+            deadlineView.setVisibility(View.VISIBLE);
+            bottomSheetDialog1.dismiss();
+        });
+        cancelBtn.setOnClickListener(v2 -> {
+            bottomSheetDialog1.dismiss();
+        });
+    }
 }

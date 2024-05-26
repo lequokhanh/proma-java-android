@@ -19,10 +19,40 @@
         android:textColor="#FF3B30"
         android:textSize="12sp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/add_DeadlineBtn"
-        app:layout_constraintEnd_toStartOf="@+id/add_DeadlineBtn"
-        app:layout_constraintTop_toTopOf="@+id/add_DeadlineBtn" />
-
+        app:layout_constraintBottom_toBottomOf="@+id/deadlineBtn"
+        app:layout_constraintEnd_toStartOf="@+id/deadlineBtn"
+        app:layout_constraintTop_toTopOf="@+id/deadlineBtn" />
+    <TextView
+        android:id="@+id/categoryView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/rounded_corner_24_purple"
+        android:fontFamily="@font/roboto_bold"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
+        android:text="Meeting"
+        android:textColor="#5856D6"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/addCategoryBtn"
+        app:layout_constraintEnd_toStartOf="@+id/addCategoryBtn"
+        app:layout_constraintTop_toTopOf="@+id/addCategoryBtn" />
+    <TextView
+        android:id="@+id/textView43"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/rounded_corner_24_blue"
+        android:fontFamily="@font/roboto_bold"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/addLeaderBtn"
+        app:layout_constraintEnd_toStartOf="@+id/addLeaderBtn"
+        app:layout_constraintTop_toTopOf="@+id/addLeaderBtn" />
     <com.google.android.material.bottomsheet.BottomSheetDragHandleView
         android:id="@+id/bottomSheetDragHandleView"
         android:layout_width="645dp"
@@ -256,7 +286,7 @@
         app:layout_constraintStart_toStartOf="@+id/imageView3"
         app:srcCompat="@drawable/ic_calendar" />
     <Button
-        android:id="@+id/add_DeadlineBtn"
+        android:id="@+id/deadlineBtn"
         android:layout_width="68dp"
         android:layout_height="24dp"
         android:background="@drawable/rounded_corner_24_blue"
@@ -308,6 +338,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
