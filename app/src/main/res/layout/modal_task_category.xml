@@ -104,7 +104,7 @@
                     android:layout_weight="1"
                     android:backgroundTint="#00FFFFFF"
                     android:button="@drawable/ic_checkbox_selector_2"
-                    android:clickable="false"
+                    android:clickable="true"
                     app:buttonIconTint="#00FFFFFF" />
 
 

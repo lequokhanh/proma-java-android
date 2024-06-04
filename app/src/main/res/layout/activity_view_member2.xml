@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.task.ViewMember2">
+    <ImageView
+        android:id="@+id/img_Back"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="50dp"
+        android:elevation="10dp"
+        android:src="@drawable/ic_arrow_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/black" />
+
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
+        android:elevation="10dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="View Member"
+        android:textColor="#000"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@+id/img_Back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/img_Back" />
+    <TextView
+        android:id="@+id/num_members"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="17dp"
+        android:fontFamily="@font/roboto"
+        android:lineHeight="20dp"
+        android:text="Project members (1)"
+        android:textColor="@color/black"
+        android:textFontWeight="400"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_Back" />
+    <ScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21.5dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="20.5dp"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/num_members">
+
+        <LinearLayout
+            android:id="@+id/commentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/item_member4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                />
+            <include
+                layout="@layout/item_member4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                />
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
