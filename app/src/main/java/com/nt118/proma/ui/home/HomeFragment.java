@@ -37,7 +37,6 @@ import com.nt118.proma.model.ImageArray;
 import com.nt118.proma.ui.project.ProjectDetail;
 import com.nt118.proma.ui.search.SearchView;
 import com.nt118.proma.ui.task.AllTask;
-import com.nt118.proma.ui.task.Comment;
 import com.nt118.proma.ui.task.TaskDetail;
 
 import java.lang.reflect.Field;
@@ -120,7 +119,7 @@ public class HomeFragment extends Fragment {
                     View homeContainer = inflater.inflate(R.layout.home_container, null);
                     CardView cardView = homeContainer.findViewById(R.id.card_view);
                     cardView.findViewById(R.id.card_view).setOnClickListener(v -> {
-                        Intent intent = new Intent(getActivity(), Comment.class);
+                        Intent intent = new Intent(getActivity(), ProjectDetail.class);
                         intent.putExtra("projectId", task.getResult().getDocuments().get(0).getId());
                         startActivity(intent);
                     });

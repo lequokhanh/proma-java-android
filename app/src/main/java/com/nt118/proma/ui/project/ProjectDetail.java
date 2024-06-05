@@ -323,13 +323,43 @@ public class ProjectDetail extends AppCompatActivity {
         addCategoryBtn.setOnClickListener(v1 -> {
             showCategoryDialog(categoryView);
         });
-//        Button addMemberBtn = view1.findViewById(R.id.addMemberBtn);
+        Button addMemberBtn = view1.findViewById(R.id.addMemberBtn);
 //        TextView memberList = view1.findViewById(R.id.memberList2);
-//        addMemberBtn.setOnClickListener(v1 -> {
-//            Intent intent = new Intent(this, AddMember.class);
-//            intent.putExtra("projectId", projectId);
-//            startActivity(intent);
-//        });
+        addMemberBtn.setOnClickListener(v1 -> {
+            Intent intent = new Intent(this, AddMember.class);
+            intent.putExtra("category", 3);
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("projects").document(projectId).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Map<String, Object> project = task.getResult().getData();
+                    ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) project.get("members");
+                    ArrayList<String> memberEmails = new ArrayList<>();
+                    ArrayList<String> memberNames = new ArrayList<>();
+                    MutableLiveData<Boolean> isFinished = new MutableLiveData<>(false);
+                    for (Map<String, Object> member : members) {
+                        memberEmails.add((String) member.get("email"));
+                        db.collection("users").whereEqualTo("email", member.get("email")).get().addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                memberNames.add(task1.getResult().getDocuments().get(0).get("name").toString());
+                                if (members.indexOf(member) == members.size() - 1) {
+                                    isFinished.setValue(true);
+                                }
+                            }
+                        });
+                    }
+                    isFinished.observe(this, aBoolean -> {
+                        if (!aBoolean) {
+                            return;
+                        }
+                        intent.putStringArrayListExtra("members", memberEmails);
+                        intent.putStringArrayListExtra("name", memberNames);
+                        startActivity(intent);
+                    });
+                }
+            });
+        });
+
+
     }
 
     private void showCategoryDialog(TextView categoryView) {

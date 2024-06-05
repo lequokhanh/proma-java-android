@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -40,13 +39,14 @@
         app:layout_constraintEnd_toEndOf="@+id/name"
         app:layout_constraintStart_toStartOf="@+id/name"
         app:layout_constraintTop_toBottomOf="@+id/name" />
+
     <CheckBox
         android:id="@+id/checkBox"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:backgroundTint="#00FFFFFF"
         android:button="@drawable/ic_checkbox_selector_2"
-        android:clickable="true"
+        android:clickable="false"
         android:fontFamily="@font/roboto_regular"
         android:minWidth="0dp"
         android:minHeight="0dp"
@@ -54,10 +54,8 @@
         android:textColor="@color/black"
         android:textSize="15sp"
         app:buttonIconTint="#ffffff"
-        tools:layout_editor_absoluteX="223dp"
-        tools:layout_editor_absoluteY="26dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

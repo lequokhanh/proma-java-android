@@ -13,6 +13,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -51,10 +52,32 @@ public class AddMember extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         TextView add_btn = findViewById(R.id.add_btn);
+        MutableLiveData<Integer> category = new MutableLiveData<>();
+        LinearLayout email_field = findViewById(R.id.email_field);
+        category.setValue(intent.getIntExtra("category", 1));
+        // 1: add project member, 2: choose leader, 3: add task member
+        MutableLiveData<String> leader_email = new MutableLiveData<>();
+        MutableLiveData<String> leader_name = new MutableLiveData<>();
+        MutableLiveData<ArrayList<String>> task_members = new MutableLiveData<>();
+        task_members.setValue(new ArrayList<>());
+        MutableLiveData<ArrayList<String>> task_names = new MutableLiveData<>();
+        task_names.setValue(new ArrayList<>());
         MutableLiveData<ArrayList<String>> members = new MutableLiveData<>();
         members.setValue(intent.getStringArrayListExtra("members"));
         MutableLiveData<ArrayList<String>> names = new MutableLiveData<>();
         names.setValue(intent.getStringArrayListExtra("name"));
+        TextView title = findViewById(R.id.addMemberTitle);
+        if (category.getValue() == 2) {
+            title.setText("Choose leader");
+            email_field.setVisibility(View.GONE);
+            leader_name.setValue(intent.getStringExtra("leader_name"));
+            leader_email.setValue(intent.getStringExtra("leader_email"));
+        }
+        if (category.getValue() == 3) {
+            email_field.setVisibility(View.GONE);
+            task_members.setValue(intent.getStringArrayListExtra("task_members"));
+            task_names.setValue(intent.getStringArrayListExtra("task_names"));
+        }
         LinearLayout member_list = findViewById(R.id.memberList);
         add_btn.setOnClickListener(v -> {
             // validate email format
@@ -97,20 +120,64 @@ public class AddMember extends AppCompatActivity {
             memberCount.setText("Project members (" + strings.size() + ")");
             member_list.removeAllViews();
             for (String email : strings) {
-                View item_member = getLayoutInflater().inflate(R.layout.item_member, null);
+                View item_member = null;
+                switch (category.getValue()) {
+                    case 1:
+                        item_member = getLayoutInflater().inflate(R.layout.item_member, null);
+                        ImageView removeBtn = item_member.findViewById(R.id.removeBtn);
+                        removeBtn.setOnClickListener(v -> {
+                            ArrayList<String> temp = members.getValue();
+                            ArrayList<String> tempName = names.getValue();
+                            tempName.remove(names.getValue().get(strings.indexOf(email)));
+                            temp.remove(email);
+                            names.setValue(tempName);
+                            members.setValue(temp);
+                        });
+                        break;
+                    case 2:
+                        item_member = getLayoutInflater().inflate(R.layout.item_member2, null);
+                        CheckBox checkBox = item_member.findViewById(R.id.checkBox);
+                        item_member.setOnClickListener(v -> {
+                            leader_email.setValue(email);
+                            leader_name.setValue(names.getValue().get(strings.indexOf(email)));
+                        });
+                        leader_email.observe(this, s -> {
+                            checkBox.setChecked(s != null && s.equals(email));
+                        });
+                        break;
+                    case 3:
+                        item_member = getLayoutInflater().inflate(R.layout.item_member3, null);
+                        CheckBox checkBox2 = item_member.findViewById(R.id.checkBox);
+                        item_member.setOnClickListener(v -> {
+                            if (!checkBox2.isChecked()) {
+                                ArrayList<String> temp = task_members.getValue();
+                                ArrayList<String> tempName = task_names.getValue();
+                                if (temp == null) {
+                                    temp = new ArrayList<>();
+                                    tempName = new ArrayList<>();
+                                }
+                                temp.add(email);
+                                tempName.add(names.getValue().get(strings.indexOf(email)));
+                                task_members.setValue(temp);
+                                task_names.setValue(tempName);
+                            } else {
+                                ArrayList<String> temp = task_members.getValue();
+                                ArrayList<String> tempName = task_names.getValue();
+                                tempName.remove(temp.indexOf(email));
+                                temp.remove(email);
+                                task_members.setValue(temp);
+                                task_names.setValue(tempName);
+                            }
+                        });
+                        task_members.observe(this, strings1 -> {
+                            checkBox2.setChecked(strings1 != null && strings1.contains(email));
+                        });
+                        break;
+                }
                 TextView email_member = item_member.findViewById(R.id.email);
                 TextView name_member = item_member.findViewById(R.id.name);
-                ImageView removeBtn = item_member.findViewById(R.id.removeBtn);
                 email_member.setText(email);
                 name_member.setText(names.getValue().get(strings.indexOf(email)));
-                removeBtn.setOnClickListener(v -> {
-                    ArrayList<String> temp = members.getValue();
-                    ArrayList<String> tempName = names.getValue();
-                    tempName.remove(names.getValue().get(strings.indexOf(email)));
-                    temp.remove(email);
-                    names.setValue(tempName);
-                    members.setValue(temp);
-                });
                 // margin top 13dp
                 float dip = 13f;
                 Resources r = getResources();
@@ -128,8 +195,18 @@ public class AddMember extends AppCompatActivity {
         Button save_btn = findViewById(R.id.saveBtn);
         save_btn.setOnClickListener(v -> {
             Intent resultIntent = new Intent();
-            resultIntent.putStringArrayListExtra("members", members.getValue());
-            resultIntent.putStringArrayListExtra("names", names.getValue());
+            if (category.getValue() == 2) {
+                resultIntent.putStringArrayListExtra("members", members.getValue());
+                resultIntent.putStringArrayListExtra("names", names.getValue());
+            }
+            if (category.getValue() == 2) {
+                resultIntent.putExtra("leader", leader_email.getValue());
+                resultIntent.putExtra("leader_name", leader_name.getValue());
+            }
+            if (category.getValue() == 3) {
+                resultIntent.putStringArrayListExtra("task_members", task_members.getValue());
+                resultIntent.putStringArrayListExtra("task_names", task_names.getValue());
+            }
             setResult(RESULT_OK, resultIntent);
             finish();
         });
