@@ -3,7 +3,6 @@ package com.nt118.proma.ui.member;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -14,14 +13,14 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.nt118.proma.R;
 
-public class ViewMember extends AppCompatActivity {
+public class ViewOneMember extends AppCompatActivity {
 
     TextView tvEmail, tvPhone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_view_member);
+        setContentView(R.layout.activity_view_one_member);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -29,26 +28,20 @@ public class ViewMember extends AppCompatActivity {
         });
 
         initUi();
-        tvPhone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String phoneNumber = tvPhone.getText().toString().trim();
+        tvPhone.setOnClickListener(v -> {
+            String phoneNumber = tvPhone.getText().toString().trim();
 
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:" + phoneNumber));
-                startActivity(intent);
-            }
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse("tel:" + phoneNumber));
+            startActivity(intent);
         });
 
-        tvEmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email= tvEmail.getText().toString().trim();
+        tvEmail.setOnClickListener(v -> {
+            String email = tvEmail.getText().toString().trim();
 
-                Intent intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setData(Uri.parse("mailto:"+email));
-                startActivity(intent);
-            }
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("mailto:" + email));
+            startActivity(intent);
         });
 
     }

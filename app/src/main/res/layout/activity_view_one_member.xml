@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F9FAFF"
-    tools:context=".ui.member.ViewMember">
+    tools:context=".ui.member.ViewOneMember">
 
     <ImageView
         android:id="@+id/img_Back"

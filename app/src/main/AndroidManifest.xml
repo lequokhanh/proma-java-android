@@ -44,7 +44,7 @@
             android:name=".ui.home.ViewNotification"
             android:exported="false" />
         <activity
-            android:name=".ui.member.ViewMember"
+            android:name=".ui.member.ViewOneMember"
             android:exported="false" />
 
         <meta-data
