@@ -36,54 +36,57 @@
         android:id="@+id/memberCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:fontFamily="@font/roboto_bold"
         android:text="Project members (0)"
         android:textColor="#000"
         android:textSize="17sp"
-        app:layout_constraintStart_toStartOf="@+id/invite_field"
-        app:layout_constraintTop_toBottomOf="@+id/invite_field" />
+        app:layout_constraintStart_toStartOf="@+id/img_Back"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout8" />
 
-    <EditText
-        android:id="@+id/invite_field"
-        style="@style/Normal_Drawable"
+    <LinearLayout
+        android:id="@+id/linearLayout8"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/rounded_corner_8"
-        android:drawableStart="@drawable/ic_search"
-        android:drawablePadding="8dp"
-        android:drawableTint="#8E8E93"
-        android:ems="10"
-        android:fontFamily="@font/roboto_regular"
-        android:hint="Invite by email"
-        android:inputType="text"
-        android:paddingVertical="12dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="28dp"
-        android:textColorHint="#8E8E93"
-        android:textColorLink="#000"
-        android:textCursorDrawable="@drawable/black_cursor"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toStartOf="@+id/add_btn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView20" />
-
-    <TextView
-        android:id="@+id/add_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
         android:layout_marginEnd="21dp"
-        android:fontFamily="@font/roboto_bold"
-        android:gravity="center_vertical"
-        android:text="Add"
-        android:textColor="#105CDB"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="@+id/invite_field"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/invite_field" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView20">
+
+        <EditText
+            android:id="@+id/invite_field"
+            style="@style/Normal_Drawable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corner_8"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="8dp"
+            android:drawableTint="#8E8E93"
+            android:ems="10"
+            android:fontFamily="@font/roboto_regular"
+            android:hint="Invite by email"
+            android:inputType="text"
+            android:paddingVertical="12dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="28dp"
+            android:textColorHint="#8E8E93"
+            android:textColorLink="#000"
+            android:textCursorDrawable="@drawable/black_cursor"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/add_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="21dp"
+            android:fontFamily="@font/roboto_bold"
+            android:gravity="center_vertical"
+            android:text="Add"
+            android:textColor="#105CDB"
+            android:textSize="13sp" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/close_btn"
