@@ -22,6 +22,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/deadlineBtn"
         app:layout_constraintEnd_toStartOf="@+id/deadlineBtn"
         app:layout_constraintTop_toTopOf="@+id/deadlineBtn" />
+
     <TextView
         android:id="@+id/categoryView"
         android:layout_width="wrap_content"
@@ -38,6 +39,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/addCategoryBtn"
         app:layout_constraintEnd_toStartOf="@+id/addCategoryBtn"
         app:layout_constraintTop_toTopOf="@+id/addCategoryBtn" />
+
     <TextView
         android:id="@+id/textView43"
         android:layout_width="wrap_content"
@@ -53,23 +55,24 @@
         app:layout_constraintBottom_toBottomOf="@+id/addLeaderBtn"
         app:layout_constraintEnd_toStartOf="@+id/addLeaderBtn"
         app:layout_constraintTop_toTopOf="@+id/addLeaderBtn" />
+
     <com.google.android.material.bottomsheet.BottomSheetDragHandleView
         android:id="@+id/bottomSheetDragHandleView"
         android:layout_width="645dp"
         android:layout_height="40dp"
         app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
         android:fontFamily="@font/roboto_bold"
         android:text="Create New Task"
         android:textColor="#000000"
         android:textSize="20sp"
-        android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toTopOf="@+id/editTextText2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -79,6 +82,7 @@
         android:layout_width="331dp"
         android:layout_height="56dp"
         android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/rounded_corner_10"
         android:ems="10"
         android:fontFamily="@font/roboto_medium"
@@ -90,7 +94,6 @@
         android:paddingBottom="16dp"
         android:textAlignment="textStart"
         android:textSize="15dp"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/editTextText3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -100,6 +103,7 @@
         android:layout_width="331dp"
         android:layout_height="56dp"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/rounded_corner_10"
         android:ems="10"
         android:fontFamily="@font/roboto_medium"
@@ -107,7 +111,6 @@
         android:inputType="text"
         android:paddingStart="14dp"
         android:paddingTop="16dp"
-        android:layout_marginBottom="16dp"
         android:paddingEnd="14dp"
         android:paddingBottom="16dp"
         android:textAlignment="textStart"
@@ -125,6 +128,7 @@
         app:layout_constraintBottom_toTopOf="@+id/imageView2"
         app:layout_constraintStart_toStartOf="@+id/editTextText3"
         app:srcCompat="@drawable/ic_team_modal" />
+
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
@@ -209,11 +213,12 @@
         android:id="@+id/imageView2"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/imageView3"
         app:layout_constraintStart_toStartOf="@+id/imageView21"
         app:srcCompat="@drawable/ic_team_modal" />
+
     <LinearLayout
         android:id="@+id/memberList2"
         android:layout_width="0dp"
@@ -229,7 +234,14 @@
         app:layout_constraintEnd_toStartOf="@+id/addMemberBtn"
         app:layout_constraintStart_toEndOf="@+id/textView5" />
 
-
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView4"
+        app:layout_constraintStart_toStartOf="@+id/imageView2"
+        app:srcCompat="@drawable/ic_checked"/>
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="24dp"
@@ -241,30 +253,31 @@
         app:srcCompat="@drawable/ic_category" />
 
     <Button
-    android:id="@+id/addCategoryBtn"
-    android:layout_width="68dp"
-    android:layout_height="24dp"
-    android:background="@drawable/rounded_corner_24_blue"
-    android:backgroundTint="#007AFF"
-    android:fontFamily="@font/roboto_bold"
-    android:gravity="center|start"
-    android:includeFontPadding="false"
-    android:outlineProvider="none"
-    android:padding="0dp"
-    android:paddingStart="12dp"
-    android:paddingLeft="16dp"
-    android:paddingTop="4dp"
-    android:paddingBottom="4dp"
-    android:text="Add"
-    android:textAlignment="gravity"
-    android:textAllCaps="false"
-    android:textSize="12sp"
-    app:icon="@drawable/ic_add_circle"
-    app:iconGravity="start"
-    app:iconPadding="2dp"
-    app:iconSize="16dp"
-    app:layout_constraintEnd_toEndOf="@+id/addLeaderBtn"
-    app:layout_constraintTop_toTopOf="@+id/imageView3" />
+        android:id="@+id/addCategoryBtn"
+        android:layout_width="68dp"
+        android:layout_height="24dp"
+        android:background="@drawable/rounded_corner_24_blue"
+        android:backgroundTint="#007AFF"
+        android:fontFamily="@font/roboto_bold"
+        android:gravity="center|start"
+        android:includeFontPadding="false"
+        android:outlineProvider="none"
+        android:padding="0dp"
+        android:paddingStart="12dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:text="Add"
+        android:textAlignment="gravity"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        app:icon="@drawable/ic_add_circle"
+        app:iconGravity="start"
+        app:iconPadding="2dp"
+        app:iconSize="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/addLeaderBtn"
+        app:layout_constraintTop_toTopOf="@+id/imageView3" />
+
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
@@ -285,6 +298,7 @@
         app:layout_constraintBottom_toTopOf="@+id/createTaskBtn"
         app:layout_constraintStart_toStartOf="@+id/imageView3"
         app:srcCompat="@drawable/ic_calendar" />
+
     <Button
         android:id="@+id/deadlineBtn"
         android:layout_width="68dp"
@@ -338,8 +352,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
