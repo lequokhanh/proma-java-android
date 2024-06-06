@@ -108,6 +108,7 @@ public class HomeFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         ProgressBar loadingHome = root.findViewById(R.id.loadingHome);
         ScrollView homeLayout = root.findViewById(R.id.homeLayout);
+        homeLayout.removeAllViews();
         loadingHome.setVisibility(View.VISIBLE);
         //member : {email, isAccepted}
         Map<String, Object> member = new HashMap<>();
@@ -127,6 +128,7 @@ public class HomeFragment extends Fragment {
                     TextView projectDescription = cardView.findViewById(R.id.projectDescription);
                     TextView tvDeadline = cardView.findViewById(R.id.deadline);
                     TextView progressProject = cardView.findViewById(R.id.progressProject);
+                    ImageView cover_project = cardView.findViewById(R.id.cover_project);
                     // find a project in database owned by user or user is a member of that project and the deadline is the nearest today
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.US);
                     Date today = new Date();
@@ -162,9 +164,12 @@ public class HomeFragment extends Fragment {
                     projectName.setText(name);
                     projectDescription.setText(description);
                     tvDeadline.setText(deadlineStr);
+                    if (task.getResult().getDocuments().get(index).get("cover") != null) {
+                        cover_project.setImageResource(ImageArray.getCoverProjectImage().get(task.getResult().getDocuments().get(index).getLong("cover").intValue()));
+                    }
                     AtomicReference<String> projectId = new AtomicReference<>();
                     projectId.set(task.getResult().getDocuments().get(index).getId());
-                    db.collection("tasks").whereEqualTo("project_id", projectId.get()).get().addOnCompleteListener(task2 -> {
+                    db.collection("tasks").whereEqualTo("projectId", projectId.get()).get().addOnCompleteListener(task2 -> {
                         if (task2.isSuccessful()) {
                             int totalTask = task2.getResult().getDocuments().size();
                             int doneTask = 0;
@@ -197,14 +202,14 @@ public class HomeFragment extends Fragment {
                             Map<String, Object> taskItem = tasks.get(i);
                             View taskView = inflater.inflate(R.layout.task_card, null);
                             TextView taskName = taskView.findViewById(R.id.taskName);
-                            taskName.setText(taskItem.get("name").toString());
+                            taskName.setText(taskItem.get("title").toString());
                             String deadline = (String) taskItem.get("deadline");
                             TextView taskDeadline = taskView.findViewById(R.id.deadline);
                             taskDeadline.setText(deadline);
                             TextView taskStatus = taskView.findViewById(R.id.status);
-                            if ((int) taskItem.get("status") == 1) {
+                            if ((Long) taskItem.get("status") == 0) {
                                 taskStatus.setVisibility(View.GONE);
-                            } else if ((int) taskItem.get("status") == 2) {
+                            } else if ((Long) taskItem.get("status") == 1) {
                                 taskStatus.setVisibility(View.VISIBLE);
                                 taskStatus.setText("On going");
                             } else {

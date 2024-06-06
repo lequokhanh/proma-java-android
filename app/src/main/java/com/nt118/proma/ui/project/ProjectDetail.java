@@ -1,11 +1,12 @@
 package com.nt118.proma.ui.project;
 
-import static com.google.firebase.firestore.Filter.equalTo;
 import static com.nt118.proma.ui.task.TaskDetail.setWindowFlag;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -16,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -24,13 +26,16 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
 import com.nt118.proma.model.ImageArray;
@@ -43,6 +48,7 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -51,6 +57,16 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ProjectDetail extends AppCompatActivity {
     private PopupMenu popup;
     private String projectId;
+    private ArrayList<String> task_members = new ArrayList<>();
+    private ArrayList<String> task_names = new ArrayList<>();
+    private LinearLayout memberList;
+    private String leaderEmail;
+    private String leaderName;
+    private TextView leader;
+    private AtomicReference<TextView> currentTab;
+    private ProgressBar loadingProjectDetail;
+    private ScrollView container;
+    private FloatingActionButton create_btn;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,10 +80,10 @@ public class ProjectDetail extends AppCompatActivity {
         back.setOnClickListener(v -> {
             finish();
         });
-        FloatingActionButton create_btn = findViewById(R.id.create_task_btn);
+        create_btn = findViewById(R.id.create_task_btn);
         AtomicReference<Boolean> isDialogShowing = new AtomicReference<>(false);
         create_btn.setOnClickListener(v -> {
-            showPopupMenu(isDialogShowing);
+            showPopupCreateTask(isDialogShowing);
         });
         ImageView menu_btn = findViewById(R.id.menu_btn);
         menu_btn.setOnClickListener(v -> {
@@ -97,22 +113,76 @@ public class ProjectDetail extends AppCompatActivity {
                 if (item.getItemId() == R.id.action_change_cover){
                     Intent intent2 = new Intent(this, SetImage.class);
                     intent2.putExtra("type", "cover");
-                    intent2.putIntegerArrayListExtra("images", new ImageArray().getCoverProjectImage());
-                    startActivity(intent2);
+                    intent2.putIntegerArrayListExtra("images", ImageArray.getCoverProjectImage());
+                    startActivityForResult(intent2, 1234);
+                } else if (item.getItemId() == R.id.action_delete) {
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    db.collection("projects").document(projectId).delete();
+                    finish();
+                } else if (item.getItemId() == R.id.action_edit) {
+                    showPopupEditProject(isDialogShowing);
                 }
                 return false;
             });
             popup.show();
         });
-        ScrollView container = findViewById(R.id.projectDetailContainer);
+        container = findViewById(R.id.projectDetailContainer);
         LinearLayout tabContainer = findViewById(R.id.tabContainer);
-        ProgressBar loadingProjectDetail = findViewById(R.id.loadingProjectDetail);
-        handleTabClick(tabContainer, container, loadingProjectDetail);
+        loadingProjectDetail = findViewById(R.id.loadingProjectDetail);
+        InitUI();
+        handleTabClick(tabContainer);
     }
 
-    private void handleTabClick(LinearLayout tabContainer, ScrollView container, ProgressBar loadingProjectDetail) {
-        AtomicReference<TextView> currentTab = new AtomicReference<>(findViewById(R.id.taskTab));
-        showTaskList(container, 0, loadingProjectDetail);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadUI();
+    }
+
+    private void InitUI() {
+        Dialog loading = createLoadingDialog();
+        ImageView cover = findViewById(R.id.cover);
+        TextView name = findViewById(R.id.nameProjectView);
+        TextView description = findViewById(R.id.descProjectView);
+        TextView deadline = findViewById(R.id.deadlineView);
+        TextView progressProjectView = findViewById(R.id.progressProjectView);
+        LinearProgressIndicator progressBar = findViewById(R.id.progressBar);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("projects").document(projectId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Map<String, Object> project = task.getResult().getData();
+                if (task.getResult().get("cover") != null) {
+                    cover.setImageResource(ImageArray.getCoverProjectImage().get(Math.toIntExact((Long) project.get("cover"))));
+                }
+                name.setText(project.get("name").toString());
+                description.setText(project.get("description").toString());
+                deadline.setText(project.get("deadline").toString());
+                db.collection("tasks").whereEqualTo("projectId", projectId).get().addOnCompleteListener(task1 -> {
+                    if (task1.isSuccessful()) {
+                        int total = task1.getResult().getDocuments().size();
+                        int completed = 0;
+                        for (int i = 0; i < total; i++) {
+                            if (task1.getResult().getDocuments().get(i).getLong("status") == 2) {
+                                completed++;
+                            }
+                        }
+                        if (total == 0) {
+                            progressProjectView.setText("0/0");
+                            progressBar.setProgress(0);
+                            return;
+                        }
+                        progressProjectView.setText(completed + "/" + total);
+                        progressBar.setProgress((int) ((float) completed / total));
+                    }
+                });
+                loading.dismiss();
+            }
+        });
+    }
+
+    private void handleTabClick(LinearLayout tabContainer) {
+        currentTab = new AtomicReference<>(findViewById(R.id.taskTab));
+        showTaskList(0, loadingProjectDetail);
         for (int i = 0; i < tabContainer.getChildCount(); i++) {
             TextView child = (TextView) tabContainer.getChildAt(i);
             child.setOnClickListener(v -> {
@@ -123,19 +193,38 @@ public class ProjectDetail extends AppCompatActivity {
                 currentTab.get().setBackground(ContextCompat.getDrawable(this, R.drawable.rounded_corner_24_bw));
                 currentTab.set(child);
                 if (child.getId() == R.id.taskTab) {
-                    showTaskList(container, 0, loadingProjectDetail);
+                    showTaskList(0, loadingProjectDetail);
                 } else if (child.getId() == R.id.processTaskTab) {
-                    showTaskList(container, 1, loadingProjectDetail);
+                    showTaskList(1, loadingProjectDetail);
                 } else if (child.getId() == R.id.completedTaskTab) {
-                    showTaskList(container, 2, loadingProjectDetail);
+                    showTaskList(2, loadingProjectDetail);
                 } else if (child.getId() == R.id.informationTab) {
-                    showInformationTab(container, loadingProjectDetail);
+                    showInformationTab(loadingProjectDetail);
                 }
             });
         }
+        SwipeRefreshLayout swipeRefresh = findViewById(R.id.swipeRefresh);
+        swipeRefresh.setOnRefreshListener(() -> {
+            loadUI();
+            swipeRefresh.setRefreshing(false);
+        });
     }
 
-    private void showTaskList(ScrollView container, int status, ProgressBar loading) {
+    private void loadUI() {
+        InitUI();
+        if (currentTab.get().getId() == R.id.taskTab) {
+            showTaskList(0, loadingProjectDetail);
+        } else if (currentTab.get().getId() == R.id.processTaskTab) {
+            showTaskList(1, loadingProjectDetail);
+        } else if (currentTab.get().getId() == R.id.completedTaskTab) {
+            showTaskList(2, loadingProjectDetail);
+        } else if (currentTab.get().getId() == R.id.informationTab) {
+            showInformationTab(loadingProjectDetail);
+        }
+    }
+
+    private void showTaskList(int status, ProgressBar loading) {
+        create_btn.setVisibility(View.VISIBLE);
         loading.setVisibility(View.VISIBLE);
         container.removeAllViews();
         View task_list = LayoutInflater.from(this).inflate(R.layout.task_list, null);
@@ -161,14 +250,14 @@ public class ProjectDetail extends AppCompatActivity {
                     Map<String, Object> taskItem = task.getResult().getDocuments().get(i).getData();
                     View taskView = LayoutInflater.from(this).inflate(R.layout.task_card, null);
                     TextView taskName = taskView.findViewById(R.id.taskName);
-                    taskName.setText(taskItem.get("name").toString());
+                    taskName.setText(taskItem.get("title").toString());
                     String deadline = (String) taskItem.get("deadline");
                     TextView taskDeadline = taskView.findViewById(R.id.deadline);
                     taskDeadline.setText(deadline);
                     TextView taskStatus = taskView.findViewById(R.id.status);
-                    if ((int) taskItem.get("status") == 1) {
+                    if ((Long) taskItem.get("status") == 0) {
                         taskStatus.setVisibility(View.GONE);
-                    } else if ((int) taskItem.get("status") == 2) {
+                    } else if ((Long) taskItem.get("status") == 1) {
                         taskStatus.setVisibility(View.VISIBLE);
                         taskStatus.setText("On going");
                     } else {
@@ -210,7 +299,7 @@ public class ProjectDetail extends AppCompatActivity {
                     Space space = new Space(this);
                     space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 20));
                     taskView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                    if (count.get() % 2 == 0) {
+                    if (count.get() % 2 == 1) {
                         leftSide.addView(taskView);
                         leftSide.addView(space);
                     } else {
@@ -218,13 +307,15 @@ public class ProjectDetail extends AppCompatActivity {
                         rightSide.addView(space);
                     }
                 }
+                container.removeAllViews();
                 container.addView(task_list);
                 loading.setVisibility(View.GONE);
             }
         });
     }
 
-    private void showInformationTab(ScrollView container, ProgressBar loading) {
+    private void showInformationTab(ProgressBar loading) {
+        create_btn.setVisibility(View.GONE);
         loading.setVisibility(View.VISIBLE);
         container.removeAllViews();
         View information = LayoutInflater.from(this).inflate(R.layout.project_detail_information, null);
@@ -239,65 +330,97 @@ public class ProjectDetail extends AppCompatActivity {
                         leader_tv.setText(task1.getResult().getDocuments().get(0).get("name").toString());
                         LinearLayout member_list = information.findViewById(R.id.memberList2);
                         ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) project.get("members");
-                        for (Map<String, Object> member : members) {
-                            if (members.indexOf(member) > 2) {
-                                TextView member_tv = createItemMember((members.size() - 2) + " more...");
-                                member_list.addView(member_tv);
-                                break;
-                            }
-                            db.collection("users").where(equalTo("email", member.get("email"))).get().addOnCompleteListener(task2 -> {
+                        MutableLiveData<Integer> count = new MutableLiveData<>(0);
+                        for (int i = 0; i < Math.min(2, members.size()); i++) {
+                            int finalI = i;
+                            db.collection("users").whereEqualTo("email", members.get(i).get("email")).get().addOnCompleteListener(task2 -> {
                                 if (task2.isSuccessful()) {
-                                    TextView member_tv = createItemMember(task2.getResult().getDocuments().get(0).get("name").toString());
-                                    member_list.addView(member_tv);
+                                    TextView member = createItemMember(task2.getResult().getDocuments().get(0).get("name").toString());
+                                    member_list.addView(member);
+                                    if (finalI == Math.min(2, members.size()) - 1) {
+                                        count.setValue(2);
+                                    }
                                 }
                             });
                         }
-                        container.addView(information);
-                        loading.setVisibility(View.GONE);
+                        count.observe(this, integer -> {
+                            if (integer == 2) {
+                                if (members.size() > 2) {
+                                    TextView more = createItemMember((members.size() - 2) + " more...");
+                                    member_list.addView(more);
+                                }
+                                loading.setVisibility(View.GONE);
+                                container.addView(information);
+                            }
+                        });
                     }
                 });
             }
         });
     }
 
-    public TextView createItemMember(String name) {
-        TextView textView = new TextView(this);
-        textView.setText(name);
-        textView.setBackgroundResource(R.drawable.rounded_corner_24_bw);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        // add padding
-        float dip10 = 10f;
-        Resources r = getResources();
-        float px10 = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dip10,
-                r.getDisplayMetrics()
-        );
-        float dip12 = 12f;
-        float px12 = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dip12,
-                r.getDisplayMetrics()
-        );
-        float dip4 = 4f;
-        float px4 = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dip4,
-                r.getDisplayMetrics()
-        );
-        textView.setPadding((int) px12, (int) px4, (int) px12, (int) px4);
-        // add margin
-        params.setMargins(0, 0, 0, (int) px10);
-        //config text size
-        textView.setTextSize(12);
-        textView.setTextColor(getResources().getColor(R.color.black));
-        // set font family
-        textView.setTypeface(getResources().getFont(R.font.roboto_bold));
-        textView.setLayoutParams(params);
-        return textView;
+    private void showPopupEditProject(AtomicReference<Boolean> isDialogShowing) {
+        Dialog loading = createLoadingDialog();
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        View view1 = LayoutInflater.from(this).inflate(R.layout.modal_create_project, null);
+        bottomSheetDialog.setContentView(view1);
+        if (isDialogShowing.get()) {
+            return;
+        }
+        isDialogShowing.set(true);
+        bottomSheetDialog.setOnDismissListener(dialog -> {
+            isDialogShowing.set(false);
+        });
+        bottomSheetDialog.setOnCancelListener(dialog -> {
+            isDialogShowing.set(false);
+        });
+        TextView title2TV = view1.findViewById(R.id.title2TV);
+        title2TV.setVisibility(View.GONE);
+        TextView titleTV = view1.findViewById(R.id.titleTV);
+        titleTV.setText("Edit project");
+        TextView nameProjectET = view1.findViewById(R.id.etNameProject);
+        TextView descProjectET = view1.findViewById(R.id.etDescProject);
+        LinearLayout memberList = view1.findViewById(R.id.memberList2);
+        TextView deadlineView = view1.findViewById(R.id.deadlineView);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Button createProjectBtn = view1.findViewById(R.id.createProjectBtn);
+        createProjectBtn.setText("Save");
+        db.collection("projects").document(projectId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Map<String, Object> project = task.getResult().getData();
+                nameProjectET.setText(project.get("name").toString());
+                descProjectET.setText(project.get("description").toString());
+                deadlineView.setText(project.get("deadline").toString());
+                deadlineView.setVisibility(View.VISIBLE);
+                ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) project.get("members");
+                MutableLiveData<Boolean> isCompleted = new MutableLiveData<>(false);
+                for (int i = 0; i < Math.min(2, members.size()); i++) {
+                    int finalI = i;
+                    db.collection("users").whereEqualTo("email", members.get(i).get("email")).get().addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            TextView member = createItemMember(task1.getResult().getDocuments().get(0).get("name").toString());
+                            memberList.addView(member);
+                            if (finalI == Math.min(2, members.size()) - 1) {
+                                isCompleted.setValue(true);
+                            }
+                        }
+                    });
+                }
+                isCompleted.observe(this, aBoolean -> {
+                    if (aBoolean) {
+                        if (members.size() > 2) {
+                            TextView more = createItemMember((members.size() - 2) + " more...");
+                            memberList.addView(more);
+                        }
+                        loading.dismiss();
+                        bottomSheetDialog.show();
+                    }
+                });
+            }
+        });
     }
 
-    private void showPopupMenu(AtomicReference<Boolean> isDialogShowing) {
+    private void showPopupCreateTask(AtomicReference<Boolean> isDialogShowing) {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         View view1 = LayoutInflater.from(this).inflate(R.layout.modal_create_task, null);
         bottomSheetDialog.setContentView(view1);
@@ -312,54 +435,203 @@ public class ProjectDetail extends AppCompatActivity {
         bottomSheetDialog.setOnCancelListener(dialog -> {
             isDialogShowing.set(false);
         });
+        // handle deadline button
         Button deadlineBtn = view1.findViewById(R.id.deadlineBtn);
         TextView deadlineView = view1.findViewById(R.id.deadlineView);
         AtomicReference<Boolean> isDatePickerShowing = new AtomicReference<>(false);
         deadlineBtn.setOnClickListener(v1 -> {
             showDatePicker(isDatePickerShowing, deadlineView);
         });
+        // handle choose category button
         Button addCategoryBtn = view1.findViewById(R.id.addCategoryBtn);
         TextView categoryView = view1.findViewById(R.id.categoryView);
         addCategoryBtn.setOnClickListener(v1 -> {
             showCategoryDialog(categoryView);
         });
+        // handle add member button
         Button addMemberBtn = view1.findViewById(R.id.addMemberBtn);
-//        TextView memberList = view1.findViewById(R.id.memberList2);
+        memberList = view1.findViewById(R.id.memberList2);
         addMemberBtn.setOnClickListener(v1 -> {
-            Intent intent = new Intent(this, AddMember.class);
-            intent.putExtra("category", 3);
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("projects").document(projectId).get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Map<String, Object> project = task.getResult().getData();
-                    ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) project.get("members");
-                    ArrayList<String> memberEmails = new ArrayList<>();
-                    ArrayList<String> memberNames = new ArrayList<>();
-                    MutableLiveData<Boolean> isFinished = new MutableLiveData<>(false);
-                    for (Map<String, Object> member : members) {
-                        memberEmails.add((String) member.get("email"));
-                        db.collection("users").whereEqualTo("email", member.get("email")).get().addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()) {
-                                memberNames.add(task1.getResult().getDocuments().get(0).get("name").toString());
-                                if (members.indexOf(member) == members.size() - 1) {
-                                    isFinished.setValue(true);
-                                }
-                            }
-                        });
-                    }
-                    isFinished.observe(this, aBoolean -> {
-                        if (!aBoolean) {
-                            return;
+            showAddMemberActivity();
+        });
+        // handle choose leader button
+        Button addLeaderBtn = view1.findViewById(R.id.addLeaderBtn);
+        leader = view1.findViewById(R.id.leaderTV);
+        addLeaderBtn.setOnClickListener(v1 -> {
+            showChooseLeaderActivity();
+        });
+        // handle create task button
+        Button createTaskBtn = view1.findViewById(R.id.createTaskBtn);
+        createTaskBtn.setOnClickListener(v1 -> {
+            EditText taskTitle = view1.findViewById(R.id.taskTitleET);
+            EditText desc = view1.findViewById(R.id.descET);
+            if (taskTitle.getText().toString().isEmpty())
+                taskTitle.setError("Task title is required");
+            if (desc.getText().toString().isEmpty()) desc.setError("Description is required");
+            if (leader.getVisibility() == View.GONE)
+                Toast.makeText(this, "Leader is required", Toast.LENGTH_SHORT).show();
+            else if (task_members.size() == 0)
+                Toast.makeText(this, "Members are required", Toast.LENGTH_SHORT).show();
+            else if (categoryView.getVisibility() == View.GONE)
+                Toast.makeText(this, "Category is required", Toast.LENGTH_SHORT).show();
+            else if (deadlineView.getVisibility() == View.GONE)
+                Toast.makeText(this, "Deadline is required", Toast.LENGTH_SHORT).show();
+            if (taskTitle.getText().toString().isEmpty() || desc.getText().toString().isEmpty() || leader.getVisibility() == View.GONE || task_members.size() == 0 || deadlineView.getVisibility() == View.GONE || categoryView.getVisibility() == View.GONE)
+                return;
+            bottomSheetDialog.dismiss();
+            handleCreateTaskBtn(taskTitle.getText().toString(), desc.getText().toString(), leaderEmail, task_members, deadlineView.getText().toString(), categoryView.getText().toString());
+        });
+    }
+
+    private void handleCreateTaskBtn(String taskTitle, String desc, String leader, ArrayList<String> members, String deadline, String category) {
+        Dialog loading = createLoadingDialog();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> newTask = new HashMap<>();
+        newTask.put("title", taskTitle);
+        newTask.put("description", desc);
+        newTask.put("deadline", deadline);
+        newTask.put("category", category);
+        newTask.put("projectId", projectId);
+        ArrayList<Map<String, Object>> membersList = new ArrayList<>();
+        for (String member : members) {
+            Map<String, Object> memberMap = new HashMap<>();
+            memberMap.put("email", member);
+            membersList.add(memberMap);
+            if (member.equals(leader)) {
+                memberMap.put("isLeader", true);
+            } else {
+                memberMap.put("isLeader", false);
+            }
+        }
+        if (!members.contains(leader)) {
+            Map<String, Object> leaderMap = new HashMap<>();
+            leaderMap.put("email", leader);
+            leaderMap.put("isLeader", true);
+        }
+        newTask.put("status", 0);
+        newTask.put("members", membersList);
+        db.collection("tasks").add(newTask).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                loading.dismiss();
+                Toast.makeText(this, "Create task successfully", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, TaskDetail.class);
+                intent.putExtra("taskId", task.getResult().getId());
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void showChooseLeaderActivity() {
+        Dialog loading = createLoadingDialog();
+        Intent intent = new Intent(this, AddMember.class);
+        intent.putExtra("category", 2);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("projects").document(projectId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Map<String, Object> project = task.getResult().getData();
+                ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) project.get("members");
+                ArrayList<String> memberEmails = new ArrayList<>();
+                MutableLiveData<ArrayList<String>> memberNames = new MutableLiveData<>(new ArrayList<>());
+                for (Map<String, Object> member : members) {
+                    memberEmails.add((String) member.get("email"));
+                    db.collection("users").whereEqualTo("email", member.get("email")).get().addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            ArrayList<String> names = memberNames.getValue();
+                            names.add(task1.getResult().getDocuments().get(0).get("name").toString());
+                            memberNames.setValue(names);
                         }
-                        intent.putStringArrayListExtra("members", memberEmails);
-                        intent.putStringArrayListExtra("name", memberNames);
-                        startActivity(intent);
                     });
                 }
-            });
+                memberNames.observe(this, strings -> {
+                    if (strings.size() == members.size()) {
+                        intent.putStringArrayListExtra("members", memberEmails);
+                        intent.putStringArrayListExtra("name", strings);
+                        intent.putExtra("leader_email", leaderEmail);
+                        intent.putExtra("leader_name", leaderName);
+                        startActivityForResult(intent, 2);
+                        loading.dismiss();
+                    }
+                });
+            }
         });
+    }
 
+    private void showAddMemberActivity() {
+        Dialog loading = createLoadingDialog();
+        Intent intent = new Intent(this, AddMember.class);
+        intent.putExtra("category", 3);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("projects").document(projectId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Map<String, Object> project = task.getResult().getData();
+                ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) project.get("members");
+                ArrayList<String> memberEmails = new ArrayList<>();
+                MutableLiveData<ArrayList<String>> memberNames = new MutableLiveData<>(new ArrayList<>());
+                for (Map<String, Object> member : members) {
+                    memberEmails.add((String) member.get("email"));
+                    db.collection("users").whereEqualTo("email", member.get("email")).get().addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            ArrayList<String> names = memberNames.getValue();
+                            names.add(task1.getResult().getDocuments().get(0).get("name").toString());
+                            memberNames.setValue(names);
+                        }
+                    });
+                }
+                memberNames.observe(this, strings -> {
+                    if (strings.size() == members.size()) {
+                        intent.putStringArrayListExtra("members", memberEmails);
+                        intent.putStringArrayListExtra("name", strings);
+                        intent.putExtra("task_members", task_members);
+                        intent.putExtra("task_names", task_names);
+                        startActivityForResult(intent, 3);
+                        loading.dismiss();
+                    }
+                });
+            }
+        });
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 3 && resultCode == RESULT_OK) {
+            task_members = data.getStringArrayListExtra("task_members");
+            task_names = data.getStringArrayListExtra("task_names");
+            memberList.removeAllViews();
+            for (int i = 0; i < Math.min(2, task_members.size()); i++) {
+                TextView member = createItemMember(task_names.get(i));
+                memberList.addView(member);
+            }
+            if (task_members.size() > 2) {
+                TextView more = createItemMember((task_members.size() - 2) + " more...");
+                memberList.addView(more);
+            }
+        } else if (requestCode == 2 && resultCode == RESULT_OK) {
+            leaderEmail = data.getStringExtra("leader_email");
+            leaderName = data.getStringExtra("leader_name");
+            leader.setText(leaderName);
+            leader.setVisibility(View.VISIBLE);
+            if (task_members.contains(leaderEmail)) {
+                return;
+            }
+            task_members.add(leaderEmail);
+            task_names.add(leaderName);
+            memberList.removeAllViews();
+            for (int i = 0; i < Math.min(2, task_members.size()); i++) {
+                TextView member = createItemMember(task_names.get(i));
+                memberList.addView(member);
+            }
+            if (task_members.size() > 2) {
+                TextView more = createItemMember((task_members.size() - 2) + " more...");
+                memberList.addView(more);
+            }
+        } else if (requestCode == 1234 && resultCode == RESULT_OK) {
+            int image = data.getIntExtra("image", 0);
+            ImageView cover = findViewById(R.id.cover);
+            cover.setImageResource(ImageArray.getCoverProjectImage().get(image));
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("projects").document(projectId).update("cover", image);
+        }
     }
 
     private void showCategoryDialog(TextView categoryView) {
@@ -533,5 +805,38 @@ public class ProjectDetail extends AppCompatActivity {
         cancelBtn.setOnClickListener(v2 -> {
             bottomSheetDialog1.dismiss();
         });
+    }
+
+    private TextView createItemMember(String name) {
+        TextView textView = new TextView(this);
+        textView.setText(name);
+        textView.setBackgroundResource(R.drawable.rounded_corner_24_bw);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        // add padding
+        float dip10 = 10f;
+        Resources r = getResources();
+        float px10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip10, r.getDisplayMetrics());
+        float dip12 = 12f;
+        float px12 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip12, r.getDisplayMetrics());
+        float dip4 = 4f;
+        float px4 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip4, r.getDisplayMetrics());
+        textView.setPadding((int) px12, (int) px4, (int) px12, (int) px4);
+        // add margin
+        params.setMargins(0, 0, 0, (int) px10);
+        //config text size
+        textView.setTextSize(12);
+        textView.setTextColor(getResources().getColor(R.color.black));
+        // set font family
+        textView.setTypeface(getResources().getFont(R.font.roboto_bold));
+        textView.setLayoutParams(params);
+        return textView;
+    }
+
+    public Dialog createLoadingDialog() {
+        Dialog loading = new Dialog(this);
+        loading.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        loading.setContentView(R.layout.loading);
+        loading.show();
+        return loading;
     }
 }

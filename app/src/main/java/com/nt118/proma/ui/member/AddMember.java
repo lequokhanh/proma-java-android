@@ -57,11 +57,13 @@ public class AddMember extends AppCompatActivity {
         category.setValue(intent.getIntExtra("category", 1));
         // 1: add project member, 2: choose leader, 3: add task member
         MutableLiveData<String> leader_email = new MutableLiveData<>();
+        leader_email.setValue(intent.getStringExtra("leader_email"));
         MutableLiveData<String> leader_name = new MutableLiveData<>();
+        leader_name.setValue(intent.getStringExtra("leader_name"));
         MutableLiveData<ArrayList<String>> task_members = new MutableLiveData<>();
-        task_members.setValue(new ArrayList<>());
+        task_members.setValue(intent.getStringArrayListExtra("task_members"));
         MutableLiveData<ArrayList<String>> task_names = new MutableLiveData<>();
-        task_names.setValue(new ArrayList<>());
+        task_names.setValue(intent.getStringArrayListExtra("task_names"));
         MutableLiveData<ArrayList<String>> members = new MutableLiveData<>();
         members.setValue(intent.getStringArrayListExtra("members"));
         MutableLiveData<ArrayList<String>> names = new MutableLiveData<>();
@@ -200,7 +202,7 @@ public class AddMember extends AppCompatActivity {
                 resultIntent.putStringArrayListExtra("names", names.getValue());
             }
             if (category.getValue() == 2) {
-                resultIntent.putExtra("leader", leader_email.getValue());
+                resultIntent.putExtra("leader_email", leader_email.getValue());
                 resultIntent.putExtra("leader_name", leader_name.getValue());
             }
             if (category.getValue() == 3) {

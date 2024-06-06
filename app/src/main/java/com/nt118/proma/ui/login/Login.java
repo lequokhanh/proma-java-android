@@ -1,15 +1,16 @@
 package com.nt118.proma.ui.login;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +45,6 @@ public class Login extends AppCompatActivity {
     GoogleSignInClient googleSignInClient;
     FirebaseAuth mAuth;
     CallbackManager mCallbackManager;
-    LinearLayout loadingLogin;
     CheckBox rememberMe;
 
     @Override
@@ -53,7 +53,6 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login);
         mAuth = FirebaseAuth.getInstance();
         Button login_button = findViewById(R.id.login_button);
-        loadingLogin = findViewById(R.id.loadingLogin);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             Intent intent = new Intent(Login.this, MainActivity.class);
@@ -163,7 +162,7 @@ public class Login extends AppCompatActivity {
     }
 
     public void loginWithAuthCredential(AuthCredential credential) {
-        loadingLogin.setVisibility(LinearLayout.VISIBLE);
+        Dialog loading = createLoadingDialog();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -196,7 +195,7 @@ public class Login extends AppCompatActivity {
                 });
             } else {
                 displayToast("Authentication Failed :" + task.getException().getMessage());
-                loadingLogin.setVisibility(LinearLayout.GONE);
+                loading.dismiss();
             }
         });
     }
@@ -231,5 +230,13 @@ public class Login extends AppCompatActivity {
         super.onBackPressed();
         moveTaskToBack(true);
         finishAffinity();
+    }
+
+    public Dialog createLoadingDialog() {
+        Dialog loading = new Dialog(this);
+        loading.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        loading.setContentView(R.layout.loading);
+        loading.show();
+        return loading;
     }
 }

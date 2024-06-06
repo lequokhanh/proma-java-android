@@ -1,46 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingBottom="30dp">
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="321dp"
-        android:layout_height="37dp"
-        android:layout_marginBottom="32dp"
-        android:fontFamily="@font/roboto_regular"
-        android:text="Let’s Collaborate and Create exciting new project together!"
-        android:textAlignment="center"
-        android:textColor="#8E8E93"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@+id/etNameProject"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <com.google.android.material.bottomsheet.BottomSheetDragHandleView
         android:id="@+id/bottomSheetDragHandleView"
         android:layout_width="645dp"
         android:layout_height="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
+        app:layout_constraintBottom_toTopOf="@+id/title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="@font/roboto_bold"
-        android:text="Create New Project"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView4"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/etNameProject"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/titleTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="Create New Project"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/title2TV"
+            android:layout_width="321dp"
+            android:layout_height="37dp"
+            android:fontFamily="@font/roboto_regular"
+            android:text="Let’s Collaborate and Create exciting new project together!"
+            android:textAlignment="center"
+            android:textColor="#8E8E93"
+            android:textSize="15sp" />
+    </LinearLayout>
+
 
     <EditText
         android:id="@+id/etNameProject"

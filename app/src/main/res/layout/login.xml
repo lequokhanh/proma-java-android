@@ -6,26 +6,6 @@
     android:background="#f9faff"
     android:backgroundTint="#f9faff">
 
-    <LinearLayout
-        android:id="@+id/loadingLogin"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#28000000"
-        android:clickable="true"
-        android:elevation="10dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="center"
-        android:visibility="gone">
-
-    <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </LinearLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editTextText5"
         android:layout_width="0dp"

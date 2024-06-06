@@ -35,7 +35,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.databinding.ActivityMainBinding;
-import com.nt118.proma.ui.home.HomeFragment;
 import com.nt118.proma.ui.login.CompleteProfile;
 import com.nt118.proma.ui.login.Login;
 import com.nt118.proma.ui.member.AddMember;
@@ -253,10 +252,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if (resultCode != RESULT_OK) {
-                return;
-            }
+        if (requestCode == 1 && resultCode == RESULT_OK) {
             members = data.getStringArrayListExtra("members");
             names = data.getStringArrayListExtra("names");
             member_list.removeAllViews();

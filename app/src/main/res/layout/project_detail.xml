@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imageView5"
+            android:id="@+id/cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="fill_horizontal"
@@ -44,7 +44,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView20"
+        android:id="@+id/addMemberTittle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#FFFFFF"
@@ -66,9 +66,9 @@
         android:elevation="10dp"
         android:foregroundTint="#FFFFFF"
         android:src="@drawable/three_dot"
-        app:layout_constraintBottom_toBottomOf="@+id/textView20"
+        app:layout_constraintBottom_toBottomOf="@+id/addMemberTittle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView20"
+        app:layout_constraintTop_toTopOf="@+id/addMemberTittle"
         app:tint="#FFFFFF" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -119,7 +119,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="15dp"
         android:fontFamily="@font/roboto_bold"
-        android:text="LinCop Mobile App"
         android:textColor="#000000"
         android:textSize="28sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -134,7 +133,6 @@
         android:ems="10"
         android:fontFamily="@font/roboto_regular"
         android:maxLines="2"
-        android:text="Mobile App project for Corporation Indonesia"
         android:textColor="#8E8E93"
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="@+id/memberAvatars"
@@ -150,7 +148,6 @@
         android:fontFamily="@font/roboto_bold"
         android:paddingHorizontal="8dp"
         android:paddingVertical="4dp"
-        android:text="12 Oct 2023"
         android:textColor="#FF3B30"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/descProjectView"
@@ -163,7 +160,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:indeterminate="false"
-        android:progress="65"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/deadlineView"
         app:layout_constraintTop_toBottomOf="@+id/deadlineView"
@@ -178,7 +174,6 @@
         android:fontFamily="@font/roboto_bold"
         android:paddingHorizontal="8dp"
         android:paddingVertical="4dp"
-        android:text="65 / 100"
         android:textColor="#FFFFFF"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/deadlineView"
@@ -270,35 +265,39 @@
         app:layout_constraintStart_toStartOf="@+id/horizontalScrollView2"
         app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView2" />
 
-    <ScrollView
-        android:id="@+id/projectDetailContainer"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="14dp"
-        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="@+id/create_task_btn"
         app:layout_constraintEnd_toEndOf="@+id/horizontalScrollView2"
         app:layout_constraintStart_toStartOf="@+id/horizontalScrollView2"
         app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView2">
 
-    </ScrollView>
+        <ScrollView
+            android:id="@+id/projectDetailContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/create_task_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginBottom="25dp"
         android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_gravity="center"
         android:scaleType="center"
         android:src="@drawable/ic_add"
         android:theme="@style/Widget.FloatingActionButton"
         app:backgroundTint="#0066FF"
         app:borderWidth="0dp"
-        app:elevation="0dp"/>
+        app:elevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

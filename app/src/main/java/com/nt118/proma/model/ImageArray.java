@@ -34,7 +34,7 @@ public class ImageArray {
         return (ArrayList<Integer>) images;
     }
 
-    public ArrayList<Integer> getCoverProjectImage() {
+    public static ArrayList<Integer> getCoverProjectImage() {
         List<Integer> images = new ArrayList<>();
         images.add(R.drawable.cover1);
         images.add(R.drawable.cover2);

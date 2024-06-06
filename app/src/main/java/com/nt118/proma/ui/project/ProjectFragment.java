@@ -31,6 +31,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
 import com.nt118.proma.databinding.FragmentProjectBinding;
+import com.nt118.proma.model.ImageArray;
 import com.nt118.proma.ui.search.SearchView;
 import com.nt118.proma.ui.task.TaskDetail;
 
@@ -113,17 +114,20 @@ public class ProjectFragment extends Fragment {
                     return;
                 }
                 for (int i = 0; i < task.getResult().getDocuments().size(); i++) {
-                    System.out.println("999999999" + task.getResult().getDocuments().get(i).getId());
                     Map<String, Object> projectItem = task.getResult().getDocuments().get(i).getData();
                     View projectView = LayoutInflater.from(getContext()).inflate(R.layout.project_card, null);
                     TextView projectName = projectView.findViewById(R.id.projectName);
                     TextView projectDescription = projectView.findViewById(R.id.projectDescription);
                     TextView tvDeadline = projectView.findViewById(R.id.deadline);
                     TextView progressProject = projectView.findViewById(R.id.progressProject);
+                    ImageView cover_project = projectView.findViewById(R.id.cover_project);
                     projectName.setText(projectItem.get("name").toString());
                     projectDescription.setText(projectItem.get("description").toString());
                     tvDeadline.setText(projectItem.get("deadline").toString());
-                    db.collection("tasks").whereEqualTo("project_id", task.getResult().getDocuments().get(i).getId()).get().addOnCompleteListener(task2 -> {
+                    if (projectItem.get("cover") != null) {
+                        cover_project.setImageResource(ImageArray.getCoverProjectImage().get(Math.toIntExact((Long) projectItem.get("cover"))));
+                    }
+                    db.collection("tasks").whereEqualTo("projectId", task.getResult().getDocuments().get(i).getId()).get().addOnCompleteListener(task2 -> {
                         if (task2.isSuccessful()) {
                             int totalTask = task2.getResult().getDocuments().size();
                             int doneTask = 0;
@@ -135,8 +139,10 @@ public class ProjectFragment extends Fragment {
                             progressProject.setText(doneTask + "/" + totalTask);
                         }
                     });
+                    int finalI = i;
                     projectView.setOnClickListener(v -> {
                         Intent intent = new Intent(getContext(), ProjectDetail.class);
+                        intent.putExtra("projectId", task.getResult().getDocuments().get(finalI).getId());
                         startActivity(intent);
                     });
                     projectView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -200,14 +206,14 @@ public class ProjectFragment extends Fragment {
                                 Map<String, Object> taskItem = task.getResult().getDocuments().get(i).getData();
                                 View taskView = LayoutInflater.from(getContext()).inflate(R.layout.task_card, null);
                                 TextView taskName = taskView.findViewById(R.id.taskName);
-                                taskName.setText(taskItem.get("name").toString());
+                                taskName.setText(taskItem.get("title").toString());
                                 String deadline = (String) taskItem.get("deadline");
                                 TextView taskDeadline = taskView.findViewById(R.id.deadline);
                                 taskDeadline.setText(deadline);
                                 TextView taskStatus = taskView.findViewById(R.id.status);
-                                if ((int) taskItem.get("status") == 1) {
+                                if ((Long) taskItem.get("status") == 0) {
                                     taskStatus.setVisibility(View.GONE);
-                                } else if ((int) taskItem.get("status") == 2) {
+                                } else if ((Long) taskItem.get("status") == 1) {
                                     taskStatus.setVisibility(View.VISIBLE);
                                     taskStatus.setText("On going");
                                 } else {
@@ -247,7 +253,7 @@ public class ProjectFragment extends Fragment {
                                 Space space = new Space(getContext());
                                 space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 20));
                                 taskView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                                if (count.get() % 2 == 0) {
+                                if (count.get() % 2 == 1) {
                                     leftSide.addView(taskView);
                                     leftSide.addView(space);
                                 } else {
