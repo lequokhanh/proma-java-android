@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, AddMember.class);
                         intent.putStringArrayListExtra("members", members);
                         intent.putStringArrayListExtra("name", names);
+                        intent.putExtra("category", 1);
                         startActivityForResult(intent, 1);
                     });
                     Button deadlineBtn = view1.findViewById(R.id.deadlineBtn);
