@@ -4,10 +4,12 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +24,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
@@ -79,6 +83,19 @@ public class ProjectFragment extends Fragment {
                 }
             });
         }
+        SwipeRefreshLayout swipeRefresh = binding.swipeRefresh;
+        swipeRefresh.setOnRefreshListener(() -> {
+            if (currentTab.get().getId() == R.id.TaskBtn) {
+                showTaskList(scrollview, 0, loading);
+            } else if (currentTab.get().getId() == R.id.OnGoingBtn) {
+                showTaskList(scrollview, 1, loading);
+            } else if (currentTab.get().getId() == R.id.CompletedBtn) {
+                showTaskList(scrollview, 2, loading);
+            } else {
+                showProjectList(scrollview, loading);
+            }
+            swipeRefresh.setRefreshing(false);
+        });
         return root;
     }
 
@@ -87,6 +104,8 @@ public class ProjectFragment extends Fragment {
         container.removeAllViews();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         LinearLayout containerLayout = new LinearLayout(getContext());
+        containerLayout.setOrientation(LinearLayout.VERTICAL);
+        MutableLiveData<Boolean> isLoaded = new MutableLiveData<>(false);
         db.collection("projects").whereEqualTo("user_created", email).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().getDocuments().size() == 0) {
@@ -94,6 +113,7 @@ public class ProjectFragment extends Fragment {
                     return;
                 }
                 for (int i = 0; i < task.getResult().getDocuments().size(); i++) {
+                    System.out.println("999999999" + task.getResult().getDocuments().get(i).getId());
                     Map<String, Object> projectItem = task.getResult().getDocuments().get(i).getData();
                     View projectView = LayoutInflater.from(getContext()).inflate(R.layout.project_card, null);
                     TextView projectName = projectView.findViewById(R.id.projectName);
@@ -119,15 +139,29 @@ public class ProjectFragment extends Fragment {
                         Intent intent = new Intent(getContext(), ProjectDetail.class);
                         startActivity(intent);
                     });
-
-                    Space space = new Space(getContext());
-                    space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 20));
                     projectView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                    Space space = new Space(getContext());
+                    float dip20 = 20f;
+                    Resources r = getResources();
+                    float px20 = TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP,
+                            dip20,
+                            r.getDisplayMetrics()
+                    );
+                    space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) px20));
                     containerLayout.addView(projectView);
+                    containerLayout.addView(space);
+                    if (i == task.getResult().getDocuments().size() - 1) {
+                        isLoaded.setValue(true);
+                    }
                 }
             }
-            container.addView(containerLayout);
-            loading.setVisibility(View.GONE);
+            isLoaded.observe(getViewLifecycleOwner(), aBoolean -> {
+                if (aBoolean) {
+                    container.addView(containerLayout);
+                    loading.setVisibility(View.GONE);
+                }
+            });
         });
     }
 
