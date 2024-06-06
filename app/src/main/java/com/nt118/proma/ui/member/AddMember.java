@@ -197,7 +197,7 @@ public class AddMember extends AppCompatActivity {
         Button save_btn = findViewById(R.id.saveBtn);
         save_btn.setOnClickListener(v -> {
             Intent resultIntent = new Intent();
-            if (category.getValue() == 2) {
+            if (category.getValue() == 1) {
                 resultIntent.putStringArrayListExtra("members", members.getValue());
                 resultIntent.putStringArrayListExtra("names", names.getValue());
             }
