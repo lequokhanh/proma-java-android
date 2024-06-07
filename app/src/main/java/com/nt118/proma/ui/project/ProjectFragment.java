@@ -205,6 +205,8 @@ public class ProjectFragment extends Fragment {
                                 count.getAndIncrement();
                                 Map<String, Object> taskItem = task.getResult().getDocuments().get(i).getData();
                                 View taskView = LayoutInflater.from(getContext()).inflate(R.layout.task_card, null);
+                                ImageView taskIcon = taskView.findViewById(R.id.icon);
+                                taskIcon.setImageResource(ImageArray.getIconTaskCard().get(taskItem.get("category").toString()));
                                 TextView taskName = taskView.findViewById(R.id.taskName);
                                 taskName.setText(taskItem.get("title").toString());
                                 String deadline = (String) taskItem.get("deadline");
@@ -262,6 +264,7 @@ public class ProjectFragment extends Fragment {
                                 }
                             }
                         }
+                        container.removeAllViews();
                         container.addView(task_list);
                         loading.setVisibility(View.GONE);
                     });

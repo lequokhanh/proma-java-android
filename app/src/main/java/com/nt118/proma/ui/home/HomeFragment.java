@@ -201,6 +201,8 @@ public class HomeFragment extends Fragment {
                         for (int i = 0; i < tasks.size(); i++) {
                             Map<String, Object> taskItem = tasks.get(i);
                             View taskView = inflater.inflate(R.layout.task_card, null);
+                            ImageView taskIcon = taskView.findViewById(R.id.icon);
+                            taskIcon.setImageResource(ImageArray.getIconTaskCard().get(taskItem.get("category").toString()));
                             TextView taskName = taskView.findViewById(R.id.taskName);
                             taskName.setText(taskItem.get("title").toString());
                             String deadline = (String) taskItem.get("deadline");

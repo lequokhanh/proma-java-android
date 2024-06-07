@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="160dp"
     android:layout_height="wrap_content"
@@ -24,21 +23,20 @@
         android:paddingVertical="16dp">
 
         <ImageView
-            android:id="@+id/imageView22"
+            android:id="@+id/icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_meeting" />
+            card_view:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/threeDot"
             android:layout_width="16dp"
             android:layout_height="0dp"
             android:src="@drawable/three_dot"
-            card_view:layout_constraintBottom_toBottomOf="@+id/imageView22"
+            card_view:layout_constraintBottom_toBottomOf="@+id/icon"
             card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintTop_toTopOf="@+id/imageView22" />
+            card_view:layout_constraintTop_toTopOf="@+id/icon" />
 
         <TextView
             android:id="@+id/taskName"
@@ -49,11 +47,10 @@
             android:fontFamily="@font/roboto_bold"
             android:letterSpacing="-0.0408"
             android:maxLines="2"
-            android:text="Meeting Project"
             android:textColor="#000"
             android:textSize="17sp"
             card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@+id/imageView22" />
+            card_view:layout_constraintTop_toBottomOf="@+id/icon" />
 
         <TextView
             android:id="@+id/deadline"
@@ -62,7 +59,6 @@
             android:layout_marginTop="4dp"
             android:fontFamily="@font/roboto_regular"
             android:letterSpacing="-0.024"
-            android:text="Tomorow - 13.00 PM"
             android:textColor="#8E8E93"
             android:textSize="15sp"
             card_view:layout_constraintStart_toStartOf="@+id/taskName"

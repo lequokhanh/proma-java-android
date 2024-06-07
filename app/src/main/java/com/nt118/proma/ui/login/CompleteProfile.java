@@ -111,82 +111,87 @@ public class CompleteProfile extends AppCompatActivity {
         });
         AtomicReference<Boolean> isDatePickerShowing = new AtomicReference<>(false);
         etDOB.setOnClickListener(v1 -> {
-            BottomSheetDialog datePickerDialog = new BottomSheetDialog(this);
-            View view2 = LayoutInflater.from(this).inflate(R.layout.modal_date_picker, null);
-            datePickerDialog.setContentView(view2);
-            if (isDatePickerShowing.get()) {
+            showPopupSetDOB(isDatePickerShowing);
+        });
+    }
+
+    private void showPopupSetDOB(AtomicReference<Boolean> isDatePickerShowing) {
+        BottomSheetDialog datePickerDialog = new BottomSheetDialog(this);
+        View view2 = LayoutInflater.from(this).inflate(R.layout.modal_date_picker, null);
+        datePickerDialog.setContentView(view2);
+        if (isDatePickerShowing.get()) {
+            return;
+        }
+        CalendarView datePicker = view2.findViewById(R.id.datePicker);
+        if (!etDOB.getText().toString().isEmpty()) {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+            try {
+                Date date = formatter.parse(etDOB.getText().toString());
+                datePicker.setDate(date.getTime());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        isDatePickerShowing.set(true);
+        datePickerDialog.show();
+        View timeContainer = view2.findViewById(R.id.timeContainer);
+        timeContainer.setVisibility(View.GONE);
+        MutableLiveData<Date> dobDate = new MutableLiveData<>(new Date(datePicker.getDate()));
+        datePicker.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            dobDate.setValue(new Date(year - 1900, month, dayOfMonth));
+        });
+        Button monthBtn = view2.findViewById(R.id.monthBtn);
+        AtomicReference<Boolean> isMonthPicker = new AtomicReference<>(false);
+        monthBtn.setOnClickListener(v2 -> {
+            if (isMonthPicker.get()) {
                 return;
             }
-            CalendarView datePicker = view2.findViewById(R.id.datePicker);
-            if (!etDOB.getText().toString().isEmpty()) {
-                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
-                try {
-                    Date date = formatter.parse(etDOB.getText().toString());
-                    datePicker.setDate(date.getTime());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            isDatePickerShowing.set(true);
-            datePickerDialog.show();
-            View timeContainer = view2.findViewById(R.id.timeContainer);
-            timeContainer.setVisibility(View.GONE);
-            MutableLiveData<Date> dobDate = new MutableLiveData<>(new Date(datePicker.getDate()));
-            datePicker.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
-                dobDate.setValue(new Date(year - 1900, month, dayOfMonth));
-            });
-            Button monthBtn = view2.findViewById(R.id.monthBtn);
-            AtomicReference<Boolean> isMonthPicker = new AtomicReference<>(false);
-            monthBtn.setOnClickListener(v2 -> {
-                if (isMonthPicker.get()) {
-                    return;
-                }
-                isMonthPicker.set(true);
-                BottomSheetDialog monthPicker = new BottomSheetDialog(this);
-                View monthPickerView = getLayoutInflater().inflate(R.layout.modal_month_picker, null);
-                monthPicker.setContentView(monthPickerView);
-                NumberPicker monthPickerNumber = monthPickerView.findViewById(R.id.monthPicker);
-                NumberPicker yearPicker = monthPickerView.findViewById(R.id.yearPicker);
-                monthPickerNumber.setMinValue(1);
-                monthPickerNumber.setMaxValue(12);
-                monthPickerNumber.setDisplayedValues(new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
-                monthPickerNumber.setValue(dobDate.getValue().getMonth() + 1);
-                yearPicker.setMinValue(1970);
-                yearPicker.setMaxValue(2100);
-                yearPicker.setValue(new Date().getYear() + 1900);
-                yearPicker.setWrapSelectorWheel(false);
-                Button applyBtn = monthPickerView.findViewById(R.id.applyBtn);
-                Button cancelBtn = view2.findViewById(R.id.cancelBtn);
-                applyBtn.setOnClickListener(v3 -> {
-                    Date date = new Date(yearPicker.getValue() - 1900, monthPickerNumber.getValue() - 1, 1);
-                    dobDate.setValue(date);
-                    monthPicker.dismiss();
-                });
-                cancelBtn.setOnClickListener(v3 -> monthPicker.dismiss());
-                monthPicker.setOnDismissListener(dialog -> isMonthPicker.set(false));
-                monthPicker.show();
-            });
-            Button applyBtn = view2.findViewById(R.id.applyBtn);
+            isMonthPicker.set(true);
+            BottomSheetDialog monthPicker = new BottomSheetDialog(this);
+            View monthPickerView = getLayoutInflater().inflate(R.layout.modal_month_picker, null);
+            monthPicker.setContentView(monthPickerView);
+            NumberPicker monthPickerNumber = monthPickerView.findViewById(R.id.monthPicker);
+            NumberPicker yearPicker = monthPickerView.findViewById(R.id.yearPicker);
+            monthPickerNumber.setMinValue(1);
+            monthPickerNumber.setMaxValue(12);
+            monthPickerNumber.setDisplayedValues(new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
+            monthPickerNumber.setValue(dobDate.getValue().getMonth() + 1);
+            yearPicker.setMinValue(1970);
+            yearPicker.setMaxValue(2100);
+            yearPicker.setValue(new Date().getYear() + 1900);
+            yearPicker.setWrapSelectorWheel(false);
+            Button applyBtn = monthPickerView.findViewById(R.id.applyBtn);
             Button cancelBtn = view2.findViewById(R.id.cancelBtn);
-            dobDate.observe(this, date -> {
-                datePicker.setDate(date.getTime());
+            applyBtn.setOnClickListener(v3 -> {
+                Date date = new Date(yearPicker.getValue() - 1900, monthPickerNumber.getValue() - 1, 1);
+                dobDate.setValue(date);
+                monthPicker.dismiss();
             });
-            datePicker.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
-                dobDate.setValue(new Date(year - 1900, month, dayOfMonth));
-            });
-            applyBtn.setOnClickListener(v2 -> {
-                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
-                String dob = formatter.format(dobDate.getValue());
-                etDOB.setText(dob);
-                etDOB.setTextColor(getResources().getColor(R.color.black));
-                datePickerDialog.dismiss();
-                isDatePickerShowing.set(false);
-            });
-            cancelBtn.setOnClickListener(v2 -> {
-                datePickerDialog.dismiss();
-                isDatePickerShowing.set(false);
-            });
+            cancelBtn.setOnClickListener(v3 -> monthPicker.dismiss());
+            monthPicker.setOnDismissListener(dialog -> isMonthPicker.set(false));
+            monthPicker.show();
         });
+        Button applyBtn = view2.findViewById(R.id.applyBtn);
+        Button cancelBtn = view2.findViewById(R.id.cancelBtn);
+        dobDate.observe(this, date -> {
+            datePicker.setDate(date.getTime());
+        });
+        datePicker.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            dobDate.setValue(new Date(year - 1900, month, dayOfMonth));
+        });
+        applyBtn.setOnClickListener(v2 -> {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+            String dob = formatter.format(dobDate.getValue());
+            etDOB.setText(dob);
+            etDOB.setTextColor(getResources().getColor(R.color.black));
+            datePickerDialog.dismiss();
+            isDatePickerShowing.set(false);
+        });
+        cancelBtn.setOnClickListener(v2 -> {
+            datePickerDialog.dismiss();
+            isDatePickerShowing.set(false);
+        });
+        datePickerDialog.setOnDismissListener(dialog -> isDatePickerShowing.set(false));
     }
 
     @Override

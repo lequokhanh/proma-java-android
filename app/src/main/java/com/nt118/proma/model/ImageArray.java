@@ -3,7 +3,9 @@ package com.nt118.proma.model;
 import com.nt118.proma.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ImageArray {
     public ArrayList<Integer> getAvatarImage() {
@@ -55,5 +57,12 @@ public class ImageArray {
         images.add(R.drawable.cover17);
         images.add(R.drawable.cover18);
         return (ArrayList<Integer>) images;
+    }
+
+    public static Map<String, Integer> getIconTaskCard() {
+        Map<String, Integer> icons = new HashMap<>();
+        icons.put("Meeting", R.drawable.ic_meeting);
+        icons.put("Task", R.drawable.ic_task_square);
+        return icons;
     }
 }
