@@ -108,6 +108,17 @@ public class ProfileFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        TextView username = binding.username;
+        CircleImageView avatar = binding.avatar3;
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("user", MODE_PRIVATE);
+        String name = sharedPreferences.getString("name", "");
+        avatar.setImageResource(new ImageArray().getAvatarImage().get(sharedPreferences.getInt("avatar", 0)));
+        username.setText(name);
+    }
+
 
     public void remove_fcm_token() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
