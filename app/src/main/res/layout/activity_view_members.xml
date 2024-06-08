@@ -6,11 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.task.ViewMember2">
+
     <ImageView
         android:id="@+id/img_Back"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginStart="22dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="50dp"
         android:elevation="10dp"
         android:src="@drawable/ic_arrow_left"
@@ -32,11 +33,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/img_Back" />
+
     <TextView
         android:id="@+id/num_members"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="17dp"
         android:fontFamily="@font/roboto"
         android:lineHeight="20dp"
@@ -46,13 +48,14 @@
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/img_Back" />
+
     <ScrollView
         android:id="@+id/scrollview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="21.5dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="13dp"
-        android:layout_marginEnd="20.5dp"
+        android:layout_marginEnd="15dp"
         android:scrollbars="none"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,14 +71,13 @@
                 layout="@layout/item_member4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="13dp"
-                />
+                android:layout_marginBottom="13dp" />
+
             <include
                 layout="@layout/item_member4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="13dp"
-                />
+                android:layout_marginBottom="13dp" />
 
         </LinearLayout>
     </ScrollView>
