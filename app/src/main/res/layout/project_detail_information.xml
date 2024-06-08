@@ -136,6 +136,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
+        android:alpha="0.3"
         android:background="@drawable/rounded_corner_14_gr"
         android:fontFamily="@font/roboto_bold"
         android:gravity="center"
