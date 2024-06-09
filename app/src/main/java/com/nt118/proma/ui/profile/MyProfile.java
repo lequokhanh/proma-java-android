@@ -32,6 +32,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MyProfile extends AppCompatActivity {
 
     private final MutableLiveData<Integer> selectedImage = new MutableLiveData<>();
@@ -44,7 +46,8 @@ public class MyProfile extends AppCompatActivity {
     private TextView etDOB;
     private FirebaseFirestore db;
     private DocumentReference docRef;
-    private ImageView imgBack, setAvatar, avatar;
+    private ImageView imgBack, setAvatar;
+    private CircleImageView avatar;
     private Button update;
 
     @Override

@@ -31,15 +31,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/img_Back" />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatar2"
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:layout_marginTop="38dp"
+        android:src="#d9d9d9"
         app:layout_constraintEnd_toEndOf="@+id/textView20"
         app:layout_constraintStart_toStartOf="@+id/textView20"
-        app:layout_constraintTop_toBottomOf="@+id/textView20"
-        app:srcCompat="@drawable/avatar1" />
+        app:layout_constraintTop_toBottomOf="@+id/textView20" />
 
     <ImageView
         android:id="@+id/setAvatar"
@@ -68,7 +68,7 @@
         android:inputType="text"
         android:paddingHorizontal="14dp"
         android:paddingVertical="16dp"
-        android:text="Fahmi Haecal"
+        android:hint="Full Name"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -90,9 +90,9 @@
         android:inputType="datetime|date"
         android:paddingHorizontal="14dp"
         android:paddingVertical="16dp"
-        android:text="02/09/2003"
         android:textColor="#000"
         android:textSize="15sp"
+        android:hint="Date Of Birth"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -114,7 +114,7 @@
         android:inputType="text|textEmailAddress"
         android:paddingHorizontal="14dp"
         android:paddingVertical="16dp"
-        android:text="lequockhanhkt03@gmail.com"
+        android:hint="Email"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -136,7 +136,7 @@
         android:inputType="phone"
         android:paddingHorizontal="14dp"
         android:paddingVertical="16dp"
-        android:text="0843450209"
+        android:hint="Phone Number"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

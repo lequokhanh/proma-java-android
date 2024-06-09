@@ -26,10 +26,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
+import com.nt118.proma.model.ImageArray;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AddMember extends AppCompatActivity {
     private static final String EMAIL_REGEX =
@@ -176,10 +179,21 @@ public class AddMember extends AppCompatActivity {
                         });
                         break;
                 }
+                CircleImageView avatar_member = item_member.findViewById(R.id.avatar);
                 TextView email_member = item_member.findViewById(R.id.email);
                 TextView name_member = item_member.findViewById(R.id.name);
                 email_member.setText(email);
                 name_member.setText(names.getValue().get(strings.indexOf(email)));
+                db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().isEmpty()) {
+                            if (task.getResult().getDocuments().get(0).getLong("avatar") != null) {
+                                int avatar = Math.toIntExact(task.getResult().getDocuments().get(0).getLong("avatar"));
+                                avatar_member.setImageResource(new ImageArray().getAvatarImage().get(avatar));
+                            }
+                        }
+                    }
+                });
                 // margin top 13dp
                 float dip = 13f;
                 Resources r = getResources();

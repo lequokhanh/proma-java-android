@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -59,6 +60,8 @@ public class ProjectDetail extends AppCompatActivity {
     private String projectId;
     private ArrayList<String> task_members = new ArrayList<>();
     private ArrayList<String> task_names = new ArrayList<>();
+    private ArrayList<String> membersProject = new ArrayList<>();
+    private ArrayList<String> memberNames = new ArrayList<>();
     private LinearLayout memberList;
     private String leaderEmail;
     private String leaderName;
@@ -67,6 +70,7 @@ public class ProjectDetail extends AppCompatActivity {
     private ProgressBar loadingProjectDetail;
     private ScrollView container;
     private FloatingActionButton create_btn;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,10 +102,8 @@ public class ProjectDetail extends AppCompatActivity {
                     if ("mPopup".equals(field.getName())) {
                         field.setAccessible(true);
                         Object menuPopupHelper = field.get(popup);
-                        Class<?> classPopupHelper = Class.forName(menuPopupHelper
-                                .getClass().getName());
-                        Method setForceIcons = classPopupHelper.getMethod(
-                                "setForceShowIcon", boolean.class);
+                        Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                        Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
                         setForceIcons.invoke(menuPopupHelper, true);
                         break;
                     }
@@ -110,7 +112,7 @@ public class ProjectDetail extends AppCompatActivity {
                 e.printStackTrace();
             }
             popup.setOnMenuItemClickListener(item -> {
-                if (item.getItemId() == R.id.action_change_cover){
+                if (item.getItemId() == R.id.action_change_cover) {
                     Intent intent2 = new Intent(this, SetImage.class);
                     intent2.putExtra("type", "cover");
                     intent2.putIntegerArrayListExtra("images", ImageArray.getCoverProjectImage());
@@ -230,7 +232,7 @@ public class ProjectDetail extends AppCompatActivity {
         View task_list = LayoutInflater.from(this).inflate(R.layout.task_list, null);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         LinearLayout leftSide = task_list.findViewById(R.id.leftSide);
-        LinearLayout rightSide = task_list.findViewById(R.id.linearLayout5);
+        LinearLayout rightSide = task_list.findViewById(R.id.rightSide);
         leftSide.getLayoutParams().width = (int) (getResources().getDisplayMetrics().widthPixels * 0.5 - 68);
         rightSide.getLayoutParams().width = (int) (getResources().getDisplayMetrics().widthPixels * 0.5 - 68);
         leftSide.removeAllViews();
@@ -268,8 +270,11 @@ public class ProjectDetail extends AppCompatActivity {
                         taskStatus.setText("Done");
                         taskStatus.setTextColor(getResources().getColor(R.color.white));
                     }
+                    int finalI = i;
                     taskView.setOnClickListener(v -> {
                         Intent intent = new Intent(this, TaskDetail.class);
+                        intent.putExtra("taskId", task.getResult().getDocuments().get(finalI).getId());
+                        intent.putExtra("projectId", projectId);
                         startActivity(intent);
                     });
                     ImageView threeDot = taskView.findViewById(R.id.threeDot);
@@ -285,10 +290,8 @@ public class ProjectDetail extends AppCompatActivity {
                                 if ("mPopup".equals(field.getName())) {
                                     field.setAccessible(true);
                                     Object menuPopupHelper = field.get(popup);
-                                    Class<?> classPopupHelper = Class.forName(menuPopupHelper
-                                            .getClass().getName());
-                                    Method setForceIcons = classPopupHelper.getMethod(
-                                            "setForceShowIcon", boolean.class);
+                                    Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                                    Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
                                     setForceIcons.invoke(menuPopupHelper, true);
                                     break;
                                 }
@@ -331,6 +334,8 @@ public class ProjectDetail extends AppCompatActivity {
                     if (task1.isSuccessful()) {
                         leader_tv.setText(task1.getResult().getDocuments().get(0).get("name").toString());
                         LinearLayout member_list = information.findViewById(R.id.memberList2);
+                        TextView deadline_tv = information.findViewById(R.id.deadline_tv);
+                        deadline_tv.setText(project.get("deadline").toString());
                         ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) project.get("members");
                         MutableLiveData<Integer> count = new MutableLiveData<>(0);
                         for (int i = 0; i < Math.min(2, members.size()); i++) {
@@ -382,11 +387,19 @@ public class ProjectDetail extends AppCompatActivity {
         titleTV.setText("Edit project");
         TextView nameProjectET = view1.findViewById(R.id.etNameProject);
         TextView descProjectET = view1.findViewById(R.id.etDescProject);
-        LinearLayout memberList = view1.findViewById(R.id.memberList2);
         TextView deadlineView = view1.findViewById(R.id.deadlineView);
+        Button deadlineBtn = view1.findViewById(R.id.deadlineBtn);
+        deadlineBtn.setOnClickListener(v1 -> {
+            showDatePicker(new AtomicReference<>(false), deadlineView, Boolean.FALSE);
+        });
+        Button addMemberBtn = view1.findViewById(R.id.addMemberBtn);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Button createProjectBtn = view1.findViewById(R.id.createProjectBtn);
         createProjectBtn.setText("Save");
+        membersProject = new ArrayList<>();
+        memberNames = new ArrayList<>();
+        memberList = view1.findViewById(R.id.memberList2);
+        AtomicReference<ArrayList<Map<String, Object>>> members = new AtomicReference<>();
         db.collection("projects").document(projectId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Map<String, Object> project = task.getResult().getData();
@@ -394,15 +407,15 @@ public class ProjectDetail extends AppCompatActivity {
                 descProjectET.setText(project.get("description").toString());
                 deadlineView.setText(project.get("deadline").toString());
                 deadlineView.setVisibility(View.VISIBLE);
-                ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) project.get("members");
+                members.set((ArrayList<Map<String, Object>>) project.get("members"));
                 MutableLiveData<Boolean> isCompleted = new MutableLiveData<>(false);
-                for (int i = 0; i < Math.min(2, members.size()); i++) {
+                for (int i = 0; i < Math.min(2, members.get().size()); i++) {
                     int finalI = i;
-                    db.collection("users").whereEqualTo("email", members.get(i).get("email")).get().addOnCompleteListener(task1 -> {
+                    db.collection("users").whereEqualTo("email", members.get().get(i).get("email")).get().addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
                             TextView member = createItemMember(task1.getResult().getDocuments().get(0).get("name").toString());
                             memberList.addView(member);
-                            if (finalI == Math.min(2, members.size()) - 1) {
+                            if (finalI == Math.min(2, members.get().size()) - 1) {
                                 isCompleted.setValue(true);
                             }
                         }
@@ -410,15 +423,75 @@ public class ProjectDetail extends AppCompatActivity {
                 }
                 isCompleted.observe(this, aBoolean -> {
                     if (aBoolean) {
-                        if (members.size() > 2) {
-                            TextView more = createItemMember((members.size() - 2) + " more...");
+                        if (members.get().size() > 2) {
+                            TextView more = createItemMember((members.get().size() - 2) + " more...");
                             memberList.addView(more);
                         }
-                        loading.dismiss();
-                        bottomSheetDialog.show();
                     }
                 });
+                for (Map<String, Object> member : members.get()) {
+                    db.collection("users").whereEqualTo("email", member.get("email")).get().addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            membersProject.add((String) member.get("email"));
+                            memberNames.add(task1.getResult().getDocuments().get(0).get("name").toString());
+                        }
+                        if (members.get().indexOf(member) == members.get().size() - 1) {
+                            loading.dismiss();
+                            bottomSheetDialog.show();
+                        }
+                    });
+                }
             }
+        });
+        addMemberBtn.setOnClickListener(v1 -> {
+            Intent intent = new Intent(this, AddMember.class);
+            intent.putExtra("category", 1);
+            intent.putStringArrayListExtra("members", membersProject);
+            intent.putStringArrayListExtra("name", memberNames);
+            startActivityForResult(intent, 5678);
+        });
+        createProjectBtn.setOnClickListener(v1 -> {
+            if (nameProjectET.getText().toString().isEmpty()) {
+                nameProjectET.setError("Name is required");
+                return;
+            }
+            if (descProjectET.getText().toString().isEmpty()) {
+                descProjectET.setError("Description is required");
+                return;
+            }
+            if (deadlineView.getVisibility() == View.GONE) {
+                deadlineView.setError("Deadline is required");
+                return;
+            }
+            if (membersProject.size() == 0) {
+                Toast.makeText(this, "Members are required", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            bottomSheetDialog.dismiss();
+            Map<String, Object> newProject = new HashMap<>();
+            newProject.put("name", nameProjectET.getText().toString());
+            newProject.put("description", descProjectET.getText().toString());
+            newProject.put("deadline", deadlineView.getText().toString());
+            ArrayList<Map<String, Object>> membersList = new ArrayList<>();
+            for (Map<String, Object> member : members.get()) {
+                if (membersProject.contains(member.get("email"))) {
+                    membersList.add(member);
+                    membersProject.remove(member.get("email"));
+                }
+            }
+            for (String member : membersProject) {
+                Map<String, Object> memberMap = new HashMap<>();
+                memberMap.put("email", member);
+                memberMap.put("isAccepted", false);
+                membersList.add(memberMap);
+            }
+            newProject.put("members", membersList);
+            db.collection("projects").document(projectId).update(newProject);
+            memberList = null;
+            membersProject.clear();
+            memberNames.clear();
+            loadUI();
+            bottomSheetDialog.dismiss();
         });
     }
 
@@ -442,7 +515,7 @@ public class ProjectDetail extends AppCompatActivity {
         TextView deadlineView = view1.findViewById(R.id.deadlineView);
         AtomicReference<Boolean> isDatePickerShowing = new AtomicReference<>(false);
         deadlineBtn.setOnClickListener(v1 -> {
-            showDatePicker(isDatePickerShowing, deadlineView);
+            showDatePicker(isDatePickerShowing, deadlineView, Boolean.TRUE);
         });
         // handle choose category button
         Button addCategoryBtn = view1.findViewById(R.id.addCategoryBtn);
@@ -518,6 +591,7 @@ public class ProjectDetail extends AppCompatActivity {
                 Toast.makeText(this, "Create task successfully", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, TaskDetail.class);
                 intent.putExtra("taskId", task.getResult().getId());
+                intent.putExtra("projectId", projectId);
                 startActivity(intent);
             }
         });
@@ -535,16 +609,17 @@ public class ProjectDetail extends AppCompatActivity {
                 ArrayList<String> memberEmails = new ArrayList<>();
                 MutableLiveData<ArrayList<String>> memberNames = new MutableLiveData<>(new ArrayList<>());
                 for (Map<String, Object> member : members) {
-                    memberEmails.add((String) member.get("email"));
                     db.collection("users").whereEqualTo("email", member.get("email")).get().addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
                             ArrayList<String> names = memberNames.getValue();
+                            memberEmails.add((String) member.get("email"));
                             names.add(task1.getResult().getDocuments().get(0).get("name").toString());
                             memberNames.setValue(names);
                         }
                     });
                 }
                 memberNames.observe(this, strings -> {
+
                     if (strings.size() == members.size()) {
                         intent.putStringArrayListExtra("members", memberEmails);
                         intent.putStringArrayListExtra("name", strings);
@@ -633,6 +708,18 @@ public class ProjectDetail extends AppCompatActivity {
             cover.setImageResource(ImageArray.getCoverProjectImage().get(image));
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("projects").document(projectId).update("cover", image);
+        } else if (requestCode == 5678 && resultCode == RESULT_OK) {
+            membersProject = data.getStringArrayListExtra("members");
+            memberNames = data.getStringArrayListExtra("names");
+            memberList.removeAllViews();
+            for (int i = 0; i < Math.min(2, memberNames.size()); i++) {
+                TextView member = createItemMember(memberNames.get(i));
+                memberList.addView(member);
+            }
+            if (memberNames.size() > 2) {
+                TextView more = createItemMember((memberNames.size() - 2) + " more...");
+                memberList.addView(more);
+            }
         }
     }
 
@@ -676,7 +763,7 @@ public class ProjectDetail extends AppCompatActivity {
         });
     }
 
-    private void showDatePicker(AtomicReference<Boolean> isDatePickerShowing, TextView deadlineView) {
+    private void showDatePicker(AtomicReference<Boolean> isDatePickerShowing, TextView deadlineView, Boolean isShowTimePicker) {
         BottomSheetDialog bottomSheetDialog1 = new BottomSheetDialog(this);
         View view2 = LayoutInflater.from(this).inflate(R.layout.modal_date_picker, null);
         bottomSheetDialog1.setContentView(view2);
@@ -692,23 +779,23 @@ public class ProjectDetail extends AppCompatActivity {
             isDatePickerShowing.set(false);
         });
         TextView timeBtn = view2.findViewById(R.id.timeBtn);
+        ConstraintLayout timeContainer = view2.findViewById(R.id.timeContainer);
+        if (!isShowTimePicker) {
+            timeContainer.setVisibility(View.GONE);
+        }
         AtomicReference<Boolean> isTimePickerShow = new AtomicReference<>(false);
         CalendarView datePicker = view2.findViewById(R.id.datePicker);
         if (deadlineView.getVisibility() == View.VISIBLE) {
             String deadlineDate = deadlineView.getText().toString().split(" - ")[0];
-            String deadlineTime = deadlineView.getText().toString().split(" - ")[1].replace(".", ":");
-            if (deadlineDate.equals("Today")) {
-                datePicker.setDate(new Date().getTime());
-            } else if (deadlineDate.equals("Tomorrow")) {
-                datePicker.setDate(new Date().getTime() + 86400000);
-            } else {
-                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
-                try {
-                    Date date = formatter.parse(deadlineDate);
-                    datePicker.setDate(date.getTime());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            String deadlineTime = "";
+            if (isShowTimePicker)
+                deadlineTime = deadlineView.getText().toString().split(" - ")[1].replace(".", ":");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+            try {
+                Date date = formatter.parse(deadlineDate);
+                datePicker.setDate(date.getTime());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             timeBtn.setText(deadlineTime);
         }
@@ -797,9 +884,16 @@ public class ProjectDetail extends AppCompatActivity {
         Button applyBtn = view2.findViewById(R.id.applyBtn);
         Button cancelBtn = view2.findViewById(R.id.cancelBtn);
         applyBtn.setOnClickListener(v2 -> {
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy - ", Locale.ENGLISH);
-            String deadline = formatter.format(deadlineDate.getValue());
-            deadline += timeBtn.getText().toString().replace(":", ".");
+            SimpleDateFormat formatter;
+            String deadline;
+            if (isShowTimePicker) {
+                formatter = new SimpleDateFormat("dd/MM/yy - ", Locale.ENGLISH);
+                deadline = formatter.format(deadlineDate.getValue());
+                deadline += timeBtn.getText().toString().replace(":", ".");
+            } else {
+                formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+                deadline = formatter.format(deadlineDate.getValue());
+            }
             deadlineView.setText(deadline);
             deadlineView.setVisibility(View.VISIBLE);
             bottomSheetDialog1.dismiss();
@@ -836,7 +930,7 @@ public class ProjectDetail extends AppCompatActivity {
 
     public Dialog createLoadingDialog() {
         Dialog loading = new Dialog(this);
-        loading.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        loading.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         loading.setContentView(R.layout.loading);
         loading.show();
         return loading;

@@ -177,7 +177,7 @@ public class ProjectFragment extends Fragment {
         View task_list = LayoutInflater.from(getContext()).inflate(R.layout.task_list, null);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         LinearLayout leftSide = task_list.findViewById(R.id.leftSide);
-        LinearLayout rightSide = task_list.findViewById(R.id.linearLayout5);
+        LinearLayout rightSide = task_list.findViewById(R.id.rightSide);
         leftSide.getLayoutParams().width = (int) (getResources().getDisplayMetrics().widthPixels * 0.5 - 68);
         rightSide.getLayoutParams().width = (int) (getResources().getDisplayMetrics().widthPixels * 0.5 - 68);
         leftSide.removeAllViews();
@@ -224,8 +224,11 @@ public class ProjectFragment extends Fragment {
                                     taskStatus.setText("Done");
                                     taskStatus.setTextColor(getResources().getColor(R.color.white));
                                 }
+                                int finalI = i;
                                 taskView.setOnClickListener(v -> {
                                     Intent intent = new Intent(getContext(), TaskDetail.class);
+                                    intent.putExtra("taskId", task.getResult().getDocuments().get(finalI).getId());
+                                    intent.putExtra("projectId", projectId);
                                     startActivity(intent);
                                 });
                                 ImageView threeDot = taskView.findViewById(R.id.threeDot);

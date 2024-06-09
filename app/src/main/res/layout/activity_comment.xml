@@ -27,7 +27,7 @@
         android:backgroundTint="#FFFFFF"
         android:elevation="10dp"
         android:fontFamily="@font/roboto_bold"
-        android:text="Comment (1)"
+        android:text="Comment"
         android:textColor="#000"
         android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="@+id/img_Back"

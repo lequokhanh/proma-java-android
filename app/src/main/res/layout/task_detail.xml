@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/project_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="#F9FAFF"
+    android:background="#AEAEB2"
     android:backgroundTint="#F9FAFF"
     android:scrollbars="none">
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/create_task_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="25dp"
+        android:clickable="true"
+        android:scaleType="center"
+        android:src="@drawable/ic_add"
+        android:theme="@style/Widget.FloatingActionButton"
+        android:visibility="gone"
+        app:backgroundTint="#0066FF"
+        app:borderWidth="0dp"
+        app:elevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -28,9 +46,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="fill_horizontal"
             android:adjustViewBounds="false"
-            android:background="#80D3D3D3"
-            android:scaleType="centerCrop"
-            android:src="@drawable/cover1" />
+            android:background="#AEAEB2"
+            android:scaleType="centerCrop" />
 
     </androidx.cardview.widget.CardView>
 
@@ -115,7 +132,7 @@
 
 
     <TextView
-        android:id="@+id/textView22"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
@@ -126,96 +143,106 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cardView" />
 
-        <TextView
-            android:id="@+id/textView21"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:fontFamily="@font/roboto_regular"
-            android:textColor="#8E8E93"
-            android:textSize="17sp"
-            app:layout_constraintStart_toStartOf="@+id/textView22"
-            app:layout_constraintTop_toBottomOf="@+id/textView22" />
+    <TextView
+        android:id="@+id/desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:fontFamily="@font/roboto_regular"
+        android:textColor="#8E8E93"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
-        <TextView
-            android:id="@+id/deadlineView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/rounded_corner_24_blue"
-            android:fontFamily="@font/roboto_bold"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="@+id/textView21"
-            app:layout_constraintTop_toBottomOf="@+id/textView21" />
+    <TextView
+        android:id="@+id/deadlineView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_corner_24_blue"
+        android:fontFamily="@font/roboto_bold"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/desc"
+        app:layout_constraintTop_toBottomOf="@+id/desc" />
 
     <LinearLayout
-            android:id="@+id/tabContainer"
+        android:id="@+id/tabContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="@+id/deadlineView"
+        app:layout_constraintTop_toBottomOf="@+id/deadlineView">
+
+        <TextView
+            android:id="@+id/resultTab"
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="@+id/deadlineView"
-            app:layout_constraintTop_toBottomOf="@+id/deadlineView">
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corner_24_blue"
+            android:fontFamily="@font/roboto_bold"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="Result"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF" />
 
-            <TextView
-                android:id="@+id/resultTab"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_corner_24_blue"
-                android:fontFamily="@font/roboto_bold"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:text="Result"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF" />
+        <TextView
+            android:id="@+id/informationTab"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corner_24_bw"
+            android:fontFamily="@font/roboto_medium"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="Information"
+            android:textAlignment="center"
+            android:textColor="#007AFF" />
 
-            <TextView
-                android:id="@+id/informationTab"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_corner_24_bw"
-                android:fontFamily="@font/roboto_medium"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:text="Information"
-                android:textAlignment="center"
-                android:textColor="#007AFF" />
-
-            <TextView
-                android:id="@+id/subtaskTab"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_corner_24_bw"
-                android:fontFamily="@font/roboto_medium"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:text="Sub - Task"
-                android:textAlignment="center"
-                android:textColor="#007AFF" />
+        <TextView
+            android:id="@+id/subtaskTab"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corner_24_bw"
+            android:fontFamily="@font/roboto_medium"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="Sub - Task"
+            android:textAlignment="center"
+            android:textColor="#007AFF" />
 
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/resultContainer"
+    <LinearLayout
+        android:id="@+id/container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
-        android:visibility="visible"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tabContainer" />
 
+    <ProgressBar
+        android:id="@+id/loadingTaskDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/create_task_btn"
+        app:layout_constraintEnd_toEndOf="@+id/container"
+        app:layout_constraintStart_toStartOf="@+id/container"
+        app:layout_constraintTop_toTopOf="@+id/container" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

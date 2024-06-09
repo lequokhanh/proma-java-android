@@ -36,7 +36,7 @@
         android:id="@+id/img_Back"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginStart="22dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="50dp"
         android:elevation="10dp"
         android:src="@drawable/ic_arrow_left"
@@ -62,7 +62,7 @@
         android:id="@+id/menu_btn"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginEnd="22dp"
+        android:layout_marginEnd="15dp"
         android:elevation="10dp"
         android:foregroundTint="#FFFFFF"
         android:src="@drawable/three_dot"
@@ -75,7 +75,7 @@
         android:id="@+id/memberAvatars"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="22dp"
+        android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
         android:elevation="10dp"
         app:layout_constraintBottom_toBottomOf="@id/cardView"
@@ -254,17 +254,6 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <ProgressBar
-        android:id="@+id/loadingProjectDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:scrollbars="none"
-        app:layout_constraintBottom_toBottomOf="@+id/create_task_btn"
-        app:layout_constraintEnd_toEndOf="@+id/horizontalScrollView2"
-        app:layout_constraintStart_toStartOf="@+id/horizontalScrollView2"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView2" />
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="0dp"
@@ -281,6 +270,16 @@
             android:layout_height="match_parent"
             android:scrollbars="none" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/loadingProjectDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="@+id/swipeRefresh"
+        app:layout_constraintEnd_toEndOf="@+id/swipeRefresh"
+        app:layout_constraintStart_toStartOf="@+id/swipeRefresh"
+        app:layout_constraintTop_toTopOf="@+id/swipeRefresh" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/create_task_btn"

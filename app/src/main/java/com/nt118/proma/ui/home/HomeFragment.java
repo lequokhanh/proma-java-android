@@ -119,11 +119,7 @@ public class HomeFragment extends Fragment {
                 if (!task.getResult().getDocuments().isEmpty()) {
                     View homeContainer = inflater.inflate(R.layout.home_container, null);
                     CardView cardView = homeContainer.findViewById(R.id.card_view);
-                    cardView.findViewById(R.id.card_view).setOnClickListener(v -> {
-                        Intent intent = new Intent(getActivity(), ProjectDetail.class);
-                        intent.putExtra("projectId", task.getResult().getDocuments().get(0).getId());
-                        startActivity(intent);
-                    });
+
                     TextView projectName = cardView.findViewById(R.id.projectName);
                     TextView projectDescription = cardView.findViewById(R.id.projectDescription);
                     TextView tvDeadline = cardView.findViewById(R.id.deadline);
@@ -169,6 +165,11 @@ public class HomeFragment extends Fragment {
                     }
                     AtomicReference<String> projectId = new AtomicReference<>();
                     projectId.set(task.getResult().getDocuments().get(index).getId());
+                    cardView.findViewById(R.id.card_view).setOnClickListener(v -> {
+                        Intent intent = new Intent(getActivity(), ProjectDetail.class);
+                        intent.putExtra("projectId", projectId.get());
+                        startActivity(intent);
+                    });
                     db.collection("tasks").whereEqualTo("projectId", projectId.get()).get().addOnCompleteListener(task2 -> {
                         if (task2.isSuccessful()) {
                             int totalTask = task2.getResult().getDocuments().size();
@@ -183,11 +184,11 @@ public class HomeFragment extends Fragment {
                         TextView seeAllButton = homeContainer.findViewById(R.id.informationTab);
                         seeAllButton.setOnClickListener(v -> {
                             Intent intent = new Intent(getActivity(), AllTask.class);
+                            intent.putExtra("projectId", projectId.get());
                             startActivity(intent);
                         });
                         LinearLayout leftSide = homeContainer.findViewById(R.id.leftSide);
-                        LinearLayout rightSide = homeContainer.findViewById(R.id.linearLayout5);
-                        LinearLayout taskLayout = homeContainer.findViewById(R.id.horizontalLayout1);
+                        LinearLayout rightSide = homeContainer.findViewById(R.id.rightSide);
                         // set width of left and right side to 50% of screen width - 14dp * 2(padding) - 10dp
                         leftSide.getLayoutParams().width = (int) (getResources().getDisplayMetrics().widthPixels * 0.5 - 68);
                         rightSide.getLayoutParams().width = (int) (getResources().getDisplayMetrics().widthPixels * 0.5 - 68);
@@ -220,8 +221,11 @@ public class HomeFragment extends Fragment {
                                 taskStatus.setText("Done");
                                 taskStatus.setTextColor(getResources().getColor(R.color.white));
                             }
+                            int finalI = i;
                             taskView.setOnClickListener(v -> {
                                 Intent intent = new Intent(getActivity(), TaskDetail.class);
+                                intent.putExtra("taskId", task2.getResult().getDocuments().get(finalI).getId());
+                                intent.putExtra("projectId", projectId.get());
                                 startActivity(intent);
                             });
                             ImageView threeDot = taskView.findViewById(R.id.threeDot);
@@ -317,6 +321,12 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadUI();
     }
 
     // remove addSnapshotListener when fragment is destroyed
