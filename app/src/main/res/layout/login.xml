@@ -92,7 +92,7 @@
         app:useMaterialThemeColors="true" />
 
     <TextView
-        android:id="@+id/textView38"
+        android:id="@+id/forgot_password_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto_medium"

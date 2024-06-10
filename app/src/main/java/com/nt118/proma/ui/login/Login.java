@@ -52,6 +52,11 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         mAuth = FirebaseAuth.getInstance();
+        TextView forgot_password_tv = findViewById(R.id.forgot_password_tv);
+        forgot_password_tv.setOnClickListener(v -> {
+            Intent intent = new Intent(Login.this, ForgotPassword.class);
+            startActivity(intent);
+        });
         Button login_button = findViewById(R.id.login_button);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
