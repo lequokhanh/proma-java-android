@@ -5,7 +5,8 @@
     <queries>
         <package android:name="com.facebook.katana" />
     </queries>
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -19,9 +20,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TaskManager"
         tools:targetApi="31">
-        <activity
-            android:name=".ui.task.ViewMember2"
-            android:exported="false" />
         <activity
             android:name=".ui.login.ForgotPassword"
             android:exported="false" />

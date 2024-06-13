@@ -2,8 +2,10 @@ package com.nt118.proma.ui.login;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,6 +61,13 @@ public class ForgotPassword extends AppCompatActivity {
                     btn_send_request.setEnabled(true);
                 }
             });
+        });
+        TextView tv_back= findViewById(R.id.back);
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
         });
     }
 }

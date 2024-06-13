@@ -15,6 +15,8 @@ activity = "1.8.0"
 googleServices = "4.4.1"
 firebaseFirestore = "24.11.1"
 gridlayout = "1.0.0"
+googleGmsGoogleServices = "4.4.2"
+firebaseStorage = "21.0.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -32,8 +34,10 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 google-services = { group = "com.google.gms", name = "google-services", version.ref = "googleServices" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 gridlayout = { group = "androidx.gridlayout", name = "gridlayout", version.ref = "gridlayout" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
+googleGmsGoogleServices = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 
 
