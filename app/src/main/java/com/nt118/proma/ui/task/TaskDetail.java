@@ -28,15 +28,10 @@ import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -53,14 +48,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class TaskDetail extends AppCompatActivity {
+    private static final int PICK_FILE_REQUEST = 1;
     private LinearLayout container;
     private String taskId, projectId, parentId;
     private FloatingActionButton create_btn;
     private ProgressBar loadingBar;
-    private FirebaseStorage storage;
-    private StorageReference storageRef;
-    private Uri dataUpload;
-    private static final int PICK_FILE_REQUEST = 1;
+    private Dialog currentDialog;
+
+    public static void setWindowFlag(Activity activity, final int bits, boolean on) {
+        Window win = activity.getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -88,6 +92,46 @@ public class TaskDetail extends AppCompatActivity {
         loadingBar = findViewById(R.id.loadingTaskDetail);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         ImageView imageView = findViewById(R.id.img_Back);
+        ImageView threeDot = findViewById(R.id.menu_btn);
+        threeDot.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(this, v, 5);
+            popup.getMenuInflater().inflate(R.menu.task_menu, popup.getMenu());
+            SpannableString s = new SpannableString(popup.getMenu().getItem(2).getTitle());
+            s.setSpan(new ForegroundColorSpan(Color.parseColor("#FF3B30")), 0, s.length(), 0);
+            popup.getMenu().getItem(2).setTitle(s);
+            try {
+                Field[] fields = popup.getClass().getDeclaredFields();
+                for (Field field : fields) {
+                    if ("mPopup".equals(field.getName())) {
+                        field.setAccessible(true);
+                        Object menuPopupHelper = field.get(popup);
+                        Class<?> classPopupHelper = Class.forName(menuPopupHelper
+                                .getClass().getName());
+                        Method setForceIcons = classPopupHelper.getMethod(
+                                "setForceShowIcon", boolean.class);
+                        setForceIcons.invoke(menuPopupHelper, true);
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            popup.show();
+            popup.setOnMenuItemClickListener(item -> {
+//                if
+                if (item.getItemId() == R.id.action_edit) {
+                    //show popup edit task
+                }
+                if (item.getItemId() == R.id.action_delete) {
+                    db.collection("tasks").document(taskId).delete().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            finish();
+                        }
+                    });
+                }
+                return true;
+            });
+        });
         imageView.setOnClickListener(v -> {
             finish();
         });
@@ -101,14 +145,12 @@ public class TaskDetail extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         if (task2.getResult().get("cover") != null) {
                             cover.setImageResource(ImageArray.getCoverProjectImage().get(Math.toIntExact((Long) task2.getResult().get("cover"))));
-                            loading.dismiss();
                         }
+                        loading.dismiss();
                     }
                 });
             }
         });
-        storage = FirebaseStorage.getInstance();
-        storageRef = FirebaseStorage.getInstance().getReference();
     }
 
     private void handleTabClick() {
@@ -122,7 +164,7 @@ public class TaskDetail extends AppCompatActivity {
                 child.setTextColor(Color.parseColor("#FFFFFF"));
                 child.setBackground(ContextCompat.getDrawable(this, R.drawable.rounded_corner_24_blue));
                 currentTab.get().setTextColor(Color.parseColor("#007AFF"));
-                currentTab.get().setBackground(ContextCompat.getDrawable(this,R.drawable.rounded_corner_24_bw));
+                currentTab.get().setBackground(ContextCompat.getDrawable(this, R.drawable.rounded_corner_24_bw));
                 currentTab.set(child);
                 if (child.getId() == R.id.resultTab) {
                     showResultTab();
@@ -140,16 +182,6 @@ public class TaskDetail extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-    public static void setWindowFlag(Activity activity, final int bits, boolean on) {
-        Window win = activity.getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
     }
 
     private void showTaskList() {
@@ -198,32 +230,6 @@ public class TaskDetail extends AppCompatActivity {
                         Intent intent = new Intent(this, TaskDetail.class);
                         startActivity(intent);
                     });
-                    ImageView threeDot = taskView.findViewById(R.id.threeDot);
-                    threeDot.setOnClickListener(v -> {
-                        PopupMenu popup = new PopupMenu(this, v, 5);
-                        popup.getMenuInflater().inflate(R.menu.task_menu, popup.getMenu());
-                        SpannableString s = new SpannableString(popup.getMenu().getItem(2).getTitle());
-                        s.setSpan(new ForegroundColorSpan(Color.parseColor("#FF3B30")), 0, s.length(), 0);
-                        popup.getMenu().getItem(2).setTitle(s);
-                        try {
-                            Field[] fields = popup.getClass().getDeclaredFields();
-                            for (Field field : fields) {
-                                if ("mPopup".equals(field.getName())) {
-                                    field.setAccessible(true);
-                                    Object menuPopupHelper = field.get(popup);
-                                    Class<?> classPopupHelper = Class.forName(menuPopupHelper
-                                            .getClass().getName());
-                                    Method setForceIcons = classPopupHelper.getMethod(
-                                            "setForceShowIcon", boolean.class);
-                                    setForceIcons.invoke(menuPopupHelper, true);
-                                    break;
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        popup.show();
-                    });
                     Space space = new Space(this);
                     space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 20));
                     taskView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -244,69 +250,32 @@ public class TaskDetail extends AppCompatActivity {
     }
 
     private void showResultTab() {
-        loadingBar.setVisibility(View.VISIBLE);
         container.setVisibility(View.GONE);
         create_btn.setVisibility(View.GONE);
         container.removeAllViews();
         View resultPane = LayoutInflater.from(this).inflate(R.layout.task_detail_result, null);
-        Button btnAtach =   resultPane.findViewById(R.id.attachBtn);
-        Button btnLink =   resultPane.findViewById(R.id.linkBtn);
+        Button btnAtach = resultPane.findViewById(R.id.attachBtn);
+        Button btnLink = resultPane.findViewById(R.id.linkBtn);
         TextView linkTextView = resultPane.findViewById(R.id.link_tv);
         TextView fileTextView = resultPane.findViewById(R.id.attach_tv);
 
-        btnAtach.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAttachDialog();
-            }
-        });
-        btnLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Dialog dialog;
-                dialog = new Dialog(TaskDetail.this);
-                dialog.setContentView(R.layout.popup_link);
-
-                Button btnCancel = dialog.findViewById(R.id.btn_cancle);
-                btnCancel.setOnClickListener(v1 -> {
-                    // Đóng Dialog và kết thúc Activity
-                    dialog.dismiss();
-                });
-
-                dialog.show();
-                uploadFile();
-            }
-        });
-
-        if (storageRef != null) {
-            storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    // Tại đây bạn có thể sử dụng URI để hiển thị file
-                    String fileUrl = uri.toString();
-                    String fileName = storageRef.getName();
-                    // Hiển thị URL trên TextView
-                    fileTextView.setText(fileName);
-                    fileTextView.setVisibility(View.VISIBLE); // Đặt TextView là hiển thị
-                    fileTextView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(fileUrl));
-                            startActivity(intent);
-                        }
-                    });
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Xử lý lỗi
-                }
+        btnAtach.setOnClickListener(v -> showAttachDialog());
+        btnLink.setOnClickListener(v -> {
+            Dialog dialog;
+            dialog = new Dialog(TaskDetail.this);
+            dialog.setContentView(R.layout.popup_link);
+            Button btnCancel = dialog.findViewById(R.id.btn_cancle);
+            btnCancel.setOnClickListener(v1 -> {
+                dialog.dismiss();
             });
-        }
+            dialog.show();
+        });
+
         container.addView(resultPane);
         loadingBar.setVisibility(View.GONE);
         container.setVisibility(View.VISIBLE);
     }
+
     private void showAttachDialog() {
         Dialog dialog = new Dialog(TaskDetail.this);
         dialog.setContentView(R.layout.popup_attachment);
@@ -316,68 +285,115 @@ public class TaskDetail extends AppCompatActivity {
 
         Button btnUpload = dialog.findViewById(R.id.btn_upload);
         btnUpload.setOnClickListener(v -> {
-            // Lưu dialog để hiển thị sau khi chọn file
             currentDialog = dialog;
             chooseFile();
         });
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("tasks").document(taskId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ArrayList<String> files = (ArrayList<String>) task.getResult().get("attachments");
+                if (files != null) {
+                    LinearLayout listItemAttached = dialog.findViewById(R.id.list_item_atached);
+                    for (String file : files) {
+                        View fileTextView = LayoutInflater.from(this).inflate(R.layout.item_attach, null);
+                        TextView item_name = fileTextView.findViewById(R.id.item_name);
+                        item_name.setText(getFileName(Uri.parse(file)));
+                        ImageView closeIcon = fileTextView.findViewById(R.id.deleteBtn);
+                        listItemAttached.addView(fileTextView);
+                        item_name.setOnClickListener(v -> {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(file));
+                            startActivity(intent);
+                        });
+                        closeIcon.setOnClickListener(v -> {
+                            listItemAttached.removeView(fileTextView);
+                            files.remove(file);
+                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                            StorageReference storageRef = storage.getReferenceFromUrl(file);
+                            storageRef.delete();
+                            db.collection("tasks").document(taskId).update("attachments", files);
+                        });
+                    }
+                }
+            }
+        });
+
         dialog.show();
     }
-
-    private Dialog currentDialog; // Biến để lưu dialog hiện tại
 
     private void chooseFile() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         startActivityForResult(intent, PICK_FILE_REQUEST);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_FILE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            dataUpload = data.getData();
-            // Hiển thị file trong popup_attachment
-            displaySelectedFile(dataUpload);
+            uploadFile(data.getData());
         }
     }
-    private void displaySelectedFile(Uri fileUri) {
-        if (currentDialog  != null && fileUri != null) {
-            // Lấy LinearLayout từ dialog
+
+    private void uploadFile(Uri dataUpload) {
+        if (currentDialog != null && dataUpload != null) {
             LinearLayout listItemAttached = currentDialog.findViewById(R.id.list_item_atached);
-
-            // Tạo một TextView mới để hiển thị file đã chọn
-            TextView fileTextView = new TextView(this);
-            fileTextView.setText(getFileName(fileUri));
-            fileTextView.setPadding(16, 16, 16, 16);
-            fileTextView.setBackgroundResource(R.drawable.rounded_corner_12_bw);
-            fileTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_document_small, 0, R.drawable.ic_close_circle_2, 0);
-            fileTextView.setCompoundDrawablePadding(6);
-
-            // Thêm TextView vào LinearLayout
+            View fileTextView = LayoutInflater.from(this).inflate(R.layout.item_attach, null);
+            TextView item_name = fileTextView.findViewById(R.id.item_name);
+            item_name.setText(getFileName(dataUpload));
+            ImageView closeIcon = fileTextView.findViewById(R.id.deleteBtn);
             listItemAttached.addView(fileTextView);
-
-            // Xử lý sự kiện khi nhấn nút xóa
-            fileTextView.setOnClickListener(v -> listItemAttached.removeView(fileTextView));
-
-            // Hiển thị dialog trở lại
-            currentDialog.show();
-        }
-    }
-    private void uploadFile() {
-        if (dataUpload != null) {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             StorageReference fileRef = storageRef.child("uploads/" + System.currentTimeMillis() + "_" + getFileName(dataUpload));
-
-            fileRef.putFile(dataUpload)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        Toast.makeText(TaskDetail.this, "File uploaded successfully", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(TaskDetail.this, "Failed to upload file", Toast.LENGTH_SHORT).show();
-                    });
+            UploadTask uploadTask = fileRef.putFile(dataUpload);
+            ProgressBar progressBar = fileTextView.findViewById(R.id.progressBar2);
+            uploadTask.addOnProgressListener(taskSnapshot -> {
+                closeIcon.setOnClickListener(v -> {
+                    uploadTask.cancel();
+                    listItemAttached.removeView(fileTextView);
+                });
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                progressBar.setProgress((int) progress);
+            }).addOnSuccessListener(taskSnapshot -> {
+                progressBar.setProgress(100);
+                progressBar.setVisibility(View.GONE);
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("tasks").document(taskId).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<String> files = (ArrayList<String>) task.getResult().get("attachments");
+                        if (files == null) {
+                            files = new ArrayList<>();
+                        }
+                        ArrayList<String> finalFiles = files;
+                        fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            finalFiles.add(uri.toString());
+                            db.collection("tasks").document(taskId).update("attachments", finalFiles);
+                            item_name.setOnClickListener(v -> {
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()));
+                                startActivity(intent);
+                            });
+                            closeIcon.setOnClickListener(v -> {
+                                listItemAttached.removeView(fileTextView);
+                                finalFiles.remove(uri.toString());
+                                FirebaseStorage storage1 = FirebaseStorage.getInstance();
+                                StorageReference storageRef1 = storage1.getReferenceFromUrl(uri.toString());
+                                storageRef1.delete();
+                                db.collection("tasks").document(taskId).update("attachments", finalFiles);
+                            });
+                        });
+                        Toast.makeText(this, "Upload file successfully", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }).addOnFailureListener(e -> {
+                listItemAttached.removeView(fileTextView);
+                Toast.makeText(this, "Upload file failed", Toast.LENGTH_SHORT).show();
+            });
         }
     }
+
+
+    @SuppressLint("Range")
     private String getFileName(Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
@@ -442,9 +458,6 @@ public class TaskDetail extends AppCompatActivity {
                 }
             }
         });
-        container.addView(informationPane);
-        loadingBar.setVisibility(View.GONE);
-        container.setVisibility(View.VISIBLE);
     }
 
     private TextView createItemMember(String name) {

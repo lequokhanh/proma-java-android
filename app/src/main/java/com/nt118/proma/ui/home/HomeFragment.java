@@ -4,16 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Space;
@@ -39,8 +35,6 @@ import com.nt118.proma.ui.search.SearchView;
 import com.nt118.proma.ui.task.AllTask;
 import com.nt118.proma.ui.task.TaskDetail;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -227,32 +221,6 @@ public class HomeFragment extends Fragment {
                                 intent.putExtra("taskId", task2.getResult().getDocuments().get(finalI).getId());
                                 intent.putExtra("projectId", projectId.get());
                                 startActivity(intent);
-                            });
-                            ImageView threeDot = taskView.findViewById(R.id.threeDot);
-                            threeDot.setOnClickListener(v -> {
-                                PopupMenu popup = new PopupMenu(getContext(), v, 5);
-                                popup.getMenuInflater().inflate(R.menu.task_menu, popup.getMenu());
-                                SpannableString s = new SpannableString(popup.getMenu().getItem(2).getTitle());
-                                s.setSpan(new ForegroundColorSpan(Color.parseColor("#FF3B30")), 0, s.length(), 0);
-                                popup.getMenu().getItem(2).setTitle(s);
-                                try {
-                                    Field[] fields = popup.getClass().getDeclaredFields();
-                                    for (Field field : fields) {
-                                        if ("mPopup".equals(field.getName())) {
-                                            field.setAccessible(true);
-                                            Object menuPopupHelper = field.get(popup);
-                                            Class<?> classPopupHelper = Class.forName(menuPopupHelper
-                                                    .getClass().getName());
-                                            Method setForceIcons = classPopupHelper.getMethod(
-                                                    "setForceShowIcon", boolean.class);
-                                            setForceIcons.invoke(menuPopupHelper, true);
-                                            break;
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                popup.show();
                             });
                             Space space = new Space(getContext());
                             space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 20));

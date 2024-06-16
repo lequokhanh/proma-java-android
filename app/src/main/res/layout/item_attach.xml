@@ -5,24 +5,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/etEmail"
+        android:id="@+id/item_name"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:background="@drawable/rounded_corner_12_bw"
         android:drawableStart="@drawable/ic_document_small"
         android:drawablePadding="6dp"
         android:drawableTint="#000"
-        android:drawableEnd="@drawable/ic_close_circle_2"
+        android:ellipsize="end"
         android:ems="10"
         android:fontFamily="@font/roboto_bold"
-        android:text="Your file"
+        android:gravity="center_vertical"
         android:inputType="text"
         android:letterSpacing="0.0038"
+        android:paddingStart="10dp"
+        android:paddingEnd="40dp"
+        android:text="lhsdfskjdfhjksdhfkjshdfkjshdfkjshdfjkhsjkdfhsdjkfhjsdf"
         android:textColor="#000"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="5dp"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/deleteBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_close_circle_2" />
+
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:indeterminate="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

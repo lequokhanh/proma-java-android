@@ -277,30 +277,6 @@ public class ProjectDetail extends AppCompatActivity {
                         intent.putExtra("projectId", projectId);
                         startActivity(intent);
                     });
-                    ImageView threeDot = taskView.findViewById(R.id.threeDot);
-                    threeDot.setOnClickListener(v -> {
-                        PopupMenu popup = new PopupMenu(this, v, 5);
-                        popup.getMenuInflater().inflate(R.menu.task_menu, popup.getMenu());
-                        SpannableString s = new SpannableString(popup.getMenu().getItem(2).getTitle());
-                        s.setSpan(new ForegroundColorSpan(Color.parseColor("#FF3B30")), 0, s.length(), 0);
-                        popup.getMenu().getItem(2).setTitle(s);
-                        try {
-                            Field[] fields = popup.getClass().getDeclaredFields();
-                            for (Field field : fields) {
-                                if ("mPopup".equals(field.getName())) {
-                                    field.setAccessible(true);
-                                    Object menuPopupHelper = field.get(popup);
-                                    Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
-                                    Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
-                                    setForceIcons.invoke(menuPopupHelper, true);
-                                    break;
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        popup.show();
-                    });
                     Space space = new Space(this);
                     space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 20));
                     taskView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));

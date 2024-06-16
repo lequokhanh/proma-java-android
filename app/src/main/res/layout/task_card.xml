@@ -29,15 +29,6 @@
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/threeDot"
-            android:layout_width="16dp"
-            android:layout_height="0dp"
-            android:src="@drawable/three_dot"
-            card_view:layout_constraintBottom_toBottomOf="@+id/icon"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintTop_toTopOf="@+id/icon" />
-
         <TextView
             android:id="@+id/taskName"
             android:layout_width="match_parent"
