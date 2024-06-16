@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="330dp"
     android:layout_height="507dp"
     android:layout_gravity="center"
@@ -33,7 +32,7 @@
         android:layout_marginEnd="8dp"
         android:background="@drawable/rounded_corner_8"
         android:fontFamily="@font/roboto_regular"
-        android:hint="Add a link here"
+        android:hint="Enter link. Eg: https://example.com"
         android:paddingHorizontal="8dp"
         android:paddingVertical="8dp"
         android:textColorHint="#8E8E93"

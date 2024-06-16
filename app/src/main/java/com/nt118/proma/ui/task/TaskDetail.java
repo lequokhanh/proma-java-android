@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -256,14 +257,80 @@ public class TaskDetail extends AppCompatActivity {
         View resultPane = LayoutInflater.from(this).inflate(R.layout.task_detail_result, null);
         Button btnAtach = resultPane.findViewById(R.id.attachBtn);
         Button btnLink = resultPane.findViewById(R.id.linkBtn);
-        TextView linkTextView = resultPane.findViewById(R.id.link_tv);
-        TextView fileTextView = resultPane.findViewById(R.id.attach_tv);
 
         btnAtach.setOnClickListener(v -> showAttachDialog());
         btnLink.setOnClickListener(v -> {
             Dialog dialog;
             dialog = new Dialog(TaskDetail.this);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.setContentView(R.layout.popup_link);
+            EditText search_field = dialog.findViewById(R.id.search_field);
+            TextView add_btn = dialog.findViewById(R.id.add_btn);
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            float dip10 = 10f;
+            Resources r = getResources();
+            float px10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip10, r.getDisplayMetrics());
+            db.collection("tasks").document(taskId).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    ArrayList<String> links = (ArrayList<String>) task.getResult().get("links");
+                    if (links != null) {
+                        LinearLayout listItemAttached = dialog.findViewById(R.id.list_item_atached);
+                        for (String link : links) {
+                            View item_link = LayoutInflater.from(this).inflate(R.layout.item_link, null);
+                            TextView linkTV = item_link.findViewById(R.id.item_name);
+                            linkTV.setText(link);
+                            ImageView deleteBtn = item_link.findViewById(R.id.deleteBtn);
+                            listItemAttached.addView(item_link);
+                            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) item_link.getLayoutParams();
+                            layoutParams.setMargins(0, 0, 0, (int) px10);
+                            deleteBtn.setOnClickListener(v2 -> {
+                                listItemAttached.removeView(item_link);
+                                links.remove(link);
+                                db.collection("tasks").document(taskId).update("links", links);
+                            });
+                        }
+                    }
+                }
+            });
+            add_btn.setOnClickListener(v1 -> {
+                String link = search_field.getText().toString();
+                if (link.isEmpty()) {
+                    search_field.setError("Link is required");
+                    return;
+                }
+                if (!link.contains("http://") && !link.contains("https://")) {
+                    search_field.setError("Link must not contain http:// or https://");
+                    return;
+                }
+                View item_link = LayoutInflater.from(this).inflate(R.layout.item_link, null);
+                TextView linkTV = item_link.findViewById(R.id.item_name);
+                linkTV.setText(link);
+                ImageView deleteBtn = item_link.findViewById(R.id.deleteBtn);
+
+                linkTV.setOnClickListener(v2 -> {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                    startActivity(intent);
+                });
+                ((LinearLayout) dialog.findViewById(R.id.list_item_atached)).addView(item_link);
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) item_link.getLayoutParams();
+                layoutParams.setMargins(0, 0, 0, (int) px10);
+                db.collection("tasks").document(taskId).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<String> links = (ArrayList<String>) task.getResult().get("links");
+                        if (links == null) {
+                            links = new ArrayList<>();
+                        }
+                        links.add(link);
+                        db.collection("tasks").document(taskId).update("links", links);
+                        ArrayList<String> finalLinks = links;
+                        deleteBtn.setOnClickListener(v2 -> {
+                            ((LinearLayout) dialog.findViewById(R.id.list_item_atached)).removeView(item_link);
+                            finalLinks.remove(link);
+                            db.collection("tasks").document(taskId).update("links", finalLinks);
+                        });
+                    }
+                });
+            });
             Button btnCancel = dialog.findViewById(R.id.btn_cancle);
             btnCancel.setOnClickListener(v1 -> {
                 dialog.dismiss();
@@ -278,6 +345,7 @@ public class TaskDetail extends AppCompatActivity {
 
     private void showAttachDialog() {
         Dialog dialog = new Dialog(TaskDetail.this);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setContentView(R.layout.popup_attachment);
 
         Button btnCancel = dialog.findViewById(R.id.btn_cancle);
@@ -300,7 +368,14 @@ public class TaskDetail extends AppCompatActivity {
                         TextView item_name = fileTextView.findViewById(R.id.item_name);
                         item_name.setText(getFileName(Uri.parse(file)));
                         ImageView closeIcon = fileTextView.findViewById(R.id.deleteBtn);
+                        ProgressBar progressBar = fileTextView.findViewById(R.id.progressBar2);
+                        progressBar.setVisibility(View.GONE);
                         listItemAttached.addView(fileTextView);
+                        float dip10 = 10f;
+                        Resources r = getResources();
+                        float px10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip10, r.getDisplayMetrics());
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) fileTextView.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) px10);
                         item_name.setOnClickListener(v -> {
                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(file));
                             startActivity(intent);
@@ -343,6 +418,11 @@ public class TaskDetail extends AppCompatActivity {
             item_name.setText(getFileName(dataUpload));
             ImageView closeIcon = fileTextView.findViewById(R.id.deleteBtn);
             listItemAttached.addView(fileTextView);
+            float dip10 = 10f;
+            Resources r = getResources();
+            float px10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip10, r.getDisplayMetrics());
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) fileTextView.getLayoutParams();
+            layoutParams.setMargins(0, 0, 0, (int) px10);
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             StorageReference fileRef = storageRef.child("uploads/" + System.currentTimeMillis() + "_" + getFileName(dataUpload));
