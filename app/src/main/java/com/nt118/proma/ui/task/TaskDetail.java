@@ -119,7 +119,6 @@ public class TaskDetail extends AppCompatActivity {
             }
             popup.show();
             popup.setOnMenuItemClickListener(item -> {
-//                if
                 if (item.getItemId() == R.id.action_edit) {
                     //show popup edit task
                 }
@@ -250,6 +249,7 @@ public class TaskDetail extends AppCompatActivity {
         });
     }
 
+
     private void showResultTab() {
         container.setVisibility(View.GONE);
         create_btn.setVisibility(View.GONE);
@@ -257,7 +257,12 @@ public class TaskDetail extends AppCompatActivity {
         View resultPane = LayoutInflater.from(this).inflate(R.layout.task_detail_result, null);
         Button btnAtach = resultPane.findViewById(R.id.attachBtn);
         Button btnLink = resultPane.findViewById(R.id.linkBtn);
-
+        TextView moreAllBtn = resultPane.findViewById(R.id.moreAllBtn);
+        moreAllBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(this, Comment.class);
+            intent.putExtra("taskId", taskId);
+            startActivity(intent);
+        });
         btnAtach.setOnClickListener(v -> showAttachDialog());
         btnLink.setOnClickListener(v -> {
             Dialog dialog;
