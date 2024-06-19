@@ -193,7 +193,6 @@ public class SearchView extends AppCompatActivity {
         Dialog loading = new Dialog(this);
         loading.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         loading.setContentView(R.layout.loading);
-        loading.show();
         return loading;
     }
     @Override
