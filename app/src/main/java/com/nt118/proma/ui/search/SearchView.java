@@ -44,6 +44,8 @@ public class SearchView extends AppCompatActivity {
     private String user;
     private SharedPreferences sharedPreferences;
     Dialog loading;
+    private boolean isSearchActive = false; // follow status search
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,17 +99,21 @@ public class SearchView extends AppCompatActivity {
             // do search
             loading.show();
             String searchText = searchField.getText().toString().trim();
+            recent.add(searchText);
+            searchRecent.setValue(recent);
 
             List<String> projectNames = new ArrayList<>();
             db.collection("projects")
-                    .whereEqualTo("user_created",user)
+                    .whereEqualTo("user_created", user)
                     .get()
                     .addOnSuccessListener(res -> {
+                        loading.dismiss();
                         if (!res.isEmpty()) {
+                            boolean hasMatch = false;
                             searchRecentContainer.removeAllViews();
                             for (QueryDocumentSnapshot doc : res) {
-                                loading.dismiss();
                                 if (doc.get("name").toString().contains(searchText)) {
+                                    hasMatch = true;
                                     View view = getLayoutInflater().inflate(R.layout.project_card, null);
                                     TextView name = view.findViewById(R.id.projectName);
                                     TextView description = view.findViewById(R.id.projectDescription);
@@ -117,7 +123,7 @@ public class SearchView extends AppCompatActivity {
                                     name.setText(doc.get("name").toString());
                                     description.setText(doc.get("description").toString());
                                     deadline.setText(doc.get("deadline").toString());
-                                    if(doc.get("cover") != null) {
+                                    if (doc.get("cover") != null) {
                                         cover.setImageResource(ImageArray.getCoverProjectImage().get(doc.getLong("cover").intValue()));
                                     }
                                     float dip10 = 10f;
@@ -128,22 +134,35 @@ public class SearchView extends AppCompatActivity {
                                     layoutParams.setMargins(0, 0, 0, (int) px10);
                                 }
                             }
-
+                            isSearchActive = true;
+                            if (!hasMatch) {
+                                // No project matches the search term
+                                showNoMatchDialog();
+                            }
+                        } else {
+                            // No documents found
+                            showNoMatchDialog();
                         }
-                        else{
-                            loading.dismiss();
-                            // Optional: Show a message if no project matches
-                            Dialog noMatchDialog = new Dialog(SearchView.this);
-                            noMatchDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                            noMatchDialog.setContentView(R.layout.no_match_result);
-                            noMatchDialog.show();
-                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        loading.dismiss();
+                        // Handle any errors that occurred during the query
+                        Log.e("SearchError", "Error searching projects", e);
                     });
+
             return true;
         });
     }
+// Function to show the "no match" dialog
+        private void showNoMatchDialog() {
+            Dialog noMatchDialog = new Dialog(SearchView.this);
+            noMatchDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            noMatchDialog.setContentView(R.layout.no_match_result);
+            noMatchDialog.show();
+        }
 
-    private void initUi() {
+
+        private void initUi() {
         searchField = findViewById(R.id.search_field);
         closeBtn = findViewById(R.id.close_btn);
         sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
@@ -197,8 +216,16 @@ public class SearchView extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+        // Kiểm tra trạng thái tìm kiếm
+        if (isSearchActive) {
+            // Gọi hàm bạn muốn thực hiện khi nhấn nút "Back" trong trạng thái tìm kiếm
+            addItemSearch();
+            // Đặt lại trạng thái tìm kiếm để cho phép thoát nếu người dùng nhấn "Back" lần nữa
+            isSearchActive = false;
+        } else {
+            // Gọi super.onBackPressed() để Activity thoát
+            super.onBackPressed();
+        }
     }
 
 }
