@@ -2,6 +2,7 @@ package com.nt118.proma.ui.search;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
@@ -29,9 +30,11 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.nt118.proma.R;
 import com.nt118.proma.model.ImageArray;
+import com.nt118.proma.ui.project.ProjectDetail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class SearchView extends AppCompatActivity {
 
@@ -132,16 +135,27 @@ public class SearchView extends AppCompatActivity {
                                     searchRecentContainer.addView(view);
                                     LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
                                     layoutParams.setMargins(0, 0, 0, (int) px10);
+                                    String projectId = doc.getId();
+                                    view.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(SearchView.this, ProjectDetail.class);
+                                            intent.putExtra("projectId", projectId);
+                                            startActivity(intent);
+                                        }
+                                    });
                                 }
                             }
                             isSearchActive = true;
                             if (!hasMatch) {
                                 // No project matches the search term
                                 showNoMatchDialog();
+                                addItemSearch();
                             }
                         } else {
                             // No documents found
                             showNoMatchDialog();
+                            addItemSearch();
                         }
                     })
                     .addOnFailureListener(e -> {
