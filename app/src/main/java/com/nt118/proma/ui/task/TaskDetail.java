@@ -277,7 +277,7 @@ public class TaskDetail extends AppCompatActivity {
         Button btnLink = resultPane.findViewById(R.id.linkBtn);
         TextView moreAllBtn = resultPane.findViewById(R.id.moreAllBtn);
 
-        listComments = resultPane.findViewById(R.id.list_Comments);
+        listComments = resultPane.findViewById(R.id.list_comments);
         listItem = resultPane.findViewById(R.id.list_item);
         listItemAttached = resultPane.findViewById(R.id.list_link);
         //show list item attachment
@@ -297,6 +297,8 @@ public class TaskDetail extends AppCompatActivity {
         showComments();
 
         container.addView(resultPane);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        resultPane.setLayoutParams(params);
         loadingBar.setVisibility(View.GONE);
         container.setVisibility(View.VISIBLE);
     }
@@ -495,13 +497,10 @@ public class TaskDetail extends AppCompatActivity {
         dialog.setContentView(R.layout.popup_attachment);
 
         Button btnCancel = dialog.findViewById(R.id.btn_cancle);
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View v) {
-                                             dialog.dismiss();
-                                             showLiskItem(listItem);
-                                         }
-                                     }
+        btnCancel.setOnClickListener(v -> {
+                    dialog.dismiss();
+                    showLiskItem(listItem);
+                }
         );
         Button btnUpload = dialog.findViewById(R.id.btn_upload);
         btnUpload.setOnClickListener(v -> {
