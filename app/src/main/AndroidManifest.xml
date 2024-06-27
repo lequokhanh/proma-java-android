@@ -24,7 +24,7 @@
             android:name=".ui.login.ForgotPassword"
             android:exported="false" />
         <activity
-            android:name=".ui.task.ChooseLeader"
+            android:name=".ui.member.ViewMembers"
             android:exported="false" />
         <activity
             android:name=".ui.task.Comment"

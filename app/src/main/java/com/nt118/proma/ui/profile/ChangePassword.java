@@ -31,9 +31,12 @@ public class ChangePassword extends AppCompatActivity {
         btn_Reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getProviderId();
+                changePassword();
             }
         });
+    }
+
+    private void changePassword() {
     }
 
     private void onClickBack() {
@@ -50,24 +53,4 @@ public class ChangePassword extends AppCompatActivity {
         btn_Reset=findViewById(R.id.btn_reset_pw);
     }
 
-    private void getProviderId() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (user != null) {
-            for (UserInfo profile : user.getProviderData()) {
-                String providerId = profile.getProviderId();
-                Log.d("ChangePassword", "Provider ID: " + providerId);
-
-                if (providerId.equals("password")) {
-                    Log.d("ChangePassword", "User signed in with email and password");
-                } else if (providerId.equals("phone")) {
-                    Log.d("ChangePassword", "User signed in with phone number");
-                } else {
-                    Log.d("ChangePassword", "User signed in with " + providerId);
-                }
-            }
-        } else {
-            Log.d("ChangePassword", "No user is signed in.");
-        }
-    }
 }

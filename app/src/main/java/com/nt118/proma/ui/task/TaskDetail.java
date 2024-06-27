@@ -40,6 +40,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.nt118.proma.R;
 import com.nt118.proma.model.ImageArray;
+import com.nt118.proma.ui.member.ViewMembers;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -670,6 +671,17 @@ public class TaskDetail extends AppCompatActivity {
                 }
             }
         });
+        memberList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TaskDetail.this, ViewMembers.class);
+                intent.putExtra("taskId", taskId);
+                startActivity(intent);
+            }
+        });
+        container.addView(informationPane);
+        loadingBar.setVisibility(View.GONE);
+        container.setVisibility(View.VISIBLE);
     }
 
     private TextView createItemMember(String name) {
