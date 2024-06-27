@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,9 +33,12 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -44,7 +48,10 @@ import com.nt118.proma.ui.member.ViewMembers;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -56,8 +63,10 @@ public class TaskDetail extends AppCompatActivity {
     private FloatingActionButton create_btn;
     private ProgressBar loadingBar;
     private Dialog currentDialog;
-    private LinearLayout listItem;
+    private LinearLayout listItem, listComments;
     private LinearLayout listItemAttached;
+    private FirebaseFirestore db;
+    private final MutableLiveData<ArrayList<Map<String, Object>>> comments = new MutableLiveData<>();
 
     public static void setWindowFlag(Activity activity, final int bits, boolean on) {
         Window win = activity.getWindow();
@@ -192,17 +201,22 @@ public class TaskDetail extends AppCompatActivity {
         loadingBar.setVisibility(View.VISIBLE);
         container.setVisibility(View.GONE);
         container.removeAllViews();
+
         ScrollView scrollView = new ScrollView(this);
         scrollView.setVerticalScrollBarEnabled(false);
         View task_list = LayoutInflater.from(this).inflate(R.layout.task_list, null);
         scrollView.addView(task_list);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db = FirebaseFirestore.getInstance();
+
         LinearLayout leftSide = task_list.findViewById(R.id.leftSide);
         LinearLayout rightSide = task_list.findViewById(R.id.rightSide);
+
         leftSide.getLayoutParams().width = (int) (getResources().getDisplayMetrics().widthPixels * 0.5 - 68);
         rightSide.getLayoutParams().width = (int) (getResources().getDisplayMetrics().widthPixels * 0.5 - 68);
         leftSide.removeAllViews();
         rightSide.removeAllViews();
+
         AtomicInteger count = new AtomicInteger(0);
         db.collection("tasks").whereEqualTo("projectId", projectId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -257,10 +271,13 @@ public class TaskDetail extends AppCompatActivity {
         container.setVisibility(View.GONE);
         create_btn.setVisibility(View.GONE);
         container.removeAllViews();
+
         View resultPane = LayoutInflater.from(this).inflate(R.layout.task_detail_result, null);
         Button btnAtach = resultPane.findViewById(R.id.attachBtn);
         Button btnLink = resultPane.findViewById(R.id.linkBtn);
         TextView moreAllBtn = resultPane.findViewById(R.id.moreAllBtn);
+
+        listComments = resultPane.findViewById(R.id.list_Comments);
         listItem = resultPane.findViewById(R.id.list_item);
         listItemAttached = resultPane.findViewById(R.id.list_link);
         //show list item attachment
@@ -276,6 +293,8 @@ public class TaskDetail extends AppCompatActivity {
         btnLink.setOnClickListener(v -> {
             showLinkDialog();
         });
+
+        showComments();
 
         container.addView(resultPane);
         loadingBar.setVisibility(View.GONE);
@@ -641,7 +660,7 @@ public class TaskDetail extends AppCompatActivity {
         TextView status = informationPane.findViewById(R.id.status);
         TextView category = informationPane.findViewById(R.id.category);
         TextView deadline = informationPane.findViewById(R.id.deadline_tv);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
         db.collection("tasks").document(taskId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().getLong("status") == 0) {
@@ -707,6 +726,48 @@ public class TaskDetail extends AppCompatActivity {
         textView.setTypeface(getResources().getFont(R.font.roboto_bold));
         textView.setLayoutParams(params);
         return textView;
+    }
+
+    private void showComments(){
+        db = FirebaseFirestore.getInstance();
+        db.collection("tasks").document(taskId).collection("comments")
+                .orderBy("date", Query.Direction.ASCENDING)   // sort by date in ascending order
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<Map<String, Object>> commentList = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            commentList.add(document.getData());
+                        }
+                        comments.setValue((ArrayList<Map<String, Object>>) commentList);  // update comments LiveData
+
+                        // Update UI after getting comments
+                        listComments.removeAllViews();
+                        for (Map<String, Object> comment : commentList) {
+                            View item_comment = getLayoutInflater().inflate(R.layout.item_comment, null);
+                            TextView name = item_comment.findViewById(R.id.nameCmt);
+                            TextView content = item_comment.findViewById(R.id.contentCmt);
+                            TextView date = item_comment.findViewById(R.id.dateCmt);
+                            name.setText((String) comment.get("name"));
+                            content.setText((String) comment.get("message"));
+
+                            // Format date
+                            long timestamp = Long.parseLong((String) comment.get("date"));
+                            String formattedDate = formatDateTime(timestamp);
+                            date.setText(formattedDate);
+
+                            listComments.addView(item_comment);
+                        }
+                    } else {
+                        Log.d("Firestore", "Error getting comments: ", task.getException());
+                    }
+                });
+    }
+    public String formatDateTime(long timestamp) {
+        Date date = new Date(timestamp);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+        return sdf.format(date);
     }
 
     public Dialog createLoadingDialog() {

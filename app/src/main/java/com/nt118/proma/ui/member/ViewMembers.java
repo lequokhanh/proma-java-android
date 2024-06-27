@@ -35,6 +35,7 @@ public class ViewMembers extends AppCompatActivity {
 
     private LinearLayout listMembers;
     private ImageView imgBack;
+    private TextView numMembers;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -52,6 +53,7 @@ public class ViewMembers extends AppCompatActivity {
     private void initUI() {
         imgBack = findViewById(R.id.img_Back);
         listMembers = findViewById(R.id.list_members);
+        numMembers = findViewById(R.id.num_members);
     }
 
     private void showMembers() {
@@ -62,6 +64,7 @@ public class ViewMembers extends AppCompatActivity {
         db.collection("tasks").document(taskId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) task.getResult().get("members");
+                numMembers.setText("Project members (" + members.size() + ")");
                 for (Map<String, Object> member : members) {
                     String email = (String) member.get("email");
                     db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(task2 -> {
