@@ -55,6 +55,8 @@ public class TaskDetail extends AppCompatActivity {
     private FloatingActionButton create_btn;
     private ProgressBar loadingBar;
     private Dialog currentDialog;
+    private LinearLayout listItem;
+    private LinearLayout listItemAttached;
 
     public static void setWindowFlag(Activity activity, final int bits, boolean on) {
         Window win = activity.getWindow();
@@ -258,6 +260,12 @@ public class TaskDetail extends AppCompatActivity {
         Button btnAtach = resultPane.findViewById(R.id.attachBtn);
         Button btnLink = resultPane.findViewById(R.id.linkBtn);
         TextView moreAllBtn = resultPane.findViewById(R.id.moreAllBtn);
+        listItem = resultPane.findViewById(R.id.list_item);
+        listItemAttached = resultPane.findViewById(R.id.list_link);
+        //show list item attachment
+        showLiskItem(listItem);
+        showLiskLink(listItemAttached);
+
         moreAllBtn.setOnClickListener(v -> {
             Intent intent = new Intent(this, Comment.class);
             intent.putExtra("taskId", taskId);
@@ -265,87 +273,200 @@ public class TaskDetail extends AppCompatActivity {
         });
         btnAtach.setOnClickListener(v -> showAttachDialog());
         btnLink.setOnClickListener(v -> {
-            Dialog dialog;
-            dialog = new Dialog(TaskDetail.this);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.setContentView(R.layout.popup_link);
-            EditText search_field = dialog.findViewById(R.id.search_field);
-            TextView add_btn = dialog.findViewById(R.id.add_btn);
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            float dip10 = 10f;
-            Resources r = getResources();
-            float px10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip10, r.getDisplayMetrics());
-            db.collection("tasks").document(taskId).get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    ArrayList<String> links = (ArrayList<String>) task.getResult().get("links");
-                    if (links != null) {
-                        LinearLayout listItemAttached = dialog.findViewById(R.id.list_item_atached);
-                        for (String link : links) {
-                            View item_link = LayoutInflater.from(this).inflate(R.layout.item_link, null);
-                            TextView linkTV = item_link.findViewById(R.id.item_name);
-                            linkTV.setText(link);
-                            ImageView deleteBtn = item_link.findViewById(R.id.deleteBtn);
-                            listItemAttached.addView(item_link);
-                            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) item_link.getLayoutParams();
-                            layoutParams.setMargins(0, 0, 0, (int) px10);
-                            deleteBtn.setOnClickListener(v2 -> {
-                                listItemAttached.removeView(item_link);
-                                links.remove(link);
-                                db.collection("tasks").document(taskId).update("links", links);
-                            });
-                        }
-                    }
-                }
-            });
-            add_btn.setOnClickListener(v1 -> {
-                String link = search_field.getText().toString();
-                if (link.isEmpty()) {
-                    search_field.setError("Link is required");
-                    return;
-                }
-                if (!link.contains("http://") && !link.contains("https://")) {
-                    search_field.setError("Link must not contain http:// or https://");
-                    return;
-                }
-                View item_link = LayoutInflater.from(this).inflate(R.layout.item_link, null);
-                TextView linkTV = item_link.findViewById(R.id.item_name);
-                linkTV.setText(link);
-                ImageView deleteBtn = item_link.findViewById(R.id.deleteBtn);
-
-                linkTV.setOnClickListener(v2 -> {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-                    startActivity(intent);
-                });
-                ((LinearLayout) dialog.findViewById(R.id.list_item_atached)).addView(item_link);
-                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) item_link.getLayoutParams();
-                layoutParams.setMargins(0, 0, 0, (int) px10);
-                db.collection("tasks").document(taskId).get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        ArrayList<String> links = (ArrayList<String>) task.getResult().get("links");
-                        if (links == null) {
-                            links = new ArrayList<>();
-                        }
-                        links.add(link);
-                        db.collection("tasks").document(taskId).update("links", links);
-                        ArrayList<String> finalLinks = links;
-                        deleteBtn.setOnClickListener(v2 -> {
-                            ((LinearLayout) dialog.findViewById(R.id.list_item_atached)).removeView(item_link);
-                            finalLinks.remove(link);
-                            db.collection("tasks").document(taskId).update("links", finalLinks);
-                        });
-                    }
-                });
-            });
-            Button btnCancel = dialog.findViewById(R.id.btn_cancle);
-            btnCancel.setOnClickListener(v1 -> {
-                dialog.dismiss();
-            });
-            dialog.show();
+            showLinkDialog();
         });
 
         container.addView(resultPane);
         loadingBar.setVisibility(View.GONE);
         container.setVisibility(View.VISIBLE);
+    }
+
+    private void showLiskItem(LinearLayout listItem) {
+        listItem.removeAllViews();
+        float dip10 = 10f;
+        Resources r = getResources();
+        float px10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip10, r.getDisplayMetrics());
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("tasks").document(taskId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ArrayList<String> files = (ArrayList<String>) task.getResult().get("attachments");
+                if (files != null) {
+                    for (String file : files.subList(0,Math.min(files.size(), 2))) {
+                        View fileTextView = LayoutInflater.from(this).inflate(R.layout.item_attach2, null);
+                        TextView item_name = fileTextView.findViewById(R.id.item_name);
+                        item_name.setText(getFileName(Uri.parse(file)));
+                        listItem.addView(fileTextView);
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) fileTextView.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) px10);
+                        item_name.setOnClickListener(v -> {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(file));
+                            startActivity(intent);
+                        });
+                    }
+                    if (files.size() > 2){
+                        TextView textView = new TextView(this);
+                        textView.setText("More");
+                        textView.setBackgroundResource(R.drawable.rounded_corner_24_bw);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        // add padding
+                        float dip12 = 12f;
+                        float px12 = TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_DIP,
+                                dip12,
+                                r.getDisplayMetrics()
+                        );
+                        float dip4 = 4f;
+                        float px4 = TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_DIP,
+                                dip4,
+                                r.getDisplayMetrics()
+                        );
+                        textView.setPadding((int) px12, (int) px4, (int) px12, (int) px4);
+                        // add margin
+                        params.setMargins(0, 0, 0, (int) px10);
+                        //config text size
+                        textView.setTextSize(12);
+                        textView.setTextColor(getResources().getColor(R.color.black));
+                        // set font family
+                        textView.setTypeface(getResources().getFont(R.font.roboto_bold));
+                        textView.setLayoutParams(params);
+                        listItem.addView(textView);
+                    }
+                }
+            }
+        });
+    }
+
+    private void showLiskLink(LinearLayout listLink) {
+        listLink.removeAllViews();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        float dip10 = 10f;
+        Resources r = getResources();
+        float px10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip10, r.getDisplayMetrics());
+        db.collection("tasks").document(taskId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ArrayList<String> links = (ArrayList<String>) task.getResult().get("links");
+                if (links != null) {
+                    for (String link : links.subList(0,Math.min(links.size(), 2))){
+                        View item_link = LayoutInflater.from(this).inflate(R.layout.item_link2, null);
+                        TextView linkTV = item_link.findViewById(R.id.item_name);
+                        linkTV.setText(link);
+                        listItemAttached.addView(item_link);
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) item_link.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) px10);
+                    }
+                    if (links.size() > 2){
+                        TextView textView = new TextView(this);
+                        textView.setText("More");
+                        textView.setBackgroundResource(R.drawable.rounded_corner_24_bw);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        // add padding
+                        float dip12 = 12f;
+                        float px12 = TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_DIP,
+                                dip12,
+                                r.getDisplayMetrics()
+                        );
+                        float dip4 = 4f;
+                        float px4 = TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_DIP,
+                                dip4,
+                                r.getDisplayMetrics()
+                        );
+                        textView.setPadding((int) px12, (int) px4, (int) px12, (int) px4);
+                        // add margin
+                        params.setMargins(0, 0, 0, (int) px10);
+                        //config text size
+                        textView.setTextSize(12);
+                        textView.setTextColor(getResources().getColor(R.color.black));
+                        // set font family
+                        textView.setTypeface(getResources().getFont(R.font.roboto_bold));
+                        textView.setLayoutParams(params);
+                        listLink.addView(textView);
+                    }
+                }
+            }
+        });
+    }
+
+    private void showLinkDialog() {
+        Dialog dialog;
+        dialog = new Dialog(TaskDetail.this);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.popup_link);
+        EditText search_field = dialog.findViewById(R.id.search_field);
+        TextView add_btn = dialog.findViewById(R.id.add_btn);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        float dip10 = 10f;
+        Resources r = getResources();
+        float px10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip10, r.getDisplayMetrics());
+        db.collection("tasks").document(taskId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ArrayList<String> links = (ArrayList<String>) task.getResult().get("links");
+                if (links != null) {
+                    LinearLayout listItemAttached = dialog.findViewById(R.id.list_item_atached);
+                    for (String link : links) {
+                        View item_link = LayoutInflater.from(this).inflate(R.layout.item_link, null);
+                        TextView linkTV = item_link.findViewById(R.id.item_name);
+                        linkTV.setText(link);
+                        ImageView deleteBtn = item_link.findViewById(R.id.deleteBtn);
+                        listItemAttached.addView(item_link);
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) item_link.getLayoutParams();
+                        layoutParams.setMargins(0, 0, 0, (int) px10);
+                        deleteBtn.setOnClickListener(v2 -> {
+                            listItemAttached.removeView(item_link);
+                            links.remove(link);
+                            db.collection("tasks").document(taskId).update("links", links);
+                        });
+                    }
+                }
+            }
+        });
+        add_btn.setOnClickListener(v1 -> {
+            String link = search_field.getText().toString();
+            if (link.isEmpty()) {
+                search_field.setError("Link is required");
+                return;
+            }
+            if (!link.contains("http://") && !link.contains("https://")) {
+                search_field.setError("Link must not contain http:// or https://");
+                return;
+            }
+            View item_link = LayoutInflater.from(this).inflate(R.layout.item_link, null);
+            TextView linkTV = item_link.findViewById(R.id.item_name);
+            linkTV.setText(link);
+            ImageView deleteBtn = item_link.findViewById(R.id.deleteBtn);
+
+            linkTV.setOnClickListener(v2 -> {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                startActivity(intent);
+            });
+            ((LinearLayout) dialog.findViewById(R.id.list_item_atached)).addView(item_link);
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) item_link.getLayoutParams();
+            layoutParams.setMargins(0, 0, 0, (int) px10);
+            db.collection("tasks").document(taskId).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    ArrayList<String> links = (ArrayList<String>) task.getResult().get("links");
+                    if (links == null) {
+                        links = new ArrayList<>();
+                    }
+                    links.add(link);
+                    db.collection("tasks").document(taskId).update("links", links);
+                    ArrayList<String> finalLinks = links;
+                    deleteBtn.setOnClickListener(v2 -> {
+                        ((LinearLayout) dialog.findViewById(R.id.list_item_atached)).removeView(item_link);
+                        finalLinks.remove(link);
+                        db.collection("tasks").document(taskId).update("links", finalLinks);
+                    });
+                }
+            });
+        });
+        Button btnCancel = dialog.findViewById(R.id.btn_cancle);
+        btnCancel.setOnClickListener(v1 -> {
+            dialog.dismiss();
+            showLiskLink(listItemAttached);
+        });
+        dialog.show();
     }
 
     private void showAttachDialog() {
@@ -354,8 +475,14 @@ public class TaskDetail extends AppCompatActivity {
         dialog.setContentView(R.layout.popup_attachment);
 
         Button btnCancel = dialog.findViewById(R.id.btn_cancle);
-        btnCancel.setOnClickListener(v -> dialog.dismiss());
-
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+                                             dialog.dismiss();
+                                             showLiskItem(listItem);
+                                         }
+                                     }
+        );
         Button btnUpload = dialog.findViewById(R.id.btn_upload);
         btnUpload.setOnClickListener(v -> {
             currentDialog = dialog;
@@ -430,7 +557,7 @@ public class TaskDetail extends AppCompatActivity {
             layoutParams.setMargins(0, 0, 0, (int) px10);
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
-            StorageReference fileRef = storageRef.child("uploads/" + System.currentTimeMillis() + "_" + getFileName(dataUpload));
+            StorageReference fileRef = storageRef.child("uploads/"  + getFileName(dataUpload)+  "_" +System.currentTimeMillis());
             UploadTask uploadTask = fileRef.putFile(dataUpload);
             ProgressBar progressBar = fileTextView.findViewById(R.id.progressBar2);
             uploadTask.addOnProgressListener(taskSnapshot -> {
