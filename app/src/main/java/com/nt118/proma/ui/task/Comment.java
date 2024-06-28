@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.nt118.proma.R;
+import com.nt118.proma.model.ImageArray;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -91,6 +92,9 @@ public class Comment extends AppCompatActivity {
                 TextView name = item_comment.findViewById(R.id.nameCmt);
                 TextView content = item_comment.findViewById(R.id.contentCmt);
                 TextView date = item_comment.findViewById(R.id.dateCmt);
+                ImageView avatar = item_comment.findViewById(R.id.imageView123);
+
+                String email= (String) comment.get("email");
                 name.setText((String) comment.get("name"));
                 content.setText((String) comment.get("message"));
 
@@ -98,6 +102,15 @@ public class Comment extends AppCompatActivity {
                 long timestamp = Long.parseLong((String) comment.get("date"));
                 String formattedDate = formatDateTime(timestamp);
                 date.setText(formattedDate);
+
+                db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(task2 -> {
+                            if (task2.isSuccessful()) {// Get the avatar ID and set the image resource
+                                Map<String, Object> user = task2.getResult().getDocuments().get(0).getData();
+                                Object avatarObj = user.get("avatar");
+                                int avatarIndex = Math.toIntExact((Long) avatarObj);
+                                avatar.setImageResource(new ImageArray().getAvatarImage().get(avatarIndex));
+                            }
+                        });
 
                 commentContainer.addView(item_comment);
             }
@@ -120,6 +133,7 @@ public class Comment extends AppCompatActivity {
                         Log.d("Firestore", "Error getting comments: ", task.getException());
                     }
                 });
+
     }
 
     private void initUI() {

@@ -537,12 +537,14 @@ public class ProjectDetail extends AppCompatActivity {
     private void handleCreateTaskBtn(String taskTitle, String desc, String leader, ArrayList<String> members, String deadline, String category) {
         Dialog loading = createLoadingDialog();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         Map<String, Object> newTask = new HashMap<>();
         newTask.put("title", taskTitle);
         newTask.put("description", desc);
         newTask.put("deadline", deadline);
         newTask.put("category", category);
         newTask.put("projectId", projectId);
+
         ArrayList<Map<String, Object>> membersList = new ArrayList<>();
         for (String member : members) {
             Map<String, Object> memberMap = new HashMap<>();
