@@ -22,14 +22,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 
-import com.android.volley.Request;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -40,9 +39,6 @@ import com.nt118.proma.databinding.ActivityMainBinding;
 import com.nt118.proma.ui.login.CompleteProfile;
 import com.nt118.proma.ui.login.Login;
 import com.nt118.proma.ui.member.AddMember;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -76,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finishAffinity();
             } else {
+                listenNotiToSend();
                 binding = ActivityMainBinding.inflate(getLayoutInflater());
                 setContentView(binding.getRoot());
                 BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -240,45 +237,8 @@ public class MainActivity extends AppCompatActivity {
                                                 put("date", formatter.format(new Date()));
                                                 put("sender", email);
                                                 put("projectId", task1.getResult().getId());
-                                            }}).addOnCompleteListener(task3 -> {
-                                                if (task3.isSuccessful()) {
-                                                    // send API to firebase cloud messaging POST https://fcm.googleapis.com/v1/projects/proma-4ca44/messages:send
-                                                    // {
-                                                    //   "message": {
-                                                    //     "token": "task2.getResult().getDocuments().get(0).getString("fcm_token")",
-                                                    //     "notification": {
-                                                    //       "title": "Proma",
-                                                    //       "body": "You have been invited to join project " + nameProject
-                                                    //     }
-                                                    //   }
-                                                    // }
-                                                    JSONObject mainObject = new JSONObject();
-                                                    try {
-                                                        JSONObject messageObject = new JSONObject();
-                                                        JSONObject notificationObject = new JSONObject();
-                                                        notificationObject.put("title", "Proma");
-                                                        notificationObject.put("body", "You have been invited to join project " + nameProject);
-                                                        messageObject.put("notification", notificationObject);
-                                                        messageObject.put("token", task2.getResult().getDocuments().get(0).getString("fcm_token"));
-                                                        mainObject.put("message", messageObject);
-                                                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, "https://fcm.googleapis.com/v1/projects/proma-4ca44/messages:send", mainObject, response -> {
-                                                            System.out.println(response);
-                                                        }, error -> {
-                                                            System.out.println(error);
-                                                        }) {
-                                                            @Override
-                                                            public Map<String, String> getHeaders() {
-                                                                Map<String, String> headers = new HashMap<>();
-                                                                headers.put("Authorization", "Bearer " + new AccessToken().getAccessToken());
-                                                                headers.put("Content-Type", "application/json");
-                                                                return headers;
-                                                            }
-                                                        };
-                                                    } catch (JSONException e) {
-                                                        throw new RuntimeException(e);
-                                                    }
-                                                }
-                                            });
+                                                put("isRead", false);
+                                            }});
                                         }
                                     });
                                 }
@@ -291,6 +251,38 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private void listenNotiToSend() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        String email = sharedPreferences.getString("email", "");
+        db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().getDocuments().size() > 0) {
+                    String id = task.getResult().getDocuments().get(0).getId();
+                    db.collection("users").document(id).collection("notification_logs").addSnapshotListener((value, error) -> {
+                        if (error != null) {
+                            return;
+                        }
+                        if (value != null) {
+                            for (int i = 0; i < value.getDocumentChanges().size(); i++) {
+                                if (value.getDocumentChanges().get(i).getType().toString().equals("ADDED")) {
+                                    Map<String, Object> noti = value.getDocumentChanges().get(i).getDocument().getData();
+                                    if (noti.get("isRead") != null && !((boolean) noti.get("isRead"))) {
+                                        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1")
+                                                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                                                .setContentTitle("Proma")
+                                                .setContentText((String) noti.get("message"))
+                                                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     @Override

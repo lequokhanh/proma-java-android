@@ -72,4 +72,5 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging:23.0.2")
     implementation("com.google.auth:google-auth-library-oauth2-http:1.19.0")
     implementation("com.android.volley:volley:1.2.1")
+    implementation("androidx.core:core-ktx:1.13.1")
 }

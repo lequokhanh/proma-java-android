@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -15,22 +14,22 @@
         app:srcCompat="@drawable/avatar12" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/message"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:fontFamily="@font/roboto_regular"
         android:textColor="#000"
-        android:textSize="17sp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/avatar"
-        app:layout_constraintEnd_toStartOf="@+id/img_Back"
+        app:layout_constraintEnd_toStartOf="@+id/action_btn"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/avatar"
         app:layout_constraintTop_toTopOf="@+id/avatar" />
 
     <ImageView
-        android:id="@+id/img_Back"
+        android:id="@+id/action_btn"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:elevation="10dp"

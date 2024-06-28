@@ -1,6 +1,5 @@
 package com.nt118.proma.ui.task;
 
-import static android.text.format.DateUtils.formatDateTime;
 import static com.nt118.proma.ui.task.TaskDetail.setWindowFlag;
 
 import android.content.Intent;
@@ -27,6 +26,7 @@ import com.nt118.proma.model.ImageArray;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +73,26 @@ public class Comment extends AppCompatActivity {
                     "message", etComment.getText().toString(),
                     "date", String.valueOf(System.currentTimeMillis())
             )).addOnSuccessListener(documentReference -> {
+                db.collection("tasks").document(taskId).get().addOnSuccessListener(documentSnapshot -> {
+                    ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) documentSnapshot.get("members");
+                    for (Map<String, Object> member : members) {
+                        if (!member.get("email").equals(email)) {
+                            db.collection("users").whereEqualTo("email", member).get().addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    Map<String, Object> user = task.getResult().getDocuments().get(0).getData();
+                                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                                    db.collection("tasks").document(taskId).collection("notification_logs").add(new HashMap<String, Object>() {{
+                                        put("type", 1);
+                                        put("message", "commented on task " + taskId);
+                                        put("date", sdf.format(new Date()));
+                                        put("sender", email);
+                                        put("taskId", taskId);
+                                    }});
+                                }
+                            });
+                        }
+                    }
+                });
                 showComments();
                 etComment.setText("");
             });

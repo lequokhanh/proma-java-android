@@ -6,10 +6,9 @@
     >
 
     <TextView
-        android:id="@+id/TextView1"
+        android:id="@+id/dateView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="New"
         android:fontFamily="@font/roboto_bold"
         android:textSize="15sp"
         android:alpha="0.5"
@@ -18,11 +17,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:id="@+id/listNotiContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="@+id/TextView1"
-        app:layout_constraintTop_toBottomOf="@+id/TextView1">
+        app:layout_constraintStart_toStartOf="@+id/dateView"
+        app:layout_constraintTop_toBottomOf="@+id/dateView">
 
 
     </LinearLayout>
