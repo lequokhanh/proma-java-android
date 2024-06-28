@@ -28,6 +28,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -38,6 +40,9 @@ import com.nt118.proma.databinding.ActivityMainBinding;
 import com.nt118.proma.ui.login.CompleteProfile;
 import com.nt118.proma.ui.login.Login;
 import com.nt118.proma.ui.member.AddMember;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -81,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 FloatingActionButton create_btn = findViewById(R.id.create_button);
                 AtomicReference<Boolean> isDialogShowing = new AtomicReference<>(false);
                 create_btn.setOnClickListener(v -> {
+                    members.clear();
                     BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(MainActivity.this);
                     View view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.modal_create_project, null);
                     bottomSheetDialog.setContentView(view1);
@@ -223,9 +229,61 @@ public class MainActivity extends AppCompatActivity {
                             if (task1.isSuccessful()) {
                                 bottomSheetDialog.dismiss();
                                 Toast.makeText(MainActivity.this, "Project created", Toast.LENGTH_SHORT).show();
+                                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+                                for (String member : members) {
+                                    db.collection("users").whereEqualTo("email", member).get().addOnCompleteListener(task2 -> {
+                                        if (task2.isSuccessful()) {
+                                            System.out.println("999999999999999999" + task2.getResult().getDocuments().get(0).getId());
+                                            db.collection("users").document(task2.getResult().getDocuments().get(0).getId()).collection("notification_logs").add(new HashMap<String, Object>() {{
+                                                put("type", 1);
+                                                put("message", "You have been invited to join project " + nameProject);
+                                                put("date", formatter.format(new Date()));
+                                                put("sender", email);
+                                                put("projectId", task1.getResult().getId());
+                                            }}).addOnCompleteListener(task3 -> {
+                                                if (task3.isSuccessful()) {
+                                                    // send API to firebase cloud messaging POST https://fcm.googleapis.com/v1/projects/proma-4ca44/messages:send
+                                                    // {
+                                                    //   "message": {
+                                                    //     "token": "task2.getResult().getDocuments().get(0).getString("fcm_token")",
+                                                    //     "notification": {
+                                                    //       "title": "Proma",
+                                                    //       "body": "You have been invited to join project " + nameProject
+                                                    //     }
+                                                    //   }
+                                                    // }
+                                                    JSONObject mainObject = new JSONObject();
+                                                    try {
+                                                        JSONObject messageObject = new JSONObject();
+                                                        JSONObject notificationObject = new JSONObject();
+                                                        notificationObject.put("title", "Proma");
+                                                        notificationObject.put("body", "You have been invited to join project " + nameProject);
+                                                        messageObject.put("notification", notificationObject);
+                                                        messageObject.put("token", task2.getResult().getDocuments().get(0).getString("fcm_token"));
+                                                        mainObject.put("message", messageObject);
+                                                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, "https://fcm.googleapis.com/v1/projects/proma-4ca44/messages:send", mainObject, response -> {
+                                                            System.out.println(response);
+                                                        }, error -> {
+                                                            System.out.println(error);
+                                                        }) {
+                                                            @Override
+                                                            public Map<String, String> getHeaders() {
+                                                                Map<String, String> headers = new HashMap<>();
+                                                                headers.put("Authorization", "Bearer " + new AccessToken().getAccessToken());
+                                                                headers.put("Content-Type", "application/json");
+                                                                return headers;
+                                                            }
+                                                        };
+                                                    } catch (JSONException e) {
+                                                        throw new RuntimeException(e);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
                             }
                         });
-                        members.clear();
                     });
                 });
                 if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {

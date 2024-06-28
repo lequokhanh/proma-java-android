@@ -30,6 +30,7 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.nt118.proma.R;
 import com.nt118.proma.databinding.FragmentHomeBinding;
 import com.nt118.proma.model.ImageArray;
+import com.nt118.proma.ui.notification.NotificationView;
 import com.nt118.proma.ui.project.ProjectDetail;
 import com.nt118.proma.ui.search.SearchView;
 import com.nt118.proma.ui.task.AllTask;
@@ -252,7 +253,7 @@ public class HomeFragment extends Fragment {
         root = binding.getRoot();
         FloatingActionButton notificationButton = root.findViewById(R.id.notification_button);
         notificationButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), ViewNotification.class);
+            Intent intent = new Intent(getActivity(), NotificationView.class);
             startActivity(intent);
         });
     }

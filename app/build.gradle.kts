@@ -34,6 +34,10 @@ android {
     dataBinding {
         enable = true
     }
+
+    packagingOptions {
+        exclude("META-INF/DEPENDENCIES")
+    }
 }
 dependencies {
     implementation("com.facebook.android:facebook-android-sdk:[4,5)")
@@ -47,10 +51,13 @@ dependencies {
     implementation(libs.legacy.support.v4)
     implementation(libs.activity)
     implementation(libs.gridlayout)
+    implementation(libs.datastore.core.android)
+    implementation(libs.work.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+    implementation("com.google.firebase:firebase-messaging")
     implementation("com.github.AnyChart:AnyChart-Android:1.1.5")
     implementation("com.google.firebase:firebase-messaging")
     implementation("androidx.core:core-splashscreen:1.0.0")
@@ -62,4 +69,7 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("com.google.firebase:firebase-storage")
     implementation("de.hdodenhof:circleimageview:3.1.0")
+    implementation("com.google.firebase:firebase-messaging:23.0.2")
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.19.0")
+    implementation("com.android.volley:volley:1.2.1")
 }
