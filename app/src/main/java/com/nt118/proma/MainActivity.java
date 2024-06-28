@@ -3,11 +3,15 @@ package com.nt118.proma;
 import static android.Manifest.permission.POST_NOTIFICATIONS;
 import static androidx.navigation.ui.NavigationUI.setupWithNavController;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -23,6 +27,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.NavController;
@@ -39,6 +44,7 @@ import com.nt118.proma.databinding.ActivityMainBinding;
 import com.nt118.proma.ui.login.CompleteProfile;
 import com.nt118.proma.ui.login.Login;
 import com.nt118.proma.ui.member.AddMember;
+import com.nt118.proma.ui.notification.NotificationView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -238,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
                                                 put("sender", email);
                                                 put("projectId", task1.getResult().getId());
                                                 put("isRead", false);
+                                                put("isAccepted", false);
                                             }});
                                         }
                                     });
@@ -249,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
                 if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
                     ActivityCompat.requestPermissions(this, new String[]{POST_NOTIFICATIONS}, 1);
                 }
+                createNotificationChannel();
             }
         }
     }
@@ -267,15 +275,20 @@ public class MainActivity extends AppCompatActivity {
                         }
                         if (value != null) {
                             for (int i = 0; i < value.getDocumentChanges().size(); i++) {
-                                if (value.getDocumentChanges().get(i).getType().toString().equals("ADDED")) {
-                                    Map<String, Object> noti = value.getDocumentChanges().get(i).getDocument().getData();
-                                    if (noti.get("isRead") != null && !((boolean) noti.get("isRead"))) {
-                                        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1")
-                                                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                                                .setContentTitle("Proma")
-                                                .setContentText((String) noti.get("message"))
-                                                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-                                    }
+                                Map<String, Object> noti = value.getDocumentChanges().get(i).getDocument().getData();
+                                if (noti.get("isRead") != null && !((boolean) noti.get("isRead"))) {
+                                    Intent intent = new Intent(MainActivity.this, NotificationView.class);
+                                    PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "Invite")
+                                            .setSmallIcon(R.drawable.ic_launcher_foreground)
+                                            .setContentTitle("Proma")
+                                            .setContentText((String) noti.get("message"))
+                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                            .setContentIntent(pendingIntent)
+                                            .setAutoCancel(true);
+                                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+                                    notificationManager.cancelAll();
+                                    notificationManager.notify(value.getDocumentChanges().get(i).getDocument().getId().hashCode(), builder.build());
                                 }
                             }
                         }
@@ -283,6 +296,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is not in the Support Library.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Invite";
+            String description = "Invite to join project";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("Invite", name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override

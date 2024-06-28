@@ -32,7 +32,7 @@ import java.util.Map;
 
 public class Comment extends AppCompatActivity {
     private final MutableLiveData<ArrayList<Map<String, Object>>> comments = new MutableLiveData<>();
-    private String taskId;
+    private String taskId, projectId;
     private ImageView imgBack;
     private FirebaseFirestore db;
 
@@ -49,7 +49,7 @@ public class Comment extends AppCompatActivity {
 
         Intent intent = getIntent();
         taskId = intent.getStringExtra("taskId");
-
+        projectId = intent.getStringExtra("projectId");
         imgBack.setOnClickListener(v -> {
             finish();
         });
@@ -82,11 +82,12 @@ public class Comment extends AppCompatActivity {
                                     Map<String, Object> user = task.getResult().getDocuments().get(0).getData();
                                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                                     db.collection("tasks").document(taskId).collection("notification_logs").add(new HashMap<String, Object>() {{
-                                        put("type", 1);
+                                        put("type", 2);
                                         put("message", "commented on task " + taskId);
                                         put("date", sdf.format(new Date()));
                                         put("sender", email);
                                         put("taskId", taskId);
+                                        put("projectId", projectId);
                                     }});
                                 }
                             });

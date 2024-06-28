@@ -33,7 +33,6 @@ import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -731,6 +730,7 @@ public class TaskDetail extends AppCompatActivity {
         moreAllBtn.setOnClickListener(v -> {
             Intent intent = new Intent(this, Comment.class);
             intent.putExtra("taskId", taskId);
+            intent.putExtra("projectId", projectId);
             startActivity(intent);
         });
         btnAtach.setOnClickListener(v -> showAttachDialog());
