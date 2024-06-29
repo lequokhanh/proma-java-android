@@ -146,7 +146,7 @@ public class ProjectFragment extends Fragment {
                             int totalTask = task2.getResult().getDocuments().size();
                             int doneTask = 0;
                             for (int j = 0; j < totalTask; j++) {
-                                if (task2.getResult().getDocuments().get(j).getLong("status") == 3) {
+                                if (task2.getResult().getDocuments().get(j).getLong("status") == 2) {
                                     doneTask++;
                                 }
                             }
