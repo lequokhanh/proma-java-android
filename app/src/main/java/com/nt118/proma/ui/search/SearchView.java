@@ -18,26 +18,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.nt118.proma.R;
 import com.nt118.proma.model.ImageArray;
 import com.nt118.proma.ui.project.ProjectDetail;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Map;
 
 public class SearchView extends AppCompatActivity {
 
+    Dialog loading;
     private FirebaseFirestore db;
     private MutableLiveData<ArrayList<String>> searchRecent;
     private ArrayList<String> recent;
@@ -46,7 +43,6 @@ public class SearchView extends AppCompatActivity {
     private LinearLayout searchRecentContainer;
     private String user;
     private SharedPreferences sharedPreferences;
-    Dialog loading;
     private boolean isSearchActive = false; // follow status search
 
 
@@ -106,8 +102,13 @@ public class SearchView extends AppCompatActivity {
             searchRecent.setValue(recent);
 
             List<String> projectNames = new ArrayList<>();
-            db.collection("projects")
-                    .whereEqualTo("user_created", user)
+            db.collection("projects").where(Filter.or(
+                                    Filter.equalTo("user_created", user),
+                                    Filter.arrayContains("members", Map.of("email", user,
+                                            "isAccepted", true)
+                                    )
+                            )
+                    )
                     .get()
                     .addOnSuccessListener(res -> {
                         loading.dismiss();
@@ -167,16 +168,17 @@ public class SearchView extends AppCompatActivity {
             return true;
         });
     }
-// Function to show the "no match" dialog
-        private void showNoMatchDialog() {
-            Dialog noMatchDialog = new Dialog(SearchView.this);
-            noMatchDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-            noMatchDialog.setContentView(R.layout.no_match_result);
-            noMatchDialog.show();
-        }
+
+    // Function to show the "no match" dialog
+    private void showNoMatchDialog() {
+        Dialog noMatchDialog = new Dialog(SearchView.this);
+        noMatchDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        noMatchDialog.setContentView(R.layout.no_match_result);
+        noMatchDialog.show();
+    }
 
 
-        private void initUi() {
+    private void initUi() {
         searchField = findViewById(R.id.search_field);
         closeBtn = findViewById(R.id.close_btn);
         sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
@@ -222,12 +224,14 @@ public class SearchView extends AppCompatActivity {
         });
 
     }
+
     public Dialog createLoadingDialog() {
         Dialog loading = new Dialog(this);
         loading.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         loading.setContentView(R.layout.loading);
         return loading;
     }
+
     @Override
     public void onBackPressed() {
         // Kiểm tra trạng thái tìm kiếm
