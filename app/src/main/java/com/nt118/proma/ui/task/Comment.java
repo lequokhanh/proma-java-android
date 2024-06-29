@@ -75,9 +75,10 @@ public class Comment extends AppCompatActivity {
             )).addOnSuccessListener(documentReference -> {
                 db.collection("tasks").document(taskId).get().addOnSuccessListener(documentSnapshot -> {
                     ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) documentSnapshot.get("members");
+
                     for (Map<String, Object> member : members) {
                         if (!member.get("email").equals(email)) {
-                            db.collection("users").whereEqualTo("email", member).get().addOnCompleteListener(task -> {
+                            db.collection("users").whereEqualTo("email", member.get("email")).get().addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
                                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                                     db.collection("users").document(task.getResult().getDocuments().get(0).getId()).collection("notification_logs").add(new HashMap<String, Object>() {{
@@ -87,6 +88,7 @@ public class Comment extends AppCompatActivity {
                                         put("sender", email);
                                         put("taskId", taskId);
                                         put("projectId", projectId);
+                                        put("isRead",false);
                                     }});
                                 }
                             });
