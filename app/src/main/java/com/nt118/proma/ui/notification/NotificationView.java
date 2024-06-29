@@ -16,6 +16,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
+import com.nt118.proma.model.ImageArray;
 import com.nt118.proma.ui.task.TaskDetail;
 
 import java.text.SimpleDateFormat;
@@ -56,6 +57,15 @@ public class NotificationView extends AppCompatActivity {
                 View item_notification = getLayoutInflater().inflate(R.layout.item_notification, null);
                 TextView message = item_notification.findViewById(R.id.message);
                 ImageView avatar = item_notification.findViewById(R.id.avatar);
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("users").whereEqualTo("email", maps.get(i).get("sender")).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().getDocuments().size() > 0) {
+                            int avatarIndex = (int) task.getResult().getDocuments().get(0).get("avatar");
+                            avatar.setImageResource(new ImageArray().getAvatarImage().get(avatarIndex));
+                        }
+                    }
+                });
                 if ((Long) maps.get(i).get("type") == 1) {
                     if (maps.get(i).get("isAccepted") != null && !(boolean) maps.get(i).get("isAccepted")) {
                         int finalI = i;
@@ -65,7 +75,6 @@ public class NotificationView extends AppCompatActivity {
                             Button btnAccept = bottomSheetDialog.findViewById(R.id.AcceptBtn);
                             Button btnReject = bottomSheetDialog.findViewById(R.id.RejectBtn);
                             btnAccept.setOnClickListener(v1 -> {
-                                FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
                                 String email = sharedPreferences.getString("email", "");
                                 db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(task -> {
@@ -91,7 +100,6 @@ public class NotificationView extends AppCompatActivity {
                                 bottomSheetDialog.dismiss();
                             });
                             btnReject.setOnClickListener(v2 -> {
-                                FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
                                 String email = sharedPreferences.getString("email", "");
                                 db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(task -> {
@@ -138,6 +146,17 @@ public class NotificationView extends AppCompatActivity {
                         Intent intent = new Intent(NotificationView.this, TaskDetail.class);
                         intent.putExtra("taskId", (String) maps.get(finalI1).get("taskId"));
                         intent.putExtra("projectId", (String) maps.get(finalI1).get("projectId"));
+                        startActivity(intent);
+                    });
+                    date.setText((String) maps.get(i).get("date"));
+                    message.setText((String) maps.get(i).get("message"));
+                    listNotiContainer.addView(item_notification);
+                } else if ((Long) maps.get(i).get("type") == 3) {
+                    int finalI2 = i;
+                    item_notification.setOnClickListener(v -> {
+                        Intent intent = new Intent(NotificationView.this, TaskDetail.class);
+                        intent.putExtra("taskId", (String) maps.get(finalI2).get("taskId"));
+                        intent.putExtra("projectId", (String) maps.get(finalI2).get("projectId"));
                         startActivity(intent);
                     });
                     date.setText((String) maps.get(i).get("date"));

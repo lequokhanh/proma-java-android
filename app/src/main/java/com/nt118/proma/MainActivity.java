@@ -309,6 +309,18 @@ public class MainActivity extends AppCompatActivity {
             channel.setDescription(description);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+            // create notification channel for comment
+            CharSequence nameComment = "Comment";
+            String descriptionComment = "Comment on task";
+            NotificationChannel channelComment = new NotificationChannel("Comment", nameComment, importance);
+            channelComment.setDescription(descriptionComment);
+            notificationManager.createNotificationChannel(channelComment);
+            // create notification channel for assign to task
+            CharSequence nameAssign = "Assign";
+            String descriptionAssign = "Assign to task";
+            NotificationChannel channelAssign = new NotificationChannel("Assign", nameAssign, importance);
+            channelAssign.setDescription(descriptionAssign);
+            notificationManager.createNotificationChannel(channelAssign);
         }
     }
 

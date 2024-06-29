@@ -31,11 +31,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
 import com.nt118.proma.R;
 import com.nt118.proma.databinding.FragmentHomeBinding;
 import com.nt118.proma.model.ImageArray;
-import com.nt118.proma.ui.image.SetImage;
 import com.nt118.proma.ui.login.Login;
 import com.nt118.proma.ui.notification.NotificationView;
 import com.nt118.proma.ui.project.ProjectDetail;
@@ -189,8 +187,9 @@ public class HomeFragment extends Fragment {
                     memberLeader.put("email", email);
                     memberLeader.put("isLeader", true);
                     db.collection("tasks")
-                            .whereEqualTo("projectId", projectId.get())
-                            .where(Filter.or(Filter.arrayContains("members", memberLeader), Filter.arrayContains("members", memberTask)))
+                            .where(Filter.and(Filter.equalTo("projectId", projectId.get()),
+                                    Filter.or(Filter.arrayContains("members", memberLeader),
+                                            Filter.arrayContains("members", memberTask))))
                             .get()
                             .addOnCompleteListener(task2 -> {
                         if (task2.isSuccessful()) {

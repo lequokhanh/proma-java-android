@@ -100,7 +100,10 @@ public class ProfileFragment extends Fragment {
         });
         TextView notification = binding.notification;
         notification.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), NotificationSetting.class);
+            Intent intent = new Intent();
+            intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("android.provider.extra.APP_PACKAGE", requireContext().getPackageName());
             startActivity(intent);
         });
         TextView sercurity = binding.security;
