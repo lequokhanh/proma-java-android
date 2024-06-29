@@ -4,12 +4,16 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Space;
@@ -27,15 +31,20 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.nt118.proma.R;
 import com.nt118.proma.databinding.FragmentHomeBinding;
 import com.nt118.proma.model.ImageArray;
+import com.nt118.proma.ui.image.SetImage;
+import com.nt118.proma.ui.login.Login;
 import com.nt118.proma.ui.notification.NotificationView;
 import com.nt118.proma.ui.project.ProjectDetail;
 import com.nt118.proma.ui.search.SearchView;
 import com.nt118.proma.ui.task.AllTask;
 import com.nt118.proma.ui.task.TaskDetail;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,10 +58,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HomeFragment extends Fragment {
-
+    private PopupMenu popup;
     private FragmentHomeBinding binding;
     private ListenerRegistration projectListener;
     private ListenerRegistration taskListener;
+    private String taskId;
     private View root;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -87,11 +97,11 @@ public class HomeFragment extends Fragment {
         root = binding.getRoot();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
-            Intent intent = new Intent(getActivity(), com.nt118.proma.ui.login.Login.class);
+            Intent intent = new Intent(getActivity(), Login.class);
             startActivity(intent);
         }
 
-        //xu ly su kien an nut thong bao
+        //handle notification button
         onClickNotification();
 
         FloatingActionButton searchButton = root.findViewById(R.id.search_button);
@@ -109,7 +119,14 @@ public class HomeFragment extends Fragment {
         Map<String, Object> member = new HashMap<>();
         member.put("email", email);
         member.put("isAccepted", true);
-        db.collection("projects").where(Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", member))).get().addOnCompleteListener(task -> {
+
+        db.collection("projects")
+                .where(
+                        Filter.or(
+                                Filter.equalTo("user_created", email),
+                                Filter.arrayContains("members", member)))
+                .get()
+                .addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (!task.getResult().getDocuments().isEmpty()) {
                     View homeContainer = inflater.inflate(R.layout.home_container, null);
@@ -165,7 +182,17 @@ public class HomeFragment extends Fragment {
                         intent.putExtra("projectId", projectId.get());
                         startActivity(intent);
                     });
-                    db.collection("tasks").whereEqualTo("projectId", projectId.get()).get().addOnCompleteListener(task2 -> {
+                    Map<String, Object> memberTask = new HashMap<>();
+                    memberTask.put("email", email);
+                    memberTask.put("isLeader", false);
+                    Map<String, Object> memberLeader = new HashMap<>();
+                    memberLeader.put("email", email);
+                    memberLeader.put("isLeader", true);
+                    db.collection("tasks")
+                            .whereEqualTo("projectId", projectId.get())
+                            .where(Filter.or(Filter.arrayContains("members", memberLeader), Filter.arrayContains("members", memberTask)))
+                            .get()
+                            .addOnCompleteListener(task2 -> {
                         if (task2.isSuccessful()) {
                             int totalTask = task2.getResult().getDocuments().size();
                             int doneTask = 0;
@@ -176,9 +203,11 @@ public class HomeFragment extends Fragment {
                             }
                             progressProject.setText(doneTask + "/" + totalTask);
                         }
+
                         TextView seeAllButton = homeContainer.findViewById(R.id.informationTab);
                         seeAllButton.setOnClickListener(v -> {
                             Intent intent = new Intent(getActivity(), AllTask.class);
+                            intent.putExtra("email", email);
                             intent.putExtra("projectId", projectId.get());
                             startActivity(intent);
                         });
@@ -205,6 +234,68 @@ public class HomeFragment extends Fragment {
                             TextView taskDeadline = taskView.findViewById(R.id.deadline);
                             taskDeadline.setText(deadline);
                             TextView taskStatus = taskView.findViewById(R.id.status);
+                            ImageView edit_btn = taskView.findViewById(R.id.edit_btn);
+                            // Check if the current user is a leader
+                            boolean isLeader = false;
+                            List<Map<String, Object>> members = (List<Map<String, Object>>) taskItem.get("members");
+                            if (members != null) {
+                                for (Map<String, Object> _member : members) {
+                                    String _email = (String) _member.get("email");
+                                    boolean leader = (boolean) _member.get("isLeader");
+                                    if (_email.equals(email) && leader) {
+                                        isLeader = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // Set visibility of edit button based on isLeader
+
+                            if (isLeader) {
+                                edit_btn.setVisibility(View.VISIBLE);
+                            } else {
+                                edit_btn.setVisibility(View.GONE);
+                            }
+                            edit_btn.setOnClickListener(v -> {
+                                PopupMenu popup = new PopupMenu(getContext(), v, 5);
+                                popup.getMenuInflater().inflate(R.menu.task_menu, popup.getMenu());
+
+                                SpannableString s = new SpannableString(popup.getMenu().getItem(2).getTitle());
+                                s.setSpan(new ForegroundColorSpan(Color.parseColor("#FF3B30")), 0, s.length(), 0);
+                                popup.getMenu().getItem(2).setTitle(s);
+
+                                try {
+                                    Field[] fields = popup.getClass().getDeclaredFields();
+                                    for (Field field : fields) {
+                                        if ("mPopup".equals(field.getName())) {
+                                            field.setAccessible(true);
+                                            Object menuPopupHelper = field.get(popup);
+                                            Class<?> classPopupHelper = Class.forName(menuPopupHelper
+                                                    .getClass().getName());
+                                            Method setForceIcons = classPopupHelper.getMethod(
+                                                    "setForceShowIcon", boolean.class);
+                                            setForceIcons.invoke(menuPopupHelper, true);
+                                            break;
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                popup.show();
+                                popup.setOnMenuItemClickListener(item -> {
+                                    if (item.getItemId() == R.id.action_edit) {
+                                        //show popup edit task
+                                    }
+                                    if (item.getItemId() == R.id.action_delete) {
+//                                        db.collection("tasks").document(taskId.get()).delete().addOnCompleteListener(task -> {
+//                                            if (task.isSuccessful()) {
+//                                                finish();
+//                                            }
+//                                        });
+                                    }
+                                    return true;
+                                });
+                            });
                             if ((Long) taskItem.get("status") == 0) {
                                 taskStatus.setVisibility(View.GONE);
                             } else if ((Long) taskItem.get("status") == 1) {
@@ -267,7 +358,9 @@ public class HomeFragment extends Fragment {
         }
         String email = user.getProviderData().get(1).getEmail();
         // listen to changes in projects collection
-        projectListener = db.collection("projects").where(Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", email))).addSnapshotListener((value, error) -> {
+        projectListener = db.collection("projects")
+                .where(Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", email)))
+                .addSnapshotListener((value, error) -> {
             if (error != null) {
                 return;
             }
@@ -275,7 +368,9 @@ public class HomeFragment extends Fragment {
                 loadUI();
             }
         });
-        db.collection("projects").where(Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", email))).get().addOnCompleteListener(task1 -> {
+        db.collection("projects")
+                .where(Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", email))).get()
+                .addOnCompleteListener(task1 -> {
             if (task1.isSuccessful()) {
                 if (!task1.getResult().getDocuments().isEmpty()) {
                     String projectId = task1.getResult().getDocuments().get(0).getId();

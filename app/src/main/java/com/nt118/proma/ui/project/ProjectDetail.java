@@ -37,6 +37,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
 import com.nt118.proma.model.ImageArray;
@@ -50,6 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -70,6 +72,7 @@ public class ProjectDetail extends AppCompatActivity {
     private ProgressBar loadingProjectDetail;
     private ScrollView container;
     private FloatingActionButton create_btn;
+    private String email;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +83,8 @@ public class ProjectDetail extends AppCompatActivity {
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         Intent intent = getIntent();
         projectId = intent.getStringExtra("projectId");
+        email = intent.getStringExtra("email");
+
         ImageView back = findViewById(R.id.img_Back);
         back.setOnClickListener(v -> {
             finish();
@@ -159,7 +164,17 @@ public class ProjectDetail extends AppCompatActivity {
                 name.setText(project.get("name").toString());
                 description.setText(project.get("description").toString());
                 deadline.setText(project.get("deadline").toString());
-                db.collection("tasks").whereEqualTo("projectId", projectId).get().addOnCompleteListener(task1 -> {
+                Map<String, Object> memberTask = new HashMap<>();
+                memberTask.put("email", email);
+                memberTask.put("isLeader", false);
+                Map<String, Object> memberLeader = new HashMap<>();
+                memberLeader.put("email", email);
+                memberLeader.put("isLeader", true);
+                db.collection("tasks")
+                        .whereEqualTo("projectId", projectId)
+                        .where(Filter.or(Filter.arrayContains("members", memberLeader), Filter.arrayContains("members", memberTask)))
+                        .get()
+                        .addOnCompleteListener(task1 -> {
                     if (task1.isSuccessful()) {
                         int total = task1.getResult().getDocuments().size();
                         int completed = 0;
@@ -238,7 +253,17 @@ public class ProjectDetail extends AppCompatActivity {
         leftSide.removeAllViews();
         rightSide.removeAllViews();
         AtomicInteger count = new AtomicInteger(0);
-        db.collection("tasks").whereEqualTo("projectId", projectId).get().addOnCompleteListener(task -> {
+        Map<String, Object> memberTask = new HashMap<>();
+        memberTask.put("email", email);
+        memberTask.put("isLeader", false);
+        Map<String, Object> memberLeader = new HashMap<>();
+        memberLeader.put("email", email);
+        memberLeader.put("isLeader", true);
+        db.collection("tasks")
+                .whereEqualTo("projectId", projectId)
+                .where(Filter.or(Filter.arrayContains("members", memberLeader), Filter.arrayContains("members", memberTask)))
+                .get()
+                .addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().getDocuments().size() == 0) {
                     loading.setVisibility(View.GONE);
@@ -277,6 +302,29 @@ public class ProjectDetail extends AppCompatActivity {
                         intent.putExtra("projectId", projectId);
                         startActivity(intent);
                     });
+                    ImageView edit_btn = taskView.findViewById(R.id.edit_btn);
+                    // Check if the current user is a leader
+                    boolean isLeader = false;
+                    List<Map<String, Object>> members = (List<Map<String, Object>>) taskItem.get("members");
+                    if (members != null) {
+                        for (Map<String, Object> _member : members) {
+                            String _email = (String) _member.get("email");
+                            boolean leader = (boolean) _member.get("isLeader");
+                            if (_email.equals(email) && leader) {
+                                isLeader = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Set visibility of edit button based on isLeader
+
+                    if (isLeader) {
+                        edit_btn.setVisibility(View.VISIBLE);
+                    } else {
+                        edit_btn.setVisibility(View.GONE);
+                    }
+
                     Space space = new Space(this);
                     space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 20));
                     taskView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -306,7 +354,10 @@ public class ProjectDetail extends AppCompatActivity {
                 Map<String, Object> project = task.getResult().getData();
                 // display information of project
                 TextView leader_tv = information.findViewById(R.id.leader_tv);
-                db.collection("users").whereEqualTo("email", project.get("user_created")).get().addOnCompleteListener(task1 -> {
+                db.collection("users")
+                        .whereEqualTo("email", project.get("user_created"))
+                        .get()
+                        .addOnCompleteListener(task1 -> {
                     if (task1.isSuccessful()) {
                         leader_tv.setText(task1.getResult().getDocuments().get(0).get("name").toString());
                         LinearLayout member_list = information.findViewById(R.id.memberList2);

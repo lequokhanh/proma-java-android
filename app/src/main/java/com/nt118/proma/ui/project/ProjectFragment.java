@@ -7,12 +7,15 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Space;
@@ -25,6 +28,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
 import com.nt118.proma.databinding.FragmentProjectBinding;
@@ -32,6 +36,10 @@ import com.nt118.proma.model.ImageArray;
 import com.nt118.proma.ui.search.SearchView;
 import com.nt118.proma.ui.task.TaskDetail;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -102,7 +110,15 @@ public class ProjectFragment extends Fragment {
         LinearLayout containerLayout = new LinearLayout(getContext());
         containerLayout.setOrientation(LinearLayout.VERTICAL);
         MutableLiveData<Boolean> isLoaded = new MutableLiveData<>(false);
-        db.collection("projects").whereEqualTo("user_created", email).get().addOnCompleteListener(task -> {
+
+        Map<String, Object> member = new HashMap<>();
+        member.put("email", email);
+        member.put("isAccepted", true);
+
+        db.collection("projects")
+                .where(Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", member)))
+                .get()
+                .addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().getDocuments().size() == 0) {
                     loading.setVisibility(View.GONE);
@@ -122,7 +138,17 @@ public class ProjectFragment extends Fragment {
                     if (projectItem.get("cover") != null) {
                         cover_project.setImageResource(ImageArray.getCoverProjectImage().get(Math.toIntExact((Long) projectItem.get("cover"))));
                     }
-                    db.collection("tasks").whereEqualTo("projectId", task.getResult().getDocuments().get(i).getId()).get().addOnCompleteListener(task2 -> {
+                    Map<String, Object> memberTask = new HashMap<>();
+                    memberTask.put("email", email);
+                    memberTask.put("isLeader", false);
+                    Map<String, Object> memberLeader = new HashMap<>();
+                    memberLeader.put("email", email);
+                    memberLeader.put("isLeader", true);
+                    db.collection("tasks")
+                            .whereEqualTo("projectId", task.getResult().getDocuments().get(i).getId())
+                            .where(Filter.or(Filter.arrayContains("members", memberLeader), Filter.arrayContains("members", memberTask)))
+                            .get()
+                            .addOnCompleteListener(task2 -> {
                         if (task2.isSuccessful()) {
                             int totalTask = task2.getResult().getDocuments().size();
                             int doneTask = 0;
@@ -178,7 +204,15 @@ public class ProjectFragment extends Fragment {
         leftSide.removeAllViews();
         rightSide.removeAllViews();
         AtomicInteger count = new AtomicInteger(0);
-        db.collection("projects").whereEqualTo("user_created", email).get().addOnCompleteListener(task1 -> {
+
+        Map<String, Object> member = new HashMap<>();
+        member.put("email", email);
+        member.put("isAccepted", true);
+
+        db.collection("projects")
+                .where(Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", member)))
+                .get()
+                .addOnCompleteListener(task1 -> {
             if (task1.isSuccessful()) {
                 if (task1.getResult().getDocuments().size() == 0) {
                     loading.setVisibility(View.GONE);
@@ -187,7 +221,17 @@ public class ProjectFragment extends Fragment {
                 for (int j = 0; j < task1.getResult().getDocuments().size(); j++) {
                     Map<String, Object> projectItem = task1.getResult().getDocuments().get(j).getData();
                     String projectId = task1.getResult().getDocuments().get(j).getId();
-                    db.collection("tasks").whereEqualTo("projectId", projectId).get().addOnCompleteListener(task -> {
+                    Map<String, Object> memberTask = new HashMap<>();
+                    memberTask.put("email", email);
+                    memberTask.put("isLeader", false);
+                    Map<String, Object> memberLeader = new HashMap<>();
+                    memberLeader.put("email", email);
+                    memberLeader.put("isLeader", true);
+                    db.collection("tasks")
+                            .whereEqualTo("projectId", projectId)
+                            .where(Filter.or(Filter.arrayContains("members", memberLeader), Filter.arrayContains("members", memberTask)))
+                            .get()
+                            .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (task.getResult().getDocuments().size() == 0) {
                                 loading.setVisibility(View.GONE);
@@ -225,6 +269,68 @@ public class ProjectFragment extends Fragment {
                                     intent.putExtra("taskId", task.getResult().getDocuments().get(finalI).getId());
                                     intent.putExtra("projectId", projectId);
                                     startActivity(intent);
+                                });
+                                ImageView edit_btn = taskView.findViewById(R.id.edit_btn);
+                                // Check if the current user is a leader
+                                boolean isLeader = false;
+                                List<Map<String, Object>> members = (List<Map<String, Object>>) taskItem.get("members");
+                                if (members != null) {
+                                    for (Map<String, Object> _member : members) {
+                                        String _email = (String) _member.get("email");
+                                        boolean leader = (boolean) _member.get("isLeader");
+                                        if (_email.equals(email) && leader) {
+                                            isLeader = true;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                // Set visibility of edit button based on isLeader
+
+                                if (isLeader) {
+                                    edit_btn.setVisibility(View.VISIBLE);
+                                } else {
+                                    edit_btn.setVisibility(View.GONE);
+                                }
+                                edit_btn.setOnClickListener(v -> {
+                                    PopupMenu popup = new PopupMenu(getContext(), v, 5);
+                                    popup.getMenuInflater().inflate(R.menu.task_menu, popup.getMenu());
+
+                                    SpannableString s = new SpannableString(popup.getMenu().getItem(2).getTitle());
+                                    s.setSpan(new ForegroundColorSpan(Color.parseColor("#FF3B30")), 0, s.length(), 0);
+                                    popup.getMenu().getItem(2).setTitle(s);
+
+                                    try {
+                                        Field[] fields = popup.getClass().getDeclaredFields();
+                                        for (Field field : fields) {
+                                            if ("mPopup".equals(field.getName())) {
+                                                field.setAccessible(true);
+                                                Object menuPopupHelper = field.get(popup);
+                                                Class<?> classPopupHelper = Class.forName(menuPopupHelper
+                                                        .getClass().getName());
+                                                Method setForceIcons = classPopupHelper.getMethod(
+                                                        "setForceShowIcon", boolean.class);
+                                                setForceIcons.invoke(menuPopupHelper, true);
+                                                break;
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    popup.show();
+                                    popup.setOnMenuItemClickListener(item -> {
+                                        if (item.getItemId() == R.id.action_edit) {
+                                            //show popup edit task
+                                        }
+                                        if (item.getItemId() == R.id.action_delete) {
+//                                        db.collection("tasks").document(taskId.get()).delete().addOnCompleteListener(task -> {
+//                                            if (task.isSuccessful()) {
+//                                                finish();
+//                                            }
+//                                        });
+                                        }
+                                        return true;
+                                    });
                                 });
                                 Space space = new Space(getContext());
                                 space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 20));

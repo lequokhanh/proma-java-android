@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="160dp"
     android:layout_height="wrap_content"
@@ -28,6 +29,18 @@
             android:layout_height="40dp"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/edit_btn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:elevation="10dp"
+            android:foregroundTint="#FFFFFF"
+            android:src="@drawable/three_dot"
+            card_view:layout_constraintBottom_toBottomOf="@+id/icon"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintTop_toTopOf="@+id/icon"
+            card_view:layout_constraintVertical_bias="0.562" />
 
         <TextView
             android:id="@+id/taskName"
