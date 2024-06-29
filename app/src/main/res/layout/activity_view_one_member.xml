@@ -33,7 +33,7 @@
         />
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -47,6 +47,7 @@
 
 
     <LinearLayout
+        android:id="@+id/smsBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
@@ -57,8 +58,8 @@
         android:orientation="vertical"
         android:paddingHorizontal="24dp"
         android:paddingVertical="12dp"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayout"
-        app:layout_constraintTop_toBottomOf="@+id/textView10">
+        app:layout_constraintEnd_toStartOf="@+id/phoneBtn"
+        app:layout_constraintTop_toBottomOf="@+id/name">
 
         <ImageButton
             android:id="@+id/imageButton"
@@ -80,7 +81,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/phoneBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
@@ -89,9 +90,9 @@
         android:orientation="vertical"
         android:paddingHorizontal="24dp"
         android:paddingVertical="12dp"
-        app:layout_constraintEnd_toEndOf="@+id/textView10"
-        app:layout_constraintStart_toStartOf="@+id/textView10"
-        app:layout_constraintTop_toBottomOf="@+id/textView10">
+        app:layout_constraintEnd_toEndOf="@+id/name"
+        app:layout_constraintStart_toStartOf="@+id/name"
+        app:layout_constraintTop_toBottomOf="@+id/name">
 
         <ImageButton
             android:id="@+id/imageButton2"
@@ -113,6 +114,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/emailBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -122,8 +124,8 @@
         android:orientation="vertical"
         android:paddingHorizontal="24dp"
         android:paddingVertical="12dp"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout"
-        app:layout_constraintTop_toBottomOf="@+id/textView10">
+        app:layout_constraintStart_toEndOf="@+id/phoneBtn"
+        app:layout_constraintTop_toBottomOf="@+id/name">
 
         <ImageButton
             android:id="@+id/imageButton3"
@@ -152,7 +154,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintTop_toBottomOf="@+id/phoneBtn">
 
         <LinearLayout
             android:layout_width="match_parent"

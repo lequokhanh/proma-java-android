@@ -54,10 +54,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ProjectDetail extends AppCompatActivity {
@@ -176,7 +174,6 @@ public class ProjectDetail extends AppCompatActivity {
                 memberLeader.put("isLeader", true);
                 db.collection("tasks")
                         .whereEqualTo("projectId", projectId)
-                        .where(Filter.or(Filter.arrayContains("members", memberLeader), Filter.arrayContains("members", memberTask)))
                         .get()
                         .addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {

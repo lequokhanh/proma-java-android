@@ -1,29 +1,20 @@
 package com.nt118.proma.ui.profile;
 
-import static androidx.fragment.app.FragmentManager.TAG;
-
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.nt118.proma.R;
 
 public class ChangePassword extends AppCompatActivity {
@@ -48,15 +39,10 @@ public class ChangePassword extends AppCompatActivity {
         et_new_pw.addTextChangedListener(textWatcher);
         et_cf_pw.addTextChangedListener(textWatcher);
 
-        btn_Reset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changePassword();
-            }
-        });
+        btn_Reset.setOnClickListener(v -> changePassword());
     }
 
-    private TextWatcher textWatcher = new TextWatcher() {
+    private final TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             // Do nothing
@@ -96,36 +82,9 @@ public class ChangePassword extends AppCompatActivity {
             throw new Exception("New password should not be the same as the current password.");
         }
 
-//        if (!isValidPassword(newPassword)) {
-//            throw new Exception("New password does not meet security criteria.");
-//        }
         return true;
     }
 
-//    public static boolean isValidPassword(String password) {
-            //rules security
-    //        if (password.length() < 8) {
-//            return false; // minimum length is 8 characters
-//        }
-//        boolean hasDigit = false;
-//        boolean hasUpperCase = false;
-//        boolean hasLowerCase = false;
-//        boolean hasSpecialChar = false;
-//
-//        for (char c : password.toCharArray()) {
-//            if (Character.isDigit(c)) {
-//                hasDigit = true;
-//            } else if (Character.isUpperCase(c)) {
-//                hasUpperCase = true;
-//            } else if (Character.isLowerCase(c)) {
-//                hasLowerCase = true;
-//            } else if (!Character.isLetterOrDigit(c)) {
-//                hasSpecialChar = true;
-//            }
-//        }
-//
-//        return hasDigit && hasUpperCase && hasLowerCase && hasSpecialChar;
-//    }
     private void changePassword() {
         String currentPassword = et_cr_pw.getText().toString().trim();
         String newPassword = et_new_pw.getText().toString().trim();
@@ -137,23 +96,17 @@ public class ChangePassword extends AppCompatActivity {
                 String email = user.getEmail();
 
                 AuthCredential credential = EmailAuthProvider.getCredential(email, currentPassword);
-                user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            user.updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(ChangePassword.this, "Update password successfully", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(ChangePassword.this, "Update password failed", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                        } else {
-                            Toast.makeText(ChangePassword.this, "Not match current password", Toast.LENGTH_SHORT).show();
-                        }
+                user.reauthenticate(credential).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        user.updatePassword(newPassword).addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                Toast.makeText(ChangePassword.this, "Update password successfully", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ChangePassword.this, "Update password failed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(ChangePassword.this, "Not match current password", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -163,12 +116,7 @@ public class ChangePassword extends AppCompatActivity {
     }
 
     private void onClickBack() {
-        imgBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        imgBack.setOnClickListener(v -> finish());
     }
 
     private void InitUi(){

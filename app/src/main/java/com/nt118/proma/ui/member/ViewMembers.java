@@ -1,26 +1,17 @@
 package com.nt118.proma.ui.member;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
@@ -28,8 +19,6 @@ import com.nt118.proma.model.ImageArray;
 
 import java.util.ArrayList;
 import java.util.Map;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ViewMembers extends AppCompatActivity {
 
@@ -82,6 +71,11 @@ public class ViewMembers extends AppCompatActivity {
                                 ImageView rm_btn = fileTextView.findViewById(R.id.removeBtn);
                                 rm_btn.setVisibility(View.GONE);
                                 ImageView avatar = fileTextView.findViewById(R.id.avatar);
+                                fileTextView.setOnClickListener(v -> {
+                                    Intent intent = new Intent(ViewMembers.this, ViewOneMember.class);
+                                    intent.putExtra("email", email);
+                                    startActivity(intent);
+                                });
 
                                 // Get the avatar ID and set the image resource
                                 Object avatarObj = user.get("avatar");
@@ -118,6 +112,11 @@ public class ViewMembers extends AppCompatActivity {
                                 ImageView avatar = fileTextView.findViewById(R.id.avatar);
                                 TextView status = fileTextView.findViewById(R.id.status);
                                 status.setText((boolean) member.get("isAccepted") ? "Accepted" : "Pending");
+                                fileTextView.setOnClickListener(v -> {
+                                    Intent intent = new Intent(ViewMembers.this, ViewOneMember.class);
+                                    intent.putExtra("email", email);
+                                    startActivity(intent);
+                                });
 
                                 // Get the avatar ID and set the image resource
                                 Object avatarObj = user.get("avatar");
