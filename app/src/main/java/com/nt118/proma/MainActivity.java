@@ -236,7 +236,6 @@ public class MainActivity extends AppCompatActivity {
                                 for (String member : members) {
                                     db.collection("users").whereEqualTo("email", member).get().addOnCompleteListener(task2 -> {
                                         if (task2.isSuccessful()) {
-                                            System.out.println("999999999999999999" + task2.getResult().getDocuments().get(0).getId());
                                             db.collection("users").document(task2.getResult().getDocuments().get(0).getId()).collection("notification_logs").add(new HashMap<String, Object>() {{
                                                 put("type", 1);
                                                 put("message", "You have been invited to join project " + nameProject);

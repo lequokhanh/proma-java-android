@@ -75,14 +75,14 @@ public class TaskDetail extends AppCompatActivity {
     private ArrayList<String> task_names = new ArrayList<>();
     private ArrayList<String> membersProject = new ArrayList<>();
     private ArrayList<String> memberNames = new ArrayList<>();
+    private String leaderEmail;
+    private String leaderName;
     private FloatingActionButton create_btn;
     private ProgressBar loadingBar;
     private Dialog currentDialog;
     private LinearLayout listItem, listComments;
     private LinearLayout listItemAttached;
     private LinearLayout memberList;
-    private String leaderEmail;
-    private String leaderName;
     private FirebaseFirestore db;
     private TextView leader;
     private String email;
@@ -128,7 +128,7 @@ public class TaskDetail extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         ImageView imageView = findViewById(R.id.img_Back);
         ImageView threeDot = findViewById(R.id.menu_btn);
-
+        threeDot.setVisibility(View.GONE);
         threeDot.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(this, v, 5);
             popup.getMenuInflater().inflate(R.menu.task_menu, popup.getMenu());
@@ -154,8 +154,16 @@ public class TaskDetail extends AppCompatActivity {
             }
             popup.show();
             popup.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.action_mark) {
+                    db.collection("tasks").document(taskId).update("status", 2).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            loadUI();
+                        }
+                    });
+                }
                 if (item.getItemId() == R.id.action_edit) {
-                    //show popup edit task
+                    AtomicReference<Boolean> isDialogShowing = new AtomicReference<>(false);
+                    showEditTaskDialog(isDialogShowing);
                 }
                 if (item.getItemId() == R.id.action_delete) {
                     db.collection("tasks").document(taskId).delete().addOnCompleteListener(task -> {
@@ -175,6 +183,12 @@ public class TaskDetail extends AppCompatActivity {
                 title.setText(task.getResult().getString("title"));
                 desc.setText(task.getResult().getString("description"));
                 deadline.setText(task.getResult().getString("deadline"));
+                for (Map<String, Object> member : (ArrayList<Map<String, Object>>) task.getResult().get("members")) {
+                    if ((Boolean) member.get("isLeader") && member.get("email").equals(email)) {
+                        threeDot.setVisibility(View.VISIBLE);
+                        break;
+                    }
+                }
                 db.collection("projects").document(projectId).get().addOnCompleteListener(task2 -> {
                     if (task.isSuccessful()) {
                         if (task2.getResult().get("cover") != null) {
@@ -184,6 +198,113 @@ public class TaskDetail extends AppCompatActivity {
                     }
                 });
             }
+        });
+    }
+
+    private void showEditTaskDialog(AtomicReference<Boolean> isDialogShowing) {
+        task_members = new ArrayList<>();
+        task_names = new ArrayList<>();
+        membersProject = new ArrayList<>();
+        memberNames = new ArrayList<>();
+        leaderEmail = null;
+        leaderName = null;
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        View view1 = LayoutInflater.from(this).inflate(R.layout.modal_create_task, null);
+        bottomSheetDialog.setContentView(view1);
+        if (isDialogShowing.get()) {
+            return;
+        }
+        isDialogShowing.set(true);
+        bottomSheetDialog.show();
+        bottomSheetDialog.setOnDismissListener(dialog -> {
+            isDialogShowing.set(false);
+        });
+        bottomSheetDialog.setOnCancelListener(dialog -> {
+            isDialogShowing.set(false);
+        });
+        // handle deadline button
+        TextView titleDialog = view1.findViewById(R.id.titleDialog);
+        titleDialog.setText("Edit Task");
+        Button deadlineBtn = view1.findViewById(R.id.deadlineBtn);
+        TextView deadlineView = view1.findViewById(R.id.deadlineView);
+        Button addCategoryBtn = view1.findViewById(R.id.addCategoryBtn);
+        TextView categoryView = view1.findViewById(R.id.categoryView);
+        Button addMemberBtn = view1.findViewById(R.id.addMemberBtn);
+        memberList = view1.findViewById(R.id.memberList2);
+        Button addLeaderBtn = view1.findViewById(R.id.addLeaderBtn);
+        leader = view1.findViewById(R.id.leaderTV);
+        db.collection("tasks").document(taskId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Map<String, Object> taskItem = task.getResult().getData();
+                EditText taskTitle = view1.findViewById(R.id.taskTitleET);
+                taskTitle.setText(taskItem.get("title").toString());
+                EditText desc = view1.findViewById(R.id.descET);
+                desc.setText(taskItem.get("description").toString());
+                deadlineView.setText(taskItem.get("deadline").toString());
+                deadlineView.setVisibility(View.VISIBLE);
+                categoryView.setText(taskItem.get("category").toString());
+                categoryView.setVisibility(View.VISIBLE);
+                ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) taskItem.get("members");
+                for (Map<String, Object> member : members) {
+                    if ((Boolean) member.get("isLeader")) {
+                        leaderEmail = member.get("email").toString();
+                        db.collection("users").whereEqualTo("email", leaderEmail).get().addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                leaderName = task1.getResult().getDocuments().get(0).get("name").toString();
+                                leader.setText(leaderName);
+                                leader.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    } else {
+                        task_members.add(member.get("email").toString());
+                        db.collection("users").whereEqualTo("email", member.get("email")).get().addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                task_names.add(task1.getResult().getDocuments().get(0).get("name").toString());
+                                TextView memberView = createItemMember(task1.getResult().getDocuments().get(0).get("name").toString());
+                                memberList.addView(memberView);
+                            }
+                        });
+                    }
+                }
+            }
+        });
+        AtomicReference<Boolean> isDatePickerShowing = new AtomicReference<>(false);
+        deadlineBtn.setOnClickListener(v1 -> {
+            showDatePicker(isDatePickerShowing, deadlineView, Boolean.TRUE);
+        });
+        // handle choose category button
+        addCategoryBtn.setOnClickListener(v1 -> {
+            showCategoryDialog(categoryView);
+        });
+        // handle add member button
+        addMemberBtn.setOnClickListener(v1 -> {
+            showAddMemberActivity();
+        });
+        // handle choose leader button
+        addLeaderBtn.setOnClickListener(v1 -> {
+            showChooseLeaderActivity();
+        });
+        // handle create task button
+        Button createTaskBtn = view1.findViewById(R.id.createTaskBtn);
+        createTaskBtn.setText("Save");
+        createTaskBtn.setOnClickListener(v1 -> {
+            EditText taskTitle = view1.findViewById(R.id.taskTitleET);
+            EditText desc = view1.findViewById(R.id.descET);
+            if (taskTitle.getText().toString().isEmpty())
+                taskTitle.setError("Task title is required");
+            if (desc.getText().toString().isEmpty()) desc.setError("Description is required");
+            if (leader.getVisibility() == View.GONE)
+                Toast.makeText(this, "Leader is required", Toast.LENGTH_SHORT).show();
+            else if (task_members.size() == 0)
+                Toast.makeText(this, "Members are required", Toast.LENGTH_SHORT).show();
+            else if (categoryView.getVisibility() == View.GONE)
+                Toast.makeText(this, "Category is required", Toast.LENGTH_SHORT).show();
+            else if (deadlineView.getVisibility() == View.GONE)
+                Toast.makeText(this, "Deadline is required", Toast.LENGTH_SHORT).show();
+            if (taskTitle.getText().toString().isEmpty() || desc.getText().toString().isEmpty() || leader.getVisibility() == View.GONE || task_members.size() == 0 || deadlineView.getVisibility() == View.GONE || categoryView.getVisibility() == View.GONE)
+                return;
+            bottomSheetDialog.dismiss();
+            handleEditTaskBtn(taskTitle.getText().toString(), desc.getText().toString(), leaderEmail, task_members, deadlineView.getText().toString(), categoryView.getText().toString());
         });
     }
 
@@ -252,12 +373,9 @@ public class TaskDetail extends AppCompatActivity {
         leftSide.removeAllViews();
         rightSide.removeAllViews();
 
-        create_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AtomicReference<Boolean> isDialogShowing = new AtomicReference<>(false);
-                showPopupCreateTask(isDialogShowing);
-            }
+        create_btn.setOnClickListener(v -> {
+            AtomicReference<Boolean> isDialogShowing = new AtomicReference<>(false);
+            showPopupCreateTask(isDialogShowing);
         });
 
         AtomicInteger count = new AtomicInteger(0);
@@ -314,9 +432,15 @@ public class TaskDetail extends AppCompatActivity {
     }
 
     private void showPopupCreateTask(AtomicReference<Boolean> isDialogShowing) {
+        task_members = new ArrayList<>();
+        task_names = new ArrayList<>();
+        membersProject = new ArrayList<>();
+        memberNames = new ArrayList<>();
+        leaderEmail = null;
+        leaderName = null;
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         View view1 = LayoutInflater.from(this).inflate(R.layout.modal_create_task, null);
-        TextView title = view1.findViewById(R.id.textView3);
+        TextView title = view1.findViewById(R.id.titleDialog);
         title.setText("Create Sub Task");
 
         bottomSheetDialog.setContentView(view1);
@@ -571,19 +695,19 @@ public class TaskDetail extends AppCompatActivity {
                 ArrayList<String> memberEmails = new ArrayList<>();
                 MutableLiveData<ArrayList<String>> memberNames = new MutableLiveData<>(new ArrayList<>());
                 for (Map<String, Object> member : members) {
-                    memberEmails.add((String) member.get("email"));
                     db.collection("users").whereEqualTo("email", member.get("email")).get().addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
+                            memberEmails.add((String) member.get("email"));
                             ArrayList<String> names = memberNames.getValue();
                             names.add(task1.getResult().getDocuments().get(0).get("name").toString());
                             memberNames.setValue(names);
                         }
                     });
                 }
-                memberEmails.add((String) project.get("user_created"));
                 ArrayList<String> names = memberNames.getValue();
                 db.collection("users").whereEqualTo("email", project.get("user_created")).get().addOnCompleteListener(task1 -> {
                     if (task1.isSuccessful()) {
+                        memberEmails.add((String) project.get("user_created"));
                         names.add(task1.getResult().getDocuments().get(0).get("name").toString());
                         memberNames.setValue(names);
                     }
@@ -623,16 +747,15 @@ public class TaskDetail extends AppCompatActivity {
                         }
                     });
                 }
-                memberEmails.add((String) project.get("user_created"));
                 ArrayList<String> names = memberNames.getValue();
                 db.collection("users").whereEqualTo("email", project.get("user_created")).get().addOnCompleteListener(task1 -> {
                     if (task1.isSuccessful()) {
+                        memberEmails.add((String) project.get("user_created"));
                         names.add(task1.getResult().getDocuments().get(0).get("name").toString());
                         memberNames.setValue(names);
                     }
                 });
                 memberNames.observe(this, strings -> {
-
                     if (strings.size() == members.size() + 1) {
                         intent.putStringArrayListExtra("members", memberEmails);
                         intent.putStringArrayListExtra("name", strings);
@@ -642,6 +765,40 @@ public class TaskDetail extends AppCompatActivity {
                         loading.dismiss();
                     }
                 });
+            }
+        });
+    }
+
+    private void handleEditTaskBtn(String taskTitle, String desc, String leader, ArrayList<String> members, String deadline, String category) {
+        Dialog loading = createLoadingDialog();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("tasks").document(taskId).update("title", taskTitle);
+        db.collection("tasks").document(taskId).update("description", desc);
+        db.collection("tasks").document(taskId).update("deadline", deadline);
+        db.collection("tasks").document(taskId).update("category", category);
+
+        ArrayList<Map<String, Object>> membersList = new ArrayList<>();
+        for (String member : members) {
+            Map<String, Object> memberMap = new HashMap<>();
+            memberMap.put("email", member);
+            membersList.add(memberMap);
+            if (member.equals(leader)) {
+                memberMap.put("isLeader", true);
+            } else {
+                memberMap.put("isLeader", false);
+            }
+        }
+        if (!members.contains(leader)) {
+            Map<String, Object> leaderMap = new HashMap<>();
+            leaderMap.put("email", leader);
+            leaderMap.put("isLeader", true);
+        }
+        db.collection("tasks").document(taskId).update("members", membersList).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                loading.dismiss();
+                Toast.makeText(this, "Edit task successfully", Toast.LENGTH_SHORT).show();
+                loadUI();
             }
         });
     }
@@ -684,6 +841,22 @@ public class TaskDetail extends AppCompatActivity {
                 intent.putExtra("taskId", task.getResult().getId());
                 intent.putExtra("projectId", projectId);
                 intent.putExtra("parentId", taskId);
+                for (String member : members) {
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+                    db.collection("users").whereEqualTo("email", member).get().addOnCompleteListener(task2 -> {
+                        if (task2.isSuccessful()) {
+                            db.collection("users").document(task2.getResult().getDocuments().get(0).getId()).collection("notification_logs").add(new HashMap<String, Object>() {{
+                                put("type", 3);
+                                put("message", "You have been assigned to task " + taskTitle);
+                                put("date", formatter.format(new Date()));
+                                put("sender", email);
+                                put("taskId", task.getResult().getId());
+                                put("projectId", projectId);
+                                put("isRead", false);
+                            }});
+                        }
+                    });
+                }
                 startActivity(intent);
             }
         });
@@ -1164,7 +1337,8 @@ public class TaskDetail extends AppCompatActivity {
                             Map<String, Object> user = task2.getResult().getDocuments().get(0).getData();
                             if ((boolean) member.get("isLeader"))
                                 leader.setText((String) user.get("name"));
-                            memberList.addView(createItemMember((String) user.get("name")));
+                            else
+                                memberList.addView(createItemMember((String) user.get("name")));
                         }
                     });
                 }

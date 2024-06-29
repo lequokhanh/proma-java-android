@@ -74,7 +74,7 @@ public class ProjectDetail extends AppCompatActivity {
     private ScrollView container;
     private FloatingActionButton create_btn;
     private String email;
-
+    private ImageView menu_btn;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +86,6 @@ public class ProjectDetail extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
         projectId = intent.getStringExtra("projectId");
         email = sharedPreferences.getString("email", "");
-
         ImageView back = findViewById(R.id.img_Back);
         back.setOnClickListener(v -> {
             finish();
@@ -96,7 +95,8 @@ public class ProjectDetail extends AppCompatActivity {
         create_btn.setOnClickListener(v -> {
             showPopupCreateTask(isDialogShowing);
         });
-        ImageView menu_btn = findViewById(R.id.menu_btn);
+        menu_btn = findViewById(R.id.menu_btn);
+        menu_btn.setVisibility(View.GONE);
         menu_btn.setOnClickListener(v -> {
             popup = new PopupMenu(this, v, 5);
             popup.getMenuInflater().inflate(R.menu.project_detail_menu, popup.getMenu());
@@ -162,6 +162,9 @@ public class ProjectDetail extends AppCompatActivity {
                 Map<String, Object> project = task.getResult().getData();
                 if (task.getResult().get("cover") != null) {
                     cover.setImageResource(ImageArray.getCoverProjectImage().get(Math.toIntExact((Long) project.get("cover"))));
+                }
+                if (project.get("user_created").toString().equals(email)) {
+                    menu_btn.setVisibility(View.VISIBLE);
                 }
                 name.setText(project.get("name").toString());
                 description.setText(project.get("description").toString());
@@ -634,6 +637,20 @@ public class ProjectDetail extends AppCompatActivity {
                 memberMap.put("email", member);
                 memberMap.put("isAccepted", false);
                 membersList.add(memberMap);
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+                db.collection("users").whereEqualTo("email", member).get().addOnCompleteListener(task2 -> {
+                    if (task2.isSuccessful()) {
+                        db.collection("users").document(task2.getResult().getDocuments().get(0).getId()).collection("notification_logs").add(new HashMap<String, Object>() {{
+                            put("type", 1);
+                            put("message", "You have been invited to join project " + nameProjectET.getText().toString());
+                            put("date", formatter.format(new Date()));
+                            put("sender", email);
+                            put("projectId", projectId);
+                            put("isRead", false);
+                            put("isAccepted", false);
+                        }});
+                    }
+                });
             }
             newProject.put("members", membersList);
             db.collection("projects").document(projectId).update(newProject);
@@ -745,6 +762,22 @@ public class ProjectDetail extends AppCompatActivity {
                 intent.putExtra("taskId", task.getResult().getId());
                 intent.putExtra("projectId", projectId);
                 startActivity(intent);
+                for (String member : members) {
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+                    db.collection("users").whereEqualTo("email", member).get().addOnCompleteListener(task2 -> {
+                        if (task2.isSuccessful()) {
+                            db.collection("users").document(task2.getResult().getDocuments().get(0).getId()).collection("notification_logs").add(new HashMap<String, Object>() {{
+                                put("type", 3);
+                                put("message", "You have been assigned to task " + taskTitle);
+                                put("date", formatter.format(new Date()));
+                                put("sender", email);
+                                put("taskId", task.getResult().getId());
+                                put("projectId", projectId);
+                                put("isRead", false);
+                            }});
+                        }
+                    });
+                }
             }
         });
     }
@@ -804,19 +837,19 @@ public class ProjectDetail extends AppCompatActivity {
                 ArrayList<String> memberEmails = new ArrayList<>();
                 MutableLiveData<ArrayList<String>> memberNames = new MutableLiveData<>(new ArrayList<>());
                 for (Map<String, Object> member : members) {
-                    memberEmails.add((String) member.get("email"));
                     db.collection("users").whereEqualTo("email", member.get("email")).get().addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
+                            memberEmails.add((String) member.get("email"));
                             ArrayList<String> names = memberNames.getValue();
                             names.add(task1.getResult().getDocuments().get(0).get("name").toString());
                             memberNames.setValue(names);
                         }
                     });
                 }
-                memberEmails.add((String) project.get("user_created"));
                 ArrayList<String> names = memberNames.getValue();
                 db.collection("users").whereEqualTo("email", project.get("user_created")).get().addOnCompleteListener(task1 -> {
                     if (task1.isSuccessful()) {
+                        memberEmails.add((String) project.get("user_created"));
                         names.add(task1.getResult().getDocuments().get(0).get("name").toString());
                         memberNames.setValue(names);
                     }
