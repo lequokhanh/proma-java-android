@@ -7,15 +7,12 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Space;
@@ -36,10 +33,7 @@ import com.nt118.proma.model.ImageArray;
 import com.nt118.proma.ui.search.SearchView;
 import com.nt118.proma.ui.task.TaskDetail;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -146,7 +140,6 @@ public class ProjectFragment extends Fragment {
                     memberLeader.put("isLeader", true);
                     db.collection("tasks")
                             .whereEqualTo("projectId", task.getResult().getDocuments().get(i).getId())
-                            .where(Filter.or(Filter.arrayContains("members", memberLeader), Filter.arrayContains("members", memberTask)))
                             .get()
                             .addOnCompleteListener(task2 -> {
                         if (task2.isSuccessful()) {

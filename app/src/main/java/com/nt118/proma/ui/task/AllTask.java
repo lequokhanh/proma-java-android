@@ -1,12 +1,8 @@
 package com.nt118.proma.ui.task;
 
-import static java.security.AccessController.getContext;
-
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AllTask extends AppCompatActivity {
     private String projectId;
@@ -38,8 +35,9 @@ public class AllTask extends AppCompatActivity {
         setContentView(R.layout.all_task);
         Intent intent = getIntent();
 
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
         projectId = intent.getStringExtra("projectId");
-        email = intent.getStringExtra("email");
+        email = sharedPreferences.getString("email", "");
 
         ImageView back = findViewById(R.id.back_button);
         back.setOnClickListener(v -> {
@@ -101,8 +99,34 @@ public class AllTask extends AppCompatActivity {
         Map<String, Object> memberLeader = new HashMap<>();
         memberLeader.put("email", email);
         memberLeader.put("isLeader", true);
-        db.collection("tasks").whereEqualTo("projectId", projectId)
-                .where(Filter.or(Filter.arrayContains("members", memberLeader), Filter.arrayContains("members", memberTask)))
+        AtomicBoolean isOwner = new AtomicBoolean(false);
+        db.collection("projects").document(projectId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Map<String, Object> project = task.getResult().getData();
+                List<Map<String, Object>> members = (List<Map<String, Object>>) project.get("members");
+                if (members != null) {
+                    for (Map<String, Object> member : members) {
+                        String _email = (String) member.get("email");
+                        if (_email.equals(email)) {
+                            isOwner.set(true);
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+        Filter filter = Filter.and(
+                Filter.equalTo("projectId", projectId),
+                Filter.or(
+                        Filter.arrayContains("members", memberTask),
+                        Filter.arrayContains("members", memberLeader)
+                )
+        );
+        if (isOwner.get()) {
+            filter = Filter.equalTo("projectId", projectId);
+        }
+        db.collection("tasks")
+                .where(filter)
                 .get()
                 .addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

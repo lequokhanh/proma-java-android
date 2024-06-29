@@ -1,7 +1,14 @@
 package com.nt118.proma.ui.schedule;
 
+import static com.google.firebase.firestore.Filter.arrayContains;
+
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +26,24 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.firestore.Filter;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
 import com.nt118.proma.databinding.FragmentScheduleBinding;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ScheduleFragment extends Fragment {
 
     private FragmentScheduleBinding binding;
+    private String email;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -47,6 +60,10 @@ public class ScheduleFragment extends Fragment {
         HorizontalScrollView scrollView = binding.horizontalScrollView3;
         ImageView prev = binding.prev;
         ImageView next = binding.next;
+        LinearLayout listTaskSchedule = binding.listTaskSchedule;
+        requireContext();
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
+        email = sharedPreferences.getString("email", "");
         prev.setOnClickListener(v -> {
             currentDate.setValue(getPreviousMonday(currentDate.getValue()));
         });
@@ -99,9 +116,68 @@ public class ScheduleFragment extends Fragment {
         currentDate.observe(getViewLifecycleOwner(), date -> {
             setupCalendar(dayOfWeek, date, rangeDay, month);
             scrollToCurrentDay(scrollView, dayOfWeek, date.getDay() == 0 ? 6 : date.getDay() - 1);
+            listTaskSchedule.removeAllViews();
+            showListTask(listTaskSchedule, date);
         });
         return root;
     }
+
+    private void showListTask(LinearLayout taskContainer, Date date) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> memberTask = new HashMap<>();
+        memberTask.put("email", email);
+        memberTask.put("isLeader", false);
+        Map<String, Object> memberLeader = new HashMap<>();
+        memberLeader.put("email", email);
+        memberLeader.put("isLeader", true);
+        db.collection("tasks")
+                .where(Filter.or(arrayContains("members", memberTask), arrayContains("members", memberLeader)))
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy - hh.mm a", Locale.US);
+                        for (int i = 0; i < task.getResult().getDocuments().size(); i++) {
+                            // compare date of "deadline" field in task (no compare time) with date
+                            try {
+                                Date deadline = formatter.parse((String) task.getResult().getDocuments().get(i).get("deadline"));
+                                if (deadline.getDate() == date.getDate() && deadline.getMonth() == date.getMonth() && deadline.getYear() == date.getYear()) {
+                                    View item_schedule = getLayoutInflater().inflate(R.layout.item_schedule, null);
+                                    TextView taskName = item_schedule.findViewById(R.id.taskName);
+                                    TextView timeTV = item_schedule.findViewById(R.id.timeTV);
+                                    ImageView alarmBtn = item_schedule.findViewById(R.id.alarmBtn);
+                                    taskName.setText((String) task.getResult().getDocuments().get(i).get("title"));
+                                    SimpleDateFormat timeFormatter = new SimpleDateFormat("hh.mm a", Locale.US);
+                                    timeTV.setText(timeFormatter.format(deadline));
+                                    float dip10 = 10f;
+                                    Resources r = getResources();
+                                    float px10 = TypedValue.applyDimension(
+                                            TypedValue.COMPLEX_UNIT_DIP,
+                                            dip10,
+                                            r.getDisplayMetrics()
+                                    );
+                                    taskContainer.addView(item_schedule);
+                                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) item_schedule.getLayoutParams();
+                                    params.setMargins(0, (int) px10, 0, 0);
+                                    int finalI = i;
+                                    alarmBtn.setOnClickListener(v -> {
+                                        Calendar calendar = Calendar.getInstance();
+                                        Intent intent = new Intent(Intent.ACTION_EDIT);
+                                        intent.setType("vnd.android.cursor.item/event");
+                                        intent.putExtra("beginTime", deadline.getTime());
+                                        intent.putExtra("allDay", false);
+                                        intent.putExtra("rrule", "FREQ=MINUTELY;INTERVAL=60;COUNT=1");
+                                        intent.putExtra("endTime", deadline.getTime() + 60 * 60 * 1000);
+                                        intent.putExtra("title", (String) task.getResult().getDocuments().get(finalI).get("title"));
+                                        startActivity(intent);
+                                    });
+                                }
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
+                });
+    }
+
     @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
     private void setupCalendar(LinearLayout dayOfWeek, Date currentDate, TextView rangeDay, Button month) {
         Date[] dates = getDates(currentDate);
@@ -125,10 +201,12 @@ public class ScheduleFragment extends Fragment {
             }
         }
     }
+
     private void scrollToCurrentDay(HorizontalScrollView srollView, LinearLayout dayOfWeek, int position) {
         View child = dayOfWeek.getChildAt(position);
         srollView.post(() -> srollView.scrollTo(child.getLeft(), 0));
     }
+
     private Date[] getDates(Date currentDate) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(getMonday(currentDate));
