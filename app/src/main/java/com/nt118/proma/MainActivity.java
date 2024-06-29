@@ -3,11 +3,15 @@ package com.nt118.proma;
 import static android.Manifest.permission.POST_NOTIFICATIONS;
 import static androidx.navigation.ui.NavigationUI.setupWithNavController;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -22,6 +26,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.NavController;
@@ -35,10 +41,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.databinding.ActivityMainBinding;
-import com.nt118.proma.ui.home.HomeFragment;
 import com.nt118.proma.ui.login.CompleteProfile;
 import com.nt118.proma.ui.login.Login;
 import com.nt118.proma.ui.member.AddMember;
+import com.nt118.proma.ui.notification.NotificationView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,7 +52,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MainActivity extends AppCompatActivity {
@@ -73,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finishAffinity();
             } else {
+                listenNotiToSend();
                 binding = ActivityMainBinding.inflate(getLayoutInflater());
                 setContentView(binding.getRoot());
                 BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -83,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 FloatingActionButton create_btn = findViewById(R.id.create_button);
                 AtomicReference<Boolean> isDialogShowing = new AtomicReference<>(false);
                 create_btn.setOnClickListener(v -> {
+                    members.clear();
                     BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(MainActivity.this);
                     View view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.modal_create_project, null);
                     bottomSheetDialog.setContentView(view1);
@@ -103,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, AddMember.class);
                         intent.putStringArrayListExtra("members", members);
                         intent.putStringArrayListExtra("name", names);
+                        intent.putExtra("category", 1);
                         startActivityForResult(intent, 1);
                     });
                     Button deadlineBtn = view1.findViewById(R.id.deadlineBtn);
@@ -117,18 +125,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                         CalendarView datePicker = view2.findViewById(R.id.datePicker);
                         if (deadlineView.getVisibility() == View.VISIBLE) {
-                            if (deadlineView.getText().toString().equals("Today")) {
-                                datePicker.setDate(new Date().getTime());
-                            } else if (deadlineView.getText().toString().equals("Tomorrow")) {
-                                datePicker.setDate(new Date().getTime() + 86400000);
-                            } else {
-                                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
-                                try {
-                                    Date date = formatter.parse(deadlineView.getText().toString());
-                                    datePicker.setDate(date.getTime());
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+                            try {
+                                Date date = formatter.parse(deadlineView.getText().toString());
+                                datePicker.setDate(date.getTime());
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
                         isDatePickerShowing.set(true);
@@ -179,16 +181,8 @@ public class MainActivity extends AppCompatActivity {
                             deadlineDate.setValue(new Date(year - 1900, month, dayOfMonth));
                         });
                         applyBtn.setOnClickListener(v2 -> {
-                            String deadline = Optional.of(deadlineDate.getValue()).map(date -> {
-                                if (date.getDate() == new Date().getDate()) {
-                                    return "Today";
-                                } else if (date.getDate() == new Date().getDate() + 1) {
-                                    return "Tomorrow";
-                                } else {
-                                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
-                                    return formatter.format(date);
-                                }
-                            }).orElse("");
+                            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+                            String deadline = formatter.format(deadlineDate.getValue());
                             deadlineView.setText(deadline);
                             deadlineView.setVisibility(View.VISIBLE);
                             bottomSheetDialog1.dismiss();
@@ -238,25 +232,100 @@ public class MainActivity extends AppCompatActivity {
                             if (task1.isSuccessful()) {
                                 bottomSheetDialog.dismiss();
                                 Toast.makeText(MainActivity.this, "Project created", Toast.LENGTH_SHORT).show();
+                                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
+                                for (String member : members) {
+                                    db.collection("users").whereEqualTo("email", member).get().addOnCompleteListener(task2 -> {
+                                        if (task2.isSuccessful()) {
+                                            db.collection("users").document(task2.getResult().getDocuments().get(0).getId()).collection("notification_logs").add(new HashMap<String, Object>() {{
+                                                put("type", 1);
+                                                put("message", "You have been invited to join project " + nameProject);
+                                                put("date", formatter.format(new Date()));
+                                                put("sender", email);
+                                                put("projectId", task1.getResult().getId());
+                                                put("isRead", false);
+                                                put("isAccepted", false);
+                                            }});
+                                        }
+                                    });
+                                }
                             }
                         });
-                        members.clear();
                     });
                 });
                 if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
                     ActivityCompat.requestPermissions(this, new String[]{POST_NOTIFICATIONS}, 1);
                 }
+                createNotificationChannel();
             }
+        }
+    }
+
+    private void listenNotiToSend() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        String email = sharedPreferences.getString("email", "");
+        db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().getDocuments().size() > 0) {
+                    String id = task.getResult().getDocuments().get(0).getId();
+                    db.collection("users").document(id).collection("notification_logs").addSnapshotListener((value, error) -> {
+                        if (error != null) {
+                            return;
+                        }
+                        if (value != null) {
+                            for (int i = 0; i < value.getDocumentChanges().size(); i++) {
+                                Map<String, Object> noti = value.getDocumentChanges().get(i).getDocument().getData();
+                                if (noti.get("isRead") != null && !((boolean) noti.get("isRead"))) {
+                                    Intent intent = new Intent(MainActivity.this, NotificationView.class);
+                                    PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(this, noti.get("type").equals(1) ? "Invite" : noti.get("type").equals(2) ? "Comment" : "Assign")
+                                            .setSmallIcon(R.drawable.ic_launcher_foreground)
+                                            .setContentTitle("Proma")
+                                            .setContentText((String) noti.get("message"))
+                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                            .setContentIntent(pendingIntent)
+                                            .setAutoCancel(true);
+                                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+                                    notificationManager.notify(value.getDocumentChanges().get(i).getDocument().getId().hashCode(), builder.build());
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is not in the Support Library.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Invite";
+            String description = "Invite to join project";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("Invite", name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+            // create notification channel for comment
+            CharSequence nameComment = "Comment";
+            String descriptionComment = "Comment on task";
+            NotificationChannel channelComment = new NotificationChannel("Comment", nameComment, importance);
+            channelComment.setDescription(descriptionComment);
+            notificationManager.createNotificationChannel(channelComment);
+            // create notification channel for assign to task
+            CharSequence nameAssign = "Assign";
+            String descriptionAssign = "Assign to task";
+            NotificationChannel channelAssign = new NotificationChannel("Assign", nameAssign, importance);
+            channelAssign.setDescription(descriptionAssign);
+            notificationManager.createNotificationChannel(channelAssign);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if (resultCode != RESULT_OK) {
-                return;
-            }
+        if (requestCode == 1 && resultCode == RESULT_OK) {
             members = data.getStringArrayListExtra("members");
             names = data.getStringArrayListExtra("names");
             member_list.removeAllViews();

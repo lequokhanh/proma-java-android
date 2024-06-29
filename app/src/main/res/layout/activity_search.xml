@@ -5,24 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView37"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="@font/roboto_bold"
-        android:text="Recent"
-        android:textColor="#000"
-        android:textSize="17sp"
-        app:layout_constraintStart_toStartOf="@+id/search_field"
-        app:layout_constraintTop_toBottomOf="@+id/search_field" />
-
     <EditText
         android:id="@+id/search_field"
         style="@style/Normal_Drawable"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="55dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/rounded_corner_8"
@@ -70,12 +58,25 @@
         app:srcCompat="@drawable/ic_close_circle"
         tools:visibility="invisible" />
 
+    <TextView
+        android:id="@+id/textView37"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="Recent"
+        android:textColor="#000"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="@+id/search_field"
+        app:layout_constraintTop_toBottomOf="@+id/search_field" />
+
     <ScrollView
         android:layout_width="0dp"
-        android:layout_height="579dp"
-        android:layout_marginStart="21dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="18dp"
-        android:layout_marginEnd="21dp"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView37">

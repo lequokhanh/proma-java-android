@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_corner_24_white"
+    >
+
+    <LinearLayout
+        android:id="@+id/linearLayout7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/img_start1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="26.5dp"
+            android:layout_marginRight="3dp"
+            android:src="@drawable/ic_star2" />
+
+        <ImageView
+            android:id="@+id/img_start2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:src="@drawable/ic_star2" />
+
+
+        <ImageView
+            android:id="@+id/img_start3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:src="@drawable/ic_star2" />
+
+        <ImageView
+            android:id="@+id/img_start4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:src="@drawable/ic_star2" />
+
+        <ImageView
+            android:id="@+id/img_start5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="26.5dp"
+            android:src="@drawable/ic_star2" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/etDescProject"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="171dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/rounded_corner_10"
+        android:fontFamily="@font/roboto"
+        android:gravity="left"
+        android:textFontWeight="400"
+        android:lineHeight="20dp"
+        android:paddingStart="14dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="14dp"
+        android:textColor="@color/black"
+        android:paddingBottom="16dp"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout7" />
+</androidx.constraintlayout.widget.ConstraintLayout>

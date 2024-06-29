@@ -1,10 +1,15 @@
 package com.nt118.proma.ui.search;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -16,18 +21,39 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.firebase.firestore.Filter;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.nt118.proma.R;
+import com.nt118.proma.model.ImageArray;
+import com.nt118.proma.ui.project.ProjectDetail;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class SearchView extends AppCompatActivity {
+
+    Dialog loading;
+    private FirebaseFirestore db;
+    private MutableLiveData<ArrayList<String>> searchRecent;
+    private ArrayList<String> recent;
+    private EditText searchField;
+    private ImageView closeBtn;
+    private LinearLayout searchRecentContainer;
+    private String user;
+    private SharedPreferences sharedPreferences;
+    private boolean isSearchActive = false; // follow status search
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        EditText searchField = findViewById(R.id.search_field);
-        ImageView closeBtn = findViewById(R.id.close_btn);
+
+        initUi();
+        db = FirebaseFirestore.getInstance();
+
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -55,15 +81,114 @@ public class SearchView extends AppCompatActivity {
         cancelBtn.setOnClickListener(v -> {
             finish();
         });
+
+
         // perform focus on search field and show keyboard
         searchField.requestFocus();
-        MutableLiveData<ArrayList<String>> searchRecent = new MutableLiveData<>();
-        ArrayList<String> recent = new ArrayList<>();
-        recent.add("Recent search 1");
-        recent.add("Recent search 2");
-        recent.add("Recent search 3");
+        searchRecent = new MutableLiveData<>();
+        recent = new ArrayList<>();
         searchRecent.setValue(recent);
-        LinearLayout searchRecentContainer = findViewById(R.id.searchRecentContainer);
+
+        addItemSearch();
+
+        searchField.setOnEditorActionListener((v, actionId, event) -> {
+            // hide keyboard
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+            // do search
+            loading.show();
+            String searchText = searchField.getText().toString().trim();
+            recent.add(searchText);
+            searchRecent.setValue(recent);
+
+            List<String> projectNames = new ArrayList<>();
+            db.collection("projects").where(Filter.or(
+                                    Filter.equalTo("user_created", user),
+                                    Filter.arrayContains("members", Map.of("email", user,
+                                            "isAccepted", true)
+                                    )
+                            )
+                    )
+                    .get()
+                    .addOnSuccessListener(res -> {
+                        loading.dismiss();
+                        if (!res.isEmpty()) {
+                            boolean hasMatch = false;
+                            searchRecentContainer.removeAllViews();
+                            for (QueryDocumentSnapshot doc : res) {
+                                // compare lowercase doc.get("name").toString() with lowercase searchText
+                                if (doc.get("name").toString().toLowerCase().contains(searchText.toLowerCase())) {
+                                    hasMatch = true;
+                                    View view = getLayoutInflater().inflate(R.layout.project_card, null);
+                                    TextView name = view.findViewById(R.id.projectName);
+                                    TextView description = view.findViewById(R.id.projectDescription);
+                                    TextView deadline = view.findViewById(R.id.deadline);
+                                    ImageView cover = view.findViewById(R.id.cover_project);
+                                    view.findViewById(R.id.progressProject).setVisibility(View.GONE);
+                                    name.setText(doc.get("name").toString());
+                                    description.setText(doc.get("description").toString());
+                                    deadline.setText(doc.get("deadline").toString());
+                                    if (doc.get("cover") != null) {
+                                        cover.setImageResource(ImageArray.getCoverProjectImage().get(doc.getLong("cover").intValue()));
+                                    }
+                                    float dip10 = 10f;
+                                    Resources r = getResources();
+                                    float px10 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip10, r.getDisplayMetrics());
+                                    searchRecentContainer.addView(view);
+                                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
+                                    layoutParams.setMargins(0, 0, 0, (int) px10);
+                                    String projectId = doc.getId();
+                                    view.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(SearchView.this, ProjectDetail.class);
+                                            intent.putExtra("projectId", projectId);
+                                            startActivity(intent);
+                                        }
+                                    });
+                                }
+                            }
+                            isSearchActive = true;
+                            if (!hasMatch) {
+                                // No project matches the search term
+                                showNoMatchDialog();
+                                addItemSearch();
+                            }
+                        } else {
+                            // No documents found
+                            showNoMatchDialog();
+                            addItemSearch();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        loading.dismiss();
+                        // Handle any errors that occurred during the query
+                        Log.e("SearchError", "Error searching projects", e);
+                    });
+
+            return true;
+        });
+    }
+
+    // Function to show the "no match" dialog
+    private void showNoMatchDialog() {
+        Dialog noMatchDialog = new Dialog(SearchView.this);
+        noMatchDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        noMatchDialog.setContentView(R.layout.no_match_result);
+        noMatchDialog.show();
+    }
+
+
+    private void initUi() {
+        searchField = findViewById(R.id.search_field);
+        closeBtn = findViewById(R.id.close_btn);
+        sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+        user = sharedPreferences.getString("email", "");
+        loading = createLoadingDialog();
+    }
+
+    private void addItemSearch() {
+        searchRecentContainer = findViewById(R.id.searchRecentContainer);
         searchRecent.observe(this, strings -> {
             searchRecentContainer.removeAllViews();
             for (String string : strings) {
@@ -98,24 +223,28 @@ public class SearchView extends AppCompatActivity {
                 });
             }
         });
-        searchField.setOnEditorActionListener((v, actionId, event) -> {
-            // hide keyboard
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
-            // do search
-            // add search string to recent search
-            if (!recent.contains(searchField.getText().toString())) {
-                recent.add(searchField.getText().toString());
-                searchRecent.setValue(recent);
-            }
-            return true;
-        });
+
+    }
+
+    public Dialog createLoadingDialog() {
+        Dialog loading = new Dialog(this);
+        loading.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        loading.setContentView(R.layout.loading);
+        return loading;
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+        // Kiểm tra trạng thái tìm kiếm
+        if (isSearchActive) {
+            // Gọi hàm bạn muốn thực hiện khi nhấn nút "Back" trong trạng thái tìm kiếm
+            addItemSearch();
+            // Đặt lại trạng thái tìm kiếm để cho phép thoát nếu người dùng nhấn "Back" lần nữa
+            isSearchActive = false;
+        } else {
+            // Gọi super.onBackPressed() để Activity thoát
+            super.onBackPressed();
+        }
     }
 
 }

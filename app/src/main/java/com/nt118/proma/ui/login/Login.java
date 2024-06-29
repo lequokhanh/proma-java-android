@@ -1,15 +1,16 @@
 package com.nt118.proma.ui.login;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +29,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,11 +39,12 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.nt118.proma.MainActivity;
 import com.nt118.proma.R;
 
+import java.util.Date;
+
 public class Login extends AppCompatActivity {
     GoogleSignInClient googleSignInClient;
     FirebaseAuth mAuth;
     CallbackManager mCallbackManager;
-    LinearLayout loadingLogin;
     CheckBox rememberMe;
 
     @Override
@@ -51,8 +52,12 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         mAuth = FirebaseAuth.getInstance();
+        TextView forgot_password_tv = findViewById(R.id.forgot_password_tv);
+        forgot_password_tv.setOnClickListener(v -> {
+            Intent intent = new Intent(Login.this, ForgotPassword.class);
+            startActivity(intent);
+        });
         Button login_button = findViewById(R.id.login_button);
-        loadingLogin = findViewById(R.id.loadingLogin);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             Intent intent = new Intent(Login.this, MainActivity.class);
@@ -162,7 +167,7 @@ public class Login extends AppCompatActivity {
     }
 
     public void loginWithAuthCredential(AuthCredential credential) {
-        loadingLogin.setVisibility(LinearLayout.VISIBLE);
+        Dialog loading = createLoadingDialog();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -170,13 +175,21 @@ public class Login extends AppCompatActivity {
             if (task.isSuccessful()) {
                 db.collection("users").whereEqualTo("email", mAuth.getCurrentUser().getProviderData().get(1).getEmail()).get().addOnCompleteListener(task1 -> {
                     if (task1.isSuccessful()) {
+                        editor.putString("email", mAuth.getCurrentUser().getProviderData().get(1).getEmail());
                         if (!task1.getResult().isEmpty()) {
-                            task1.getResult().getDocuments().get(0).getReference().update("last_login", System.currentTimeMillis());
-                            editor.putString("email", mAuth.getCurrentUser().getProviderData().get(1).getEmail());
+                            task1.getResult().getDocuments().get(0).getReference().update("last_login", new Date());
                             editor.putString("name", task1.getResult().getDocuments().get(0).getString("name"));
-                            editor.putString("avatar", task1.getResult().getDocuments().get(0).getString("avatar"));
+                            editor.putString("dob", task1.getResult().getDocuments().get(0).getString("dob"));
+                            editor.putString("phone_number", task1.getResult().getDocuments().get(0).getString("phone_number"));
+                            editor.putInt("avatar", task1.getResult().getDocuments().get(0).getLong("avatar") == null
+                                    ? -1
+                                    : task1.getResult().getDocuments().get(0).getLong("avatar").intValue());
                         }
-                        editor.putBoolean("isCompletedProfile", !(task1.getResult().isEmpty() || task1.getResult().getDocuments().get(0).getString("name") == null || task1.getResult().getDocuments().get(0).getString("dob") == null || task1.getResult().getDocuments().get(0).getString("phone_number") == null));
+                        editor.putBoolean("isCompletedProfile", !(task1.getResult().isEmpty()
+                                || task1.getResult().getDocuments().get(0).getString("name") == null
+                                || task1.getResult().getDocuments().get(0).getString("dob") == null
+                                || task1.getResult().getDocuments().get(0).getString("phone_number") == null
+                                || task1.getResult().getDocuments().get(0).getLong("avatar") == null));
                         editor.putBoolean("rememberMe", rememberMe.isChecked());
                         editor.apply();
                         Intent intent = new Intent(Login.this, MainActivity.class);
@@ -187,7 +200,7 @@ public class Login extends AppCompatActivity {
                 });
             } else {
                 displayToast("Authentication Failed :" + task.getException().getMessage());
-                loadingLogin.setVisibility(LinearLayout.GONE);
+                loading.dismiss();
             }
         });
     }
@@ -222,5 +235,13 @@ public class Login extends AppCompatActivity {
         super.onBackPressed();
         moveTaskToBack(true);
         finishAffinity();
+    }
+
+    public Dialog createLoadingDialog() {
+        Dialog loading = new Dialog(this);
+        loading.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        loading.setContentView(R.layout.loading);
+        loading.show();
+        return loading;
     }
 }

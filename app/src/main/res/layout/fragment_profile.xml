@@ -11,15 +11,14 @@
     android:paddingBottom="55dp"
     tools:context=".ui.profile.ProfileFragment">
 
-    <ImageView
-        android:id="@+id/imageView15"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/avatar3"
         android:layout_width="66dp"
         android:layout_height="75dp"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/avatar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/username"
@@ -29,9 +28,9 @@
         android:fontFamily="@font/roboto_bold"
         android:textColor="#242426"
         android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView15"
-        app:layout_constraintStart_toStartOf="@+id/imageView15"
-        app:layout_constraintTop_toBottomOf="@+id/imageView15" />
+        app:layout_constraintEnd_toEndOf="@+id/avatar3"
+        app:layout_constraintStart_toStartOf="@+id/avatar3"
+        app:layout_constraintTop_toBottomOf="@+id/avatar3" />
 
     <TextView
         android:id="@+id/myProfileBtn"
@@ -46,8 +45,8 @@
         android:paddingVertical="2dp"
         android:text="My profile"
         android:textSize="12dp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView15"
-        app:layout_constraintStart_toStartOf="@+id/imageView15"
+        app:layout_constraintEnd_toEndOf="@+id/avatar3"
+        app:layout_constraintStart_toStartOf="@+id/avatar3"
         app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <LinearLayout
@@ -76,7 +75,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_bold"
-                android:text="20"
                 android:textColor="#000"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -115,7 +113,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_bold"
-                android:text="124"
                 android:textColor="#000"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -154,7 +151,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_bold"
-                android:text="132"
                 android:textColor="#000"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -245,81 +241,6 @@
 
         <View
             android:id="@+id/view3"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#e5e5ea"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
-
-        <TextView
-            android:id="@+id/help"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:drawableStart="@drawable/ic_help"
-            android:drawableEnd="@drawable/ic_arrow_right_blue"
-            android:drawablePadding="24dp"
-            android:fontFamily="@font/roboto_medium"
-            android:paddingHorizontal="22dp"
-            android:paddingVertical="12dp"
-            android:text="Help"
-            android:textColor="#000"
-            android:textSize="17sp" />
-
-        <View
-            android:id="@+id/view4"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#e5e5ea"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
-
-        <TextView
-            android:id="@+id/review"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:drawableStart="@drawable/ic_star"
-            android:drawableEnd="@drawable/ic_arrow_right_blue"
-            android:drawablePadding="24dp"
-            android:fontFamily="@font/roboto_medium"
-            android:paddingHorizontal="22dp"
-            android:paddingVertical="12dp"
-            android:text="Review"
-            android:textColor="#000"
-            android:textSize="17sp" />
-
-        <View
-            android:id="@+id/view5"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#e5e5ea"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
-
-        <TextView
-            android:id="@+id/feedback"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:drawableStart="@drawable/ic_feedback"
-            android:drawableEnd="@drawable/ic_arrow_right_blue"
-            android:drawablePadding="24dp"
-            android:fontFamily="@font/roboto_medium"
-            android:paddingHorizontal="22dp"
-            android:paddingVertical="12dp"
-            android:text="Sugestion and Feedback"
-            android:textColor="#000"
-            android:textSize="17sp" />
-
-        <View
-            android:id="@+id/view6"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#e5e5ea"

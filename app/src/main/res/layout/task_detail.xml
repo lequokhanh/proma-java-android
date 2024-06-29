@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/project_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="#F9FAFF"
+    android:background="#AEAEB2"
     android:backgroundTint="#F9FAFF"
     android:scrollbars="none">
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/create_task_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="25dp"
+        android:clickable="true"
+        android:scaleType="center"
+        android:src="@drawable/ic_add"
+        android:theme="@style/Widget.FloatingActionButton"
+        android:visibility="gone"
+        app:backgroundTint="#0066FF"
+        app:borderWidth="0dp"
+        app:elevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -23,22 +41,21 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imageView5"
+            android:id="@+id/cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="fill_horizontal"
             android:adjustViewBounds="false"
-            android:background="#80D3D3D3"
-            android:scaleType="centerCrop"
-            android:src="@drawable/thumbnail" />
+            android:background="#AEAEB2"
+            android:scaleType="centerCrop" />
 
     </androidx.cardview.widget.CardView>
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/img_Back"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginStart="22dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="50dp"
         android:elevation="10dp"
         android:src="@drawable/ic_arrow_left"
@@ -55,10 +72,10 @@
         android:text="Task Detail"
         android:textColor="#FFFFFF"
         android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+        app:layout_constraintBottom_toBottomOf="@+id/img_Back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView6" />
+        app:layout_constraintTop_toTopOf="@+id/img_Back" />
 
     <ImageView
         android:id="@+id/menu_btn"
@@ -80,6 +97,7 @@
         android:layout_marginEnd="22dp"
         android:layout_marginBottom="15dp"
         android:elevation="10dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/cardView"
         app:layout_constraintEnd_toEndOf="@id/cardView">
 
@@ -89,7 +107,7 @@
             android:layout_height="50dp"
             android:layout_marginEnd="-12dp"
             android:elevation="12dp"
-            android:src="@drawable/avatar"
+            android:src="@drawable/avatar1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/imageView17" />
 
@@ -114,905 +132,118 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <TextView
-            android:id="@+id/textView22"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="22dp"
-            android:layout_marginTop="15dp"
-            android:fontFamily="@font/roboto_bold"
-            android:text="Meeting With Client"
-            android:textColor="#000000"
-            android:textSize="28sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardView" />
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/roboto_bold"
+        android:textColor="#000000"
+        android:textSize="28sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardView" />
 
-        <TextView
-            android:id="@+id/textView21"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:fontFamily="@font/roboto_regular"
-            android:text="Brief Project LinCop with Client"
-            android:textColor="#8E8E93"
-            android:textSize="17sp"
-            app:layout_constraintStart_toStartOf="@+id/textView22"
-            app:layout_constraintTop_toBottomOf="@+id/textView22" />
+    <TextView
+        android:id="@+id/desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:fontFamily="@font/roboto_regular"
+        android:textColor="#8E8E93"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
-        <TextView
-            android:id="@+id/deadlineView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/rounded_corner_24_blue"
-            android:fontFamily="@font/roboto_bold"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp"
-            android:text="Date 12 Okt 2023"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="@+id/textView21"
-            app:layout_constraintTop_toBottomOf="@+id/textView21" />
+    <TextView
+        android:id="@+id/deadlineView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_corner_24_blue"
+        android:fontFamily="@font/roboto_bold"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/desc"
+        app:layout_constraintTop_toBottomOf="@+id/desc" />
 
     <LinearLayout
-            android:id="@+id/tabContainer"
+        android:id="@+id/tabContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="@+id/deadlineView"
+        app:layout_constraintTop_toBottomOf="@+id/deadlineView">
+
+        <TextView
+            android:id="@+id/resultTab"
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="@+id/deadlineView"
-            app:layout_constraintTop_toBottomOf="@+id/deadlineView">
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corner_24_blue"
+            android:fontFamily="@font/roboto_bold"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="Result"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF" />
 
-            <TextView
-                android:id="@+id/resultTab"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_corner_24_blue"
-                android:fontFamily="@font/roboto_bold"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:text="Result"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF" />
+        <TextView
+            android:id="@+id/informationTab"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corner_24_bw"
+            android:fontFamily="@font/roboto_medium"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="Information"
+            android:textAlignment="center"
+            android:textColor="#007AFF" />
 
-            <TextView
-                android:id="@+id/informationTab"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_corner_24_bw"
-                android:fontFamily="@font/roboto_medium"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:text="Information"
-                android:textAlignment="center"
-                android:textColor="#007AFF" />
-
-            <TextView
-                android:id="@+id/subtaskTab"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_corner_24_bw"
-                android:fontFamily="@font/roboto_medium"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:text="Sub - Task"
-                android:textAlignment="center"
-                android:textColor="#007AFF" />
+        <TextView
+            android:id="@+id/subtaskTab"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_corner_24_bw"
+            android:fontFamily="@font/roboto_medium"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="Sub - Task"
+            android:textAlignment="center"
+            android:textColor="#007AFF" />
 
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/resultContainer"
+    <LinearLayout
+        android:id="@+id/container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="22dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="22dp"
-        android:visibility="visible"
+        android:layout_marginEnd="15dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabContainer">
+        app:layout_constraintTop_toBottomOf="@+id/tabContainer" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_corner_24_white"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/imageView10"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_document"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/imageView11"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginTop="24dp"
-                android:src="@drawable/ic_link"
-                app:layout_constraintStart_toStartOf="@+id/imageView10"
-                app:layout_constraintTop_toBottomOf="@+id/imageView10" />
-
-            <TextView
-                android:id="@+id/textView25"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:fontFamily="@font/roboto_medium"
-                android:text="Attachment"
-                android:textColor="#8E8E93"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView10"
-                app:layout_constraintStart_toEndOf="@+id/imageView10"
-                app:layout_constraintTop_toTopOf="@+id/imageView10" />
-
-            <TextView
-                android:id="@+id/textView26"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_medium"
-                android:text="Link"
-                android:textColor="#8E8E93"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView11"
-                app:layout_constraintStart_toStartOf="@+id/textView25"
-                app:layout_constraintTop_toTopOf="@+id/imageView11"
-                app:layout_constraintVertical_bias="1.0" />
-
-            <Button
-                android:id="@+id/signoutBtn"
-                android:layout_width="68dp"
-                android:layout_height="24dp"
-                android:background="@drawable/rounded_corner_24_blue"
-                android:backgroundTint="#007AFF"
-                android:fontFamily="@font/roboto_bold"
-                android:gravity="center|start"
-                android:includeFontPadding="false"
-                android:outlineProvider="none"
-                android:padding="0dp"
-                android:paddingStart="12dp"
-                android:paddingLeft="16dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:text="Add"
-                android:textAlignment="gravity"
-                android:textAllCaps="false"
-                android:textSize="12sp"
-                app:icon="@drawable/ic_add_circle"
-                app:iconGravity="start"
-                app:iconPadding="2dp"
-                app:iconSize="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView10"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/imageView10" />
-
-            <Button
-                android:id="@+id/button4"
-                android:layout_width="68dp"
-                android:layout_height="24dp"
-                android:background="@drawable/rounded_corner_24_blue"
-                android:backgroundTint="#007AFF"
-                android:fontFamily="@font/roboto_bold"
-                android:gravity="center|start"
-                android:includeFontPadding="false"
-                android:outlineProvider="none"
-                android:padding="0dp"
-                android:paddingStart="12dp"
-                android:paddingLeft="16dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:text="Add"
-                android:textAlignment="gravity"
-                android:textAllCaps="false"
-                android:textSize="12sp"
-                app:icon="@drawable/ic_add_circle"
-                app:iconGravity="start"
-                app:iconPadding="2dp"
-                app:iconSize="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView11"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/imageView11" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <TextView
-            android:id="@+id/textView27"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:fontFamily="@font/roboto_bold"
-            android:text="Comment (4)"
-            android:textColor="#000000"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
-
-        <TextView
-            android:id="@+id/textView28"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto_bold"
-            android:text="More All"
-            android:textColor="#007AFF"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="@+id/textView27"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView27" />
-
-        <ScrollView
-            android:id="@+id/scrollview"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="10dp"
-            android:scrollbars="none"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView27">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="20dp">
-
-                    <ImageView
-                        android:id="@+id/imageView123"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/avatar"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textView293"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:fontFamily="@font/roboto_bold"
-                        android:text="Angel Vaccaro"
-                        android:textColor="#000000"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView123"
-                        app:layout_constraintStart_toEndOf="@+id/imageView123"
-                        app:layout_constraintTop_toTopOf="@+id/imageView123" />
-
-                    <ImageView
-                        android:id="@+id/imageView133"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_marginEnd="4dp"
-                        android:src="@drawable/ic_heart"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView303"
-                        app:layout_constraintEnd_toStartOf="@+id/textView303"
-                        app:layout_constraintTop_toTopOf="@+id/textView303" />
-
-                    <TextView
-                        android:id="@+id/textView313"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:fontFamily="@font/roboto_regular"
-                        android:text="1 Minutes Ago"
-                        android:textColor="#7C7C80"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView133"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView133"
-                        app:layout_constraintTop_toTopOf="@+id/imageView133" />
-
-                    <ImageView
-                        android:id="@+id/imageView143"
-                        android:layout_width="0dp"
-                        android:layout_height="12dp"
-                        android:layout_marginTop="5dp"
-                        android:src="@drawable/ic_three_dot_vertical"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView293"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/textView293" />
-
-                    <TextView
-                        android:id="@+id/textView303"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:fontFamily="@font/roboto_regular"
-                        android:text="0"
-                        android:textColor="#7C7C80"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView143"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView143"
-                        app:layout_constraintTop_toTopOf="@+id/imageView143" />
-
-                    <TextView
-                        android:id="@+id/textView323"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:ellipsize="end"
-                        android:fontFamily="@font/roboto_regular"
-                        android:maxEms="10"
-                        android:maxLength="200"
-                        android:maxLines="2"
-                        android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"
-                        android:textColor="#444446"
-                        android:textSize="15sp"
-                        app:flow_wrapMode="chain"
-                        app:layout_constraintEnd_toEndOf="@+id/imageView143"
-                        app:layout_constraintStart_toStartOf="@+id/textView293"
-                        app:layout_constraintTop_toBottomOf="@+id/textView293"
-                        app:layout_optimizationLevel="graph_wrap" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="20dp">
-
-                    <ImageView
-                        android:id="@+id/imageView121"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/avatar"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textView291"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:fontFamily="@font/roboto_bold"
-                        android:text="Angel Vaccaro"
-                        android:textColor="#000000"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView121"
-                        app:layout_constraintStart_toEndOf="@+id/imageView121"
-                        app:layout_constraintTop_toTopOf="@+id/imageView121" />
-
-                    <ImageView
-                        android:id="@+id/imageView131"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_marginEnd="4dp"
-                        android:src="@drawable/ic_heart"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView301"
-                        app:layout_constraintEnd_toStartOf="@+id/textView301"
-                        app:layout_constraintTop_toTopOf="@+id/textView301" />
-
-                    <TextView
-                        android:id="@+id/textView311"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:fontFamily="@font/roboto_regular"
-                        android:text="1 Minutes Ago"
-                        android:textColor="#7C7C80"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView131"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView131"
-                        app:layout_constraintTop_toTopOf="@+id/imageView131" />
-
-                    <ImageView
-                        android:id="@+id/imageView141"
-                        android:layout_width="0dp"
-                        android:layout_height="12dp"
-                        android:layout_marginTop="5dp"
-                        android:src="@drawable/ic_three_dot_vertical"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView291"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/textView291" />
-
-                    <TextView
-                        android:id="@+id/textView301"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:fontFamily="@font/roboto_regular"
-                        android:text="0"
-                        android:textColor="#7C7C80"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView141"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView141"
-                        app:layout_constraintTop_toTopOf="@+id/imageView141" />
-
-                    <TextView
-                        android:id="@+id/textView321"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:ellipsize="end"
-                        android:fontFamily="@font/roboto_regular"
-                        android:maxEms="10"
-                        android:maxLength="200"
-                        android:maxLines="2"
-                        android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"
-                        android:textColor="#444446"
-                        android:textSize="15sp"
-                        app:flow_wrapMode="chain"
-                        app:layout_constraintEnd_toEndOf="@+id/imageView141"
-                        app:layout_constraintStart_toStartOf="@+id/textView291"
-                        app:layout_constraintTop_toBottomOf="@+id/textView291"
-                        app:layout_optimizationLevel="graph_wrap" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="20dp">
-
-                    <ImageView
-                        android:id="@+id/imageView122"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/avatar"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textView292"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:fontFamily="@font/roboto_bold"
-                        android:text="Angel Vaccaro"
-                        android:textColor="#000000"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView122"
-                        app:layout_constraintStart_toEndOf="@+id/imageView122"
-                        app:layout_constraintTop_toTopOf="@+id/imageView122" />
-
-                    <ImageView
-                        android:id="@+id/imageView132"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_marginEnd="4dp"
-                        android:src="@drawable/ic_heart"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView302"
-                        app:layout_constraintEnd_toStartOf="@+id/textView302"
-                        app:layout_constraintTop_toTopOf="@+id/textView302" />
-
-                    <TextView
-                        android:id="@+id/textView312"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:fontFamily="@font/roboto_regular"
-                        android:text="1 Minutes Ago"
-                        android:textColor="#7C7C80"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView132"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView132"
-                        app:layout_constraintTop_toTopOf="@+id/imageView132" />
-
-                    <ImageView
-                        android:id="@+id/imageView142"
-                        android:layout_width="0dp"
-                        android:layout_height="12dp"
-                        android:layout_marginTop="5dp"
-                        android:src="@drawable/ic_three_dot_vertical"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView292"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/textView292" />
-
-                    <TextView
-                        android:id="@+id/textView302"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:fontFamily="@font/roboto_regular"
-                        android:text="0"
-                        android:textColor="#7C7C80"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView142"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView142"
-                        app:layout_constraintTop_toTopOf="@+id/imageView142" />
-
-                    <TextView
-                        android:id="@+id/textView322"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:ellipsize="end"
-                        android:fontFamily="@font/roboto_regular"
-                        android:maxEms="10"
-                        android:maxLength="200"
-                        android:maxLines="2"
-                        android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"
-                        android:textColor="#444446"
-                        android:textSize="15sp"
-                        app:flow_wrapMode="chain"
-                        app:layout_constraintEnd_toEndOf="@+id/imageView142"
-                        app:layout_constraintStart_toStartOf="@+id/textView292"
-                        app:layout_constraintTop_toBottomOf="@+id/textView292"
-                        app:layout_optimizationLevel="graph_wrap" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="20dp">
-
-                    <ImageView
-                        android:id="@+id/imageView124"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/avatar"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textView294"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:fontFamily="@font/roboto_bold"
-                        android:text="Angel Vaccaro"
-                        android:textColor="#000000"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView124"
-                        app:layout_constraintStart_toEndOf="@+id/imageView124"
-                        app:layout_constraintTop_toTopOf="@+id/imageView124" />
-
-                    <ImageView
-                        android:id="@+id/imageView134"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_marginEnd="4dp"
-                        android:src="@drawable/ic_heart"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView304"
-                        app:layout_constraintEnd_toStartOf="@+id/textView304"
-                        app:layout_constraintTop_toTopOf="@+id/textView304" />
-
-                    <TextView
-                        android:id="@+id/textView314"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:fontFamily="@font/roboto_regular"
-                        android:text="1 Minutes Ago"
-                        android:textColor="#7C7C80"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView134"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView134"
-                        app:layout_constraintTop_toTopOf="@+id/imageView134" />
-
-                    <ImageView
-                        android:id="@+id/imageView144"
-                        android:layout_width="0dp"
-                        android:layout_height="12dp"
-                        android:layout_marginTop="5dp"
-                        android:src="@drawable/ic_three_dot_vertical"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView294"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/textView294" />
-
-                    <TextView
-                        android:id="@+id/textView304"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:fontFamily="@font/roboto_regular"
-                        android:text="0"
-                        android:textColor="#7C7C80"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView144"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView144"
-                        app:layout_constraintTop_toTopOf="@+id/imageView144" />
-
-                    <TextView
-                        android:id="@+id/textView324"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:ellipsize="end"
-                        android:fontFamily="@font/roboto_regular"
-                        android:maxEms="10"
-                        android:maxLength="200"
-                        android:maxLines="2"
-                        android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"
-                        android:textColor="#444446"
-                        android:textSize="15sp"
-                        app:flow_wrapMode="chain"
-                        app:layout_constraintEnd_toEndOf="@+id/imageView144"
-                        app:layout_constraintStart_toStartOf="@+id/textView294"
-                        app:layout_constraintTop_toBottomOf="@+id/textView294"
-                        app:layout_optimizationLevel="graph_wrap" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="20dp">
-
-                    <ImageView
-                        android:id="@+id/imageView12"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/avatar"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textView29"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:fontFamily="@font/roboto_bold"
-                        android:text="Angel Vaccaro"
-                        android:textColor="#000000"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView12"
-                        app:layout_constraintStart_toEndOf="@+id/imageView12"
-                        app:layout_constraintTop_toTopOf="@+id/imageView12" />
-
-                    <ImageView
-                        android:id="@+id/imageView13"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_marginEnd="4dp"
-                        android:src="@drawable/ic_heart"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView30"
-                        app:layout_constraintEnd_toStartOf="@+id/textView30"
-                        app:layout_constraintTop_toTopOf="@+id/textView30" />
-
-                    <TextView
-                        android:id="@+id/textView31"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:fontFamily="@font/roboto_regular"
-                        android:text="1 Minutes Ago"
-                        android:textColor="#7C7C80"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView13"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView13"
-                        app:layout_constraintTop_toTopOf="@+id/imageView13" />
-
-                    <ImageView
-                        android:id="@+id/imageView14"
-                        android:layout_width="0dp"
-                        android:layout_height="12dp"
-                        android:layout_marginTop="5dp"
-                        android:src="@drawable/ic_three_dot_vertical"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView29"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/textView29" />
-
-                    <TextView
-                        android:id="@+id/textView30"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:fontFamily="@font/roboto_regular"
-                        android:text="0"
-                        android:textColor="#7C7C80"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView14"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView14"
-                        app:layout_constraintTop_toTopOf="@+id/imageView14" />
-
-                    <TextView
-                        android:id="@+id/textView32"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:ellipsize="end"
-                        android:fontFamily="@font/roboto_regular"
-                        android:maxEms="10"
-                        android:maxLength="200"
-                        android:maxLines="2"
-                        android:text="lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh askjdhajksdh"
-                        android:textColor="#444446"
-                        android:textSize="15sp"
-                        app:flow_wrapMode="chain"
-                        app:layout_constraintEnd_toEndOf="@+id/imageView14"
-                        app:layout_constraintStart_toStartOf="@+id/textView29"
-                        app:layout_constraintTop_toBottomOf="@+id/textView29"
-                        app:layout_optimizationLevel="graph_wrap" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </LinearLayout>
-        </ScrollView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/informationContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="22dp"
+    <ProgressBar
+        android:id="@+id/loadingTaskDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabContainer">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/informationLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_corner_24_white"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/imageView101"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_person"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/textView251"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:fontFamily="@font/roboto_medium"
-                android:text="Leader"
-                android:textColor="#8E8E93"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView101"
-                app:layout_constraintStart_toEndOf="@+id/imageView101"
-                app:layout_constraintTop_toTopOf="@+id/imageView101" />
-
-            <ImageView
-                android:id="@+id/imageView111"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginTop="24dp"
-                android:src="@drawable/ic_team_modal"
-                app:layout_constraintStart_toStartOf="@+id/imageView101"
-                app:layout_constraintTop_toBottomOf="@+id/imageView101" />
-
-            <TextView
-                android:id="@+id/textView261"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_medium"
-                android:text="Team"
-                android:textColor="#8E8E93"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView111"
-                app:layout_constraintStart_toStartOf="@+id/textView251"
-                app:layout_constraintTop_toTopOf="@+id/imageView111"
-                app:layout_constraintVertical_bias="1.0" />
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginTop="24dp"
-                android:src="@drawable/ic_team_modal"
-                app:layout_constraintStart_toStartOf="@id/imageView111"
-                app:layout_constraintTop_toBottomOf="@id/imageView111" />
-
-            <TextView
-                android:id="@+id/ProjectBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_medium"
-                android:text="Status"
-                android:textColor="#8E8E93"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="@id/imageView4"
-                app:layout_constraintStart_toStartOf="@id/textView261"
-                app:layout_constraintTop_toTopOf="@id/imageView4"
-                app:layout_constraintVertical_bias="1.0" />
-
-            <Button
-                android:id="@+id/button31"
-                android:layout_width="68dp"
-                android:layout_height="24dp"
-                android:background="@drawable/rounded_corner_24_blue"
-                android:backgroundTint="#007AFF"
-                android:fontFamily="@font/roboto_bold"
-                android:gravity="center|start"
-                android:includeFontPadding="false"
-                android:outlineProvider="none"
-                android:padding="0dp"
-                android:paddingStart="12dp"
-                android:paddingLeft="16dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:text="Add"
-                android:textAlignment="gravity"
-                android:textAllCaps="false"
-                android:textSize="12sp"
-                app:icon="@drawable/ic_add_circle"
-                app:iconGravity="start"
-                app:iconPadding="2dp"
-                app:iconSize="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView101"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/imageView101" />
-
-            <Button
-                android:id="@+id/button41"
-                android:layout_width="68dp"
-                android:layout_height="24dp"
-                android:background="@drawable/rounded_corner_24_blue"
-                android:backgroundTint="#007AFF"
-                android:fontFamily="@font/roboto_bold"
-                android:gravity="center|start"
-                android:includeFontPadding="false"
-                android:outlineProvider="none"
-                android:padding="0dp"
-                android:paddingStart="12dp"
-                android:paddingLeft="16dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:text="Add"
-                android:textAlignment="gravity"
-                android:textAllCaps="false"
-                android:textSize="12sp"
-                app:icon="@drawable/ic_add_circle"
-                app:iconGravity="start"
-                app:iconPadding="2dp"
-                app:iconSize="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView111"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/imageView111"
-                app:layout_constraintVertical_bias="1.0" />
-
-            <Button
-                android:id="@+id/button9"
-                android:layout_width="68dp"
-                android:layout_height="24dp"
-                android:background="@drawable/rounded_corner_24_blue"
-                android:backgroundTint="#007AFF"
-                android:fontFamily="@font/roboto_bold"
-                android:gravity="center|start"
-                android:includeFontPadding="false"
-                android:outlineProvider="none"
-                android:padding="0dp"
-                android:paddingStart="12dp"
-                android:paddingLeft="16dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:text="Add"
-                android:textAlignment="gravity"
-                android:textAllCaps="false"
-                android:textSize="12sp"
-                app:icon="@drawable/ic_add_circle"
-                app:iconGravity="start"
-                app:iconPadding="2dp"
-                app:iconSize="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-                app:layout_constraintEnd_toEndOf="@+id/button41"
-                app:layout_constraintTop_toTopOf="@+id/imageView4"
-                app:layout_constraintVertical_bias="1.0" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
+        app:layout_constraintBottom_toBottomOf="@+id/create_task_btn"
+        app:layout_constraintEnd_toEndOf="@+id/container"
+        app:layout_constraintStart_toStartOf="@+id/container"
+        app:layout_constraintTop_toTopOf="@+id/container" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

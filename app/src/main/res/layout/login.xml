@@ -1,29 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f9faff"
     android:backgroundTint="#f9faff">
 
-    <LinearLayout
-        android:id="@+id/loadingLogin"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:background="#28000000"
-        android:elevation="10dp"
-        android:visibility="gone"
-        >
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </LinearLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editTextText5"
         android:layout_width="0dp"
@@ -110,7 +92,7 @@
         app:useMaterialThemeColors="true" />
 
     <TextView
-        android:id="@+id/textView38"
+        android:id="@+id/forgot_password_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto_medium"

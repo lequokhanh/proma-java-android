@@ -1,177 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/project_detail"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/rounded_corner_24_white"
-    android:paddingHorizontal="20dp"
-    android:paddingVertical="16dp"
-    android:scrollbars="none">
+    android:backgroundTint="@android:color/transparent"
+    android:paddingBottom="20dp">
 
-    <ImageView
-        android:id="@+id/imageView28"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corner_24_white"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="16dp"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_person"
-        app:tint="#8E8E93" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView28"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_person"
+            app:tint="#8E8E93" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/roboto_regular"
+            android:text="Leader"
+            android:textColor="#8E8E93"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView28"
+            app:layout_constraintStart_toEndOf="@+id/imageView28"
+            app:layout_constraintTop_toTopOf="@+id/imageView28" />
+
+        <TextView
+            android:id="@+id/leader_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corner_24_bw"
+            android:fontFamily="@font/roboto_bold"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:text="TextView"
+            android:textColor="#000000"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView2" />
+
+        <ImageView
+            android:id="@+id/imageView29"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toStartOf="@+id/imageView28"
+            app:layout_constraintTop_toBottomOf="@+id/imageView28"
+            app:srcCompat="@drawable/ic_team_modal" />
+
+        <TextView
+            android:id="@+id/textView40"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/roboto_regular"
+            android:text="Team"
+            android:textColor="#8E8E93"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView29"
+            app:layout_constraintStart_toEndOf="@+id/imageView29"
+            app:layout_constraintTop_toTopOf="@+id/imageView29" />
+
+        <LinearLayout
+            android:id="@+id/memberList2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:gravity="right|top"
+            android:maxHeight="92dp"
+            android:minHeight="24dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="@+id/leader_tv"
+            app:layout_constraintStart_toEndOf="@+id/textView40"
+            app:layout_constraintTop_toTopOf="@+id/textView40" />
+
+        <ImageView
+            android:id="@+id/imageView30"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toStartOf="@+id/imageView29"
+            app:layout_constraintTop_toBottomOf="@+id/memberList2"
+            app:srcCompat="@drawable/ic_calendar" />
+
+        <TextView
+            android:id="@+id/textView42"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/roboto_regular"
+            android:text="Deadline"
+            android:textColor="#8E8E93"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView30"
+            app:layout_constraintStart_toEndOf="@+id/imageView30"
+            app:layout_constraintTop_toTopOf="@+id/imageView30" />
+
+        <TextView
+            android:id="@+id/deadline_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corner_24_red"
+            android:fontFamily="@font/roboto_bold"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:text="TextView"
+            android:textColor="#FF3B30"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView42"
+            app:layout_constraintEnd_toEndOf="@+id/memberList2"
+            app:layout_constraintTop_toTopOf="@+id/textView42" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+        android:id="@+id/before_dl_tv"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:fontFamily="@font/roboto_regular"
-        android:text="Leader"
-        android:textColor="#8E8E93"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView28"
-        app:layout_constraintStart_toEndOf="@+id/imageView28"
-        app:layout_constraintTop_toTopOf="@+id/imageView28" />
-
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_corner_24_bw"
+        android:layout_marginTop="14dp"
+        android:alpha="0.3"
+        android:background="@drawable/rounded_corner_14_gr"
         android:fontFamily="@font/roboto_bold"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="4dp"
-        android:text="TextView"
-        android:textColor="#000000"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView2"
+        android:gravity="center"
+        android:paddingVertical="17dp"
+        android:text="The review date has not yet arrived !"
+        android:textSize="17sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView2" />
-
-    <ImageView
-        android:id="@+id/imageView29"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintStart_toStartOf="@+id/imageView28"
-        app:layout_constraintTop_toBottomOf="@+id/imageView28"
-        app:srcCompat="@drawable/ic_team_modal" />
-
-    <TextView
-        android:id="@+id/textView40"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:fontFamily="@font/roboto_regular"
-        android:text="Team"
-        android:textColor="#8E8E93"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView29"
-        app:layout_constraintStart_toEndOf="@+id/imageView29"
-        app:layout_constraintTop_toTopOf="@+id/imageView29" />
-
-    <LinearLayout
-        android:id="@+id/memberList2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="12dp"
-        android:gravity="right|top"
-        android:maxHeight="92dp"
-        android:minHeight="24dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/addMemberBtn"
-        app:layout_constraintStart_toEndOf="@+id/textView40"
-        app:layout_constraintTop_toTopOf="@+id/textView40" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/information" />
 
     <Button
-        android:id="@+id/addMemberBtn"
-        android:layout_width="68dp"
-        android:layout_height="24dp"
-        android:background="@drawable/rounded_corner_24_blue"
-        android:backgroundTint="#007AFF"
-        android:fontFamily="@font/roboto_bold"
-        android:gravity="center|start"
-        android:includeFontPadding="false"
-        android:outlineProvider="none"
-        android:padding="0dp"
-        android:paddingStart="12dp"
-        android:paddingLeft="16dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
-        android:text="Add"
-        android:textAlignment="gravity"
-        android:textAllCaps="false"
-        android:textSize="12sp"
-        app:icon="@drawable/ic_add_circle"
-        app:iconGravity="start"
-        app:iconPadding="2dp"
-        app:iconSize="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView40"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView40" />
-
-    <ImageView
-        android:id="@+id/imageView30"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintStart_toStartOf="@+id/imageView29"
-        app:layout_constraintTop_toBottomOf="@+id/memberList2"
-        app:srcCompat="@drawable/ic_calendar" />
-
-    <TextView
-        android:id="@+id/textView42"
-        android:layout_width="wrap_content"
+        android:id="@+id/btn_review"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:fontFamily="@font/roboto_regular"
-        android:text="Deadline"
-        android:textColor="#8E8E93"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView30"
-        app:layout_constraintStart_toEndOf="@+id/imageView30"
-        app:layout_constraintTop_toTopOf="@+id/imageView30" />
-
-    <Button
-        android:id="@+id/addMemberBtn3"
-        android:layout_width="68dp"
-        android:layout_height="24dp"
-        android:background="@drawable/rounded_corner_24_blue"
-        android:backgroundTint="#007AFF"
+        android:layout_marginTop="14dp"
         android:fontFamily="@font/roboto_bold"
-        android:gravity="center|start"
-        android:includeFontPadding="false"
-        android:outlineProvider="none"
-        android:padding="0dp"
-        android:paddingStart="12dp"
-        android:paddingLeft="16dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
-        android:text="Edit"
-        android:textAlignment="gravity"
+        android:gravity="center"
+        android:letterSpacing="0.001"
+        android:paddingHorizontal="21dp"
+        android:paddingVertical="17dp"
+        android:text="Review"
         android:textAllCaps="false"
-        android:textSize="12sp"
-        app:icon="@drawable/ic_edit"
-        app:iconGravity="start"
-        app:iconPadding="2dp"
-        app:iconSize="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView42"
+        android:textSize="17sp"
+        android:visibility="gone"
+        app:cornerRadius="14dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView42" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/information" />
 
-    <TextView
-        android:id="@+id/textView43"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/view_review"
+        layout="@layout/view_review"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/rounded_corner_24_red"
-        android:fontFamily="@font/roboto_bold"
-        android:paddingHorizontal="8dp"
-        android:paddingVertical="4dp"
-        android:text="TextView"
-        android:textColor="#FF3B30"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView42"
-        app:layout_constraintEnd_toStartOf="@+id/addMemberBtn3"
-        app:layout_constraintTop_toTopOf="@+id/textView42" />
+        android:layout_marginTop="14dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/information" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

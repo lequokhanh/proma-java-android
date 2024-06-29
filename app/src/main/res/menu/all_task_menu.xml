@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/rounded_corner_12_blue">
     <item
-        android:id="@+id/action_schedule"
+        android:id="@+id/action_schedule_sort"
         android:icon="@drawable/ic_calendar"
         android:iconTint="#000"
         android:title="Schedule" />
 
     <item
-        android:id="@+id/action_sort"
+        android:id="@+id/action_a_z_sort"
         android:icon="@drawable/ic_sort"
         android:title="A - Z" />
 </menu>

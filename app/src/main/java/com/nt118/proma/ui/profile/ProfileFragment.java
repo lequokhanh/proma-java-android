@@ -23,15 +23,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
 import com.nt118.proma.databinding.FragmentProfileBinding;
+import com.nt118.proma.model.ImageArray;
 
 import java.util.concurrent.atomic.AtomicReference;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
+    private FirebaseUser user;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -42,8 +48,10 @@ public class ProfileFragment extends Fragment {
         TextView logout = binding.logout;
         AtomicReference<Boolean> isDialogShowing = new AtomicReference<>(false);
         TextView username = binding.username;
+        CircleImageView avatar = binding.avatar3;
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("user", MODE_PRIVATE);
         String name = sharedPreferences.getString("name", "");
+        avatar.setImageResource(new ImageArray().getAvatarImage().get(sharedPreferences.getInt("avatar", 0)));
         username.setText(name);
         logout.setOnClickListener(v -> {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
@@ -92,10 +100,39 @@ public class ProfileFragment extends Fragment {
         });
         TextView notification = binding.notification;
         notification.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), NotificationSetting.class);
+            Intent intent = new Intent();
+            intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("android.provider.extra.APP_PACKAGE", requireContext().getPackageName());
             startActivity(intent);
         });
+        TextView sercurity = binding.security;
+        sercurity.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), Security.class);
+            startActivity(intent);
+        });
+        sercurity.setVisibility(View.GONE);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            for (UserInfo profile : user.getProviderData()) {
+                String providerId = profile.getProviderId();
+                if (providerId.equals("password")) {
+                    sercurity.setVisibility(View.VISIBLE);
+                }
+            }
+        }
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        TextView username = binding.username;
+        CircleImageView avatar = binding.avatar3;
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("user", MODE_PRIVATE);
+        String name = sharedPreferences.getString("name", "");
+        avatar.setImageResource(new ImageArray().getAvatarImage().get(sharedPreferences.getInt("avatar", 0)));
+        username.setText(name);
     }
 
 

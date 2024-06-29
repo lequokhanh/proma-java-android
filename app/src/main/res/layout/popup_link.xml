@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="330dp"
+    android:layout_height="507dp"
+    android:layout_gravity="center"
+    android:background="@drawable/rounded_corner_24_white"
+    android:paddingHorizontal="19dp"
+    android:paddingTop="32dp"
+    android:paddingBottom="20dp">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto"
+        android:lineHeight="34dp"
+        android:text="Link List"
+        android:textColor="#007AFF"
+        android:textFontWeight="700"
+        android:textSize="28sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/search_field"
+        style="@style/Normal_Drawable"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/rounded_corner_8"
+        android:fontFamily="@font/roboto_regular"
+        android:hint="Enter link. Eg: https://example.com"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="8dp"
+        android:textColorHint="#8E8E93"
+        android:textColorLink="#000"
+        android:textCursorDrawable="@drawable/black_cursor"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toStartOf="@+id/add_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/add_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:fontFamily="@font/roboto_bold"
+        android:gravity="center_vertical"
+        android:text="Add"
+        android:textColor="#105CDB"
+        android:textSize="13sp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="@+id/search_field"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/search_field" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="295dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_field">
+
+
+        <LinearLayout
+            android:id="@+id/list_item_atached"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout8"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/btn_cancle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#fff"
+            android:fontFamily="@font/roboto_bold"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:letterSpacing="0.01"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            android:textColor="#007AFF"
+            android:textSize="15sp"
+            app:cornerRadius="10dp"
+            app:strokeColor="#007AFF"
+            app:strokeWidth="1dp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
