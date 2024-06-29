@@ -233,9 +233,6 @@ public class ProjectFragment extends Fragment {
                                     .addOnCompleteListener(task -> {
                                         if (task.isSuccessful()) {
                                             for (int i = 0; i < task.getResult().getDocuments().size(); i++) {
-                                                if (task.getResult().getDocuments().get(i).getLong("status") != status && status != 0) {
-                                                    continue;
-                                                }
                                                 count.getAndIncrement();
                                                 Map<String, Object> taskItem = task.getResult().getDocuments().get(i).getData();
                                                 View taskView = LayoutInflater.from(getContext()).inflate(R.layout.task_card, null);
