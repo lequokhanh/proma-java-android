@@ -42,11 +42,10 @@ public class ProjectFragment extends Fragment {
 
     private FragmentProjectBinding binding;
     private String email;
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        ProjectViewModel projectViewModel =
-                new ViewModelProvider(this).get(ProjectViewModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ProjectViewModel projectViewModel = new ViewModelProvider(this).get(ProjectViewModel.class);
         binding = FragmentProjectBinding.inflate(inflater, container, false);
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("user", MODE_PRIVATE);
         email = sharedPreferences.getString("email", "");
@@ -68,7 +67,7 @@ public class ProjectFragment extends Fragment {
                 child.setTextColor(Color.parseColor("#FFFFFF"));
                 child.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.rounded_corner_24_blue));
                 currentTab.get().setTextColor(Color.parseColor("#007AFF"));
-                currentTab.get().setBackground(ContextCompat.getDrawable(requireContext(),R.drawable.rounded_corner_24_bw));
+                currentTab.get().setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.rounded_corner_24_bw));
                 currentTab.set(child);
                 if (child.getId() == R.id.TaskBtn) {
                     showTaskList(scrollview, 0, loading);
@@ -109,10 +108,7 @@ public class ProjectFragment extends Fragment {
         member.put("email", email);
         member.put("isAccepted", true);
 
-        db.collection("projects")
-                .where(Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", member)))
-                .get()
-                .addOnCompleteListener(task -> {
+        db.collection("projects").where(Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", member))).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().getDocuments().size() == 0) {
                     loading.setVisibility(View.GONE);
@@ -138,10 +134,7 @@ public class ProjectFragment extends Fragment {
                     Map<String, Object> memberLeader = new HashMap<>();
                     memberLeader.put("email", email);
                     memberLeader.put("isLeader", true);
-                    db.collection("tasks")
-                            .whereEqualTo("projectId", task.getResult().getDocuments().get(i).getId())
-                            .get()
-                            .addOnCompleteListener(task2 -> {
+                    db.collection("tasks").whereEqualTo("projectId", task.getResult().getDocuments().get(i).getId()).get().addOnCompleteListener(task2 -> {
                         if (task2.isSuccessful()) {
                             int totalTask = task2.getResult().getDocuments().size();
                             int doneTask = 0;
@@ -163,11 +156,7 @@ public class ProjectFragment extends Fragment {
                     Space space = new Space(getContext());
                     float dip20 = 20f;
                     Resources r = getResources();
-                    float px20 = TypedValue.applyDimension(
-                            TypedValue.COMPLEX_UNIT_DIP,
-                            dip20,
-                            r.getDisplayMetrics()
-                    );
+                    float px20 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip20, r.getDisplayMetrics());
                     space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) px20));
                     containerLayout.addView(projectView);
                     containerLayout.addView(space);
@@ -202,15 +191,8 @@ public class ProjectFragment extends Fragment {
         member.put("email", email);
         member.put("isAccepted", true);
 
-        db.collection("projects")
-                .where(Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", member)))
-                .get()
-                .addOnCompleteListener(task1 -> {
+        db.collection("projects").where(Filter.and(Filter.equalTo("status", status), Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", member)))).get().addOnCompleteListener(task1 -> {
             if (task1.isSuccessful()) {
-                if (task1.getResult().getDocuments().size() == 0) {
-                    loading.setVisibility(View.GONE);
-                    return;
-                }
                 for (int j = 0; j < task1.getResult().getDocuments().size(); j++) {
                     Map<String, Object> projectItem = task1.getResult().getDocuments().get(j).getData();
                     String projectId = task1.getResult().getDocuments().get(j).getId();
@@ -220,11 +202,7 @@ public class ProjectFragment extends Fragment {
                     Map<String, Object> memberLeader = new HashMap<>();
                     memberLeader.put("email", email);
                     memberLeader.put("isLeader", true);
-                    db.collection("tasks")
-                            .whereEqualTo("projectId", projectId)
-                            .where(Filter.or(Filter.arrayContains("members", memberLeader), Filter.arrayContains("members", memberTask)))
-                            .get()
-                            .addOnCompleteListener(task -> {
+                    db.collection("tasks").whereEqualTo("projectId", projectId).where(Filter.or(Filter.arrayContains("members", memberLeader), Filter.arrayContains("members", memberTask))).get().addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (task.getResult().getDocuments().size() == 0) {
                                 loading.setVisibility(View.GONE);
@@ -283,6 +261,7 @@ public class ProjectFragment extends Fragment {
             }
         });
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
