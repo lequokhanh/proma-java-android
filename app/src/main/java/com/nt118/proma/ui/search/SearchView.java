@@ -116,7 +116,8 @@ public class SearchView extends AppCompatActivity {
                             boolean hasMatch = false;
                             searchRecentContainer.removeAllViews();
                             for (QueryDocumentSnapshot doc : res) {
-                                if (doc.get("name").toString().contains(searchText)) {
+                                // compare lowercase doc.get("name").toString() with lowercase searchText
+                                if (doc.get("name").toString().toLowerCase().contains(searchText.toLowerCase())) {
                                     hasMatch = true;
                                     View view = getLayoutInflater().inflate(R.layout.project_card, null);
                                     TextView name = view.findViewById(R.id.projectName);
