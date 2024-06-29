@@ -279,13 +279,32 @@ public class MainActivity extends AppCompatActivity {
                                 if (noti.get("isRead") != null && !((boolean) noti.get("isRead"))) {
                                     Intent intent = new Intent(MainActivity.this, NotificationView.class);
                                     PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "Invite")
-                                            .setSmallIcon(R.drawable.ic_launcher_foreground)
-                                            .setContentTitle("Proma")
-                                            .setContentText((String) noti.get("message"))
-                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                            .setContentIntent(pendingIntent)
-                                            .setAutoCancel(true);
+                                    NotificationCompat.Builder builder = null;
+                                    if (noti.get("type").equals(1)) {
+                                        builder = new NotificationCompat.Builder(this, "Invite")
+                                                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                                                .setContentTitle("Proma")
+                                                .setContentText((String) noti.get("message"))
+                                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                                .setContentIntent(pendingIntent)
+                                                .setAutoCancel(true);
+                                    } else if (noti.get("type").equals(2)) {
+                                        builder = new NotificationCompat.Builder(this, "Comment")
+                                                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                                                .setContentTitle("Proma")
+                                                .setContentText((String) noti.get("message"))
+                                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                                .setContentIntent(pendingIntent)
+                                                .setAutoCancel(true);
+                                    } else if (noti.get("type").equals(3)) {
+                                        builder = new NotificationCompat.Builder(this, "Assign")
+                                                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                                                .setContentTitle("Proma")
+                                                .setContentText((String) noti.get("message"))
+                                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                                .setContentIntent(pendingIntent)
+                                                .setAutoCancel(true);
+                                    }
                                     NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
                                     notificationManager.cancelAll();
                                     notificationManager.notify(value.getDocumentChanges().get(i).getDocument().getId().hashCode(), builder.build());

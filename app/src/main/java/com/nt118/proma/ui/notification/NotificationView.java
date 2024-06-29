@@ -61,8 +61,8 @@ public class NotificationView extends AppCompatActivity {
                 db.collection("users").whereEqualTo("email", maps.get(i).get("sender")).get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         if (task.getResult().getDocuments().size() > 0) {
-                            int avatarIndex = (int) task.getResult().getDocuments().get(0).get("avatar");
-                            avatar.setImageResource(new ImageArray().getAvatarImage().get(avatarIndex));
+                            Long avatarIndex = (Long) task.getResult().getDocuments().get(0).get("avatar");
+                            avatar.setImageResource(new ImageArray().getAvatarImage().get(Math.toIntExact(avatarIndex)));
                         }
                     }
                 });
@@ -148,9 +148,6 @@ public class NotificationView extends AppCompatActivity {
                         intent.putExtra("projectId", (String) maps.get(finalI1).get("projectId"));
                         startActivity(intent);
                     });
-                    date.setText((String) maps.get(i).get("date"));
-                    message.setText((String) maps.get(i).get("message"));
-                    listNotiContainer.addView(item_notification);
                 } else if ((Long) maps.get(i).get("type") == 3) {
                     int finalI2 = i;
                     item_notification.setOnClickListener(v -> {
@@ -159,9 +156,6 @@ public class NotificationView extends AppCompatActivity {
                         intent.putExtra("projectId", (String) maps.get(finalI2).get("projectId"));
                         startActivity(intent);
                     });
-                    date.setText((String) maps.get(i).get("date"));
-                    message.setText((String) maps.get(i).get("message"));
-                    listNotiContainer.addView(item_notification);
                 }
                 date.setText((String) maps.get(i).get("date"));
                 message.setText((String) maps.get(i).get("message"));
