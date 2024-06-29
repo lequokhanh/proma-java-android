@@ -4,6 +4,7 @@ import static com.nt118.proma.ui.task.TaskDetail.setWindowFlag;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -47,6 +48,7 @@ import com.nt118.proma.ui.task.TaskDetail;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,8 +84,9 @@ public class ProjectDetail extends AppCompatActivity {
         setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         Intent intent = getIntent();
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
         projectId = intent.getStringExtra("projectId");
-        email = intent.getStringExtra("email");
+        email = sharedPreferences.getString("email", "");
 
         ImageView back = findViewById(R.id.img_Back);
         back.setOnClickListener(v -> {
@@ -252,7 +255,6 @@ public class ProjectDetail extends AppCompatActivity {
         rightSide.getLayoutParams().width = (int) (getResources().getDisplayMetrics().widthPixels * 0.5 - 68);
         leftSide.removeAllViews();
         rightSide.removeAllViews();
-        AtomicInteger count = new AtomicInteger(0);
         Map<String, Object> memberTask = new HashMap<>();
         memberTask.put("email", email);
         memberTask.put("isLeader", false);
@@ -260,20 +262,20 @@ public class ProjectDetail extends AppCompatActivity {
         memberLeader.put("email", email);
         memberLeader.put("isLeader", true);
         db.collection("tasks")
-                .whereEqualTo("projectId", projectId)
-                .where(Filter.or(Filter.arrayContains("members", memberLeader), Filter.arrayContains("members", memberTask)))
+                .where(Filter.and(Filter.equalTo("status",status),
+                        Filter.and(Filter.equalTo("projectId", projectId),
+                                Filter.or(Filter.arrayContains("members", memberLeader),
+                                        Filter.arrayContains("members", memberTask)))))
                 .get()
                 .addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                System.out.println("99999999999999" + task.getResult().getDocuments().size());
                 if (task.getResult().getDocuments().size() == 0) {
                     loading.setVisibility(View.GONE);
                     return;
                 }
                 for (int i = 0; i < task.getResult().getDocuments().size(); i++) {
-                    if (task.getResult().getDocuments().get(i).getLong("status") != status && status != 0) {
-                        continue;
-                    }
-                    count.getAndIncrement();
+
                     Map<String, Object> taskItem = task.getResult().getDocuments().get(i).getData();
                     View taskView = LayoutInflater.from(this).inflate(R.layout.task_card, null);
                     ImageView taskIcon = taskView.findViewById(R.id.icon);
@@ -328,7 +330,7 @@ public class ProjectDetail extends AppCompatActivity {
                     Space space = new Space(this);
                     space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 20));
                     taskView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                    if (count.get() % 2 == 1) {
+                    if (i % 2 == 1) {
                         leftSide.addView(taskView);
                         leftSide.addView(space);
                     } else {
@@ -362,6 +364,8 @@ public class ProjectDetail extends AppCompatActivity {
                         leader_tv.setText(task1.getResult().getDocuments().get(0).get("name").toString());
                         LinearLayout member_list = information.findViewById(R.id.memberList2);
                         TextView deadline_tv = information.findViewById(R.id.deadline_tv);
+                        Button reviewbtn = information.findViewById(R.id.btn_review);
+                        TextView beforeDlTV = information.findViewById(R.id.before_dl_tv);
                         deadline_tv.setText(project.get("deadline").toString());
                         ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) project.get("members");
                         MutableLiveData<Integer> count = new MutableLiveData<>(0);
@@ -385,6 +389,24 @@ public class ProjectDetail extends AppCompatActivity {
                                 }
                                 loading.setVisibility(View.GONE);
                                 container.addView(information);
+                            }
+                        });
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                        try {
+                            if (sdf.parse(project.get("deadline").toString()).before(new Date()) || sdf.parse(project.get("deadline").toString()).equals(new Date())){
+                                reviewbtn.setVisibility(View.VISIBLE);
+                                beforeDlTV.setVisibility(View.GONE);
+                            }else {
+                                reviewbtn.setVisibility(View.GONE);
+                                beforeDlTV.setVisibility(View.VISIBLE);
+                            }
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                        reviewbtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
                             }
                         });
                     }

@@ -178,6 +178,7 @@ public class HomeFragment extends Fragment {
                     cardView.findViewById(R.id.card_view).setOnClickListener(v -> {
                         Intent intent = new Intent(getActivity(), ProjectDetail.class);
                         intent.putExtra("projectId", projectId.get());
+
                         startActivity(intent);
                     });
                     Map<String, Object> memberTask = new HashMap<>();

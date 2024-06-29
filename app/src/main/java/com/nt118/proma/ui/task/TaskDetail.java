@@ -81,6 +81,7 @@ public class TaskDetail extends AppCompatActivity {
     private String leaderName;
     private FirebaseFirestore db;
     private TextView leader;
+    private String email;
     private final MutableLiveData<ArrayList<Map<String, Object>>> comments = new MutableLiveData<>();
 
     public static void setWindowFlag(Activity activity, final int bits, boolean on) {
@@ -100,6 +101,7 @@ public class TaskDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_detail);
         Intent intent = getIntent();
+        email = intent.getStringExtra("email");
         taskId = intent.getStringExtra("taskId");
         projectId = intent.getStringExtra("projectId");
         parentId = intent.getStringExtra("parentId");
@@ -121,6 +123,7 @@ public class TaskDetail extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         ImageView imageView = findViewById(R.id.img_Back);
         ImageView threeDot = findViewById(R.id.menu_btn);
+
         threeDot.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(this, v, 5);
             popup.getMenuInflater().inflate(R.menu.task_menu, popup.getMenu());
