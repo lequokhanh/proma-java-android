@@ -67,6 +67,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class TaskDetail extends AppCompatActivity {
     private static final int PICK_FILE_REQUEST = 1;
+    private final MutableLiveData<ArrayList<Map<String, Object>>> comments = new MutableLiveData<>();
+    AtomicReference<TextView> currentTab;
     private LinearLayout container;
     private String taskId, projectId, parentId;
     private ArrayList<String> task_members = new ArrayList<>();
@@ -84,8 +86,6 @@ public class TaskDetail extends AppCompatActivity {
     private FirebaseFirestore db;
     private TextView leader;
     private String email;
-    AtomicReference<TextView> currentTab;
-    private final MutableLiveData<ArrayList<Map<String, Object>>> comments = new MutableLiveData<>();
 
     public static void setWindowFlag(Activity activity, final int bits, boolean on) {
         Window win = activity.getWindow();
@@ -589,7 +589,7 @@ public class TaskDetail extends AppCompatActivity {
                     }
                 });
                 memberNames.observe(this, strings -> {
-                    if (strings.size() == members.size()+1) {
+                    if (strings.size() == members.size() + 1) {
                         intent.putStringArrayListExtra("members", memberEmails);
                         intent.putStringArrayListExtra("name", strings);
                         intent.putExtra("task_members", task_members);
@@ -633,7 +633,7 @@ public class TaskDetail extends AppCompatActivity {
                 });
                 memberNames.observe(this, strings -> {
 
-                    if (strings.size() == members.size()+1) {
+                    if (strings.size() == members.size() + 1) {
                         intent.putStringArrayListExtra("members", memberEmails);
                         intent.putStringArrayListExtra("name", strings);
                         intent.putExtra("leader_email", leaderEmail);
@@ -1132,7 +1132,7 @@ public class TaskDetail extends AppCompatActivity {
         TextView category = informationPane.findViewById(R.id.category);
         TextView deadline = informationPane.findViewById(R.id.deadline_tv);
         //edit status
-        Button btnEditStatus= informationPane.findViewById(R.id.editStatus);
+        Button btnEditStatus = informationPane.findViewById(R.id.editStatus);
         TextView status = informationPane.findViewById(R.id.status);
         //handle edit status task
         btnEditStatus.setOnClickListener(v -> {
@@ -1263,18 +1263,32 @@ public class TaskDetail extends AppCompatActivity {
         LinearLayout doneStatus = view1.findViewById(R.id.statusDone);
         CheckBox onGoing = view1.findViewById(R.id.cbOnGoing);
         CheckBox done = view1.findViewById(R.id.cbDone);
-        if (statusView.getText().toString().equals("On Going")) {
-            onGoing.setChecked(true);
-        } else if (statusView.getText().toString().equals("Done")) {
-            done.setChecked(true);
+        if (statusView.getVisibility() == View.VISIBLE) {
+            if (statusView.getText().toString().equals("On Going")) {
+                onGoing.setChecked(true);
+            } else if (statusView.getText().toString().equals("Done")) {
+                done.setChecked(true);
+            }
         }
         onGoingStatus.setOnClickListener(v -> {
             onGoing.setChecked(true);
             done.setChecked(false);
+            db.collection("tasks").document(taskId).update("status", 1).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(this, "Update status successfully", Toast.LENGTH_SHORT).show();
+                    bottomSheetDialog.dismiss();
+                }
+            });
         });
         doneStatus.setOnClickListener(v -> {
             done.setChecked(true);
             onGoing.setChecked(false);
+            db.collection("tasks").document(taskId).update("status", 2).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(this, "Update status successfully", Toast.LENGTH_SHORT).show();
+                    bottomSheetDialog.dismiss();
+                }
+            });
         });
         bottomSheetDialog.setOnDismissListener(dialog -> {
             if (onGoing.isChecked()) {
@@ -1292,15 +1306,6 @@ public class TaskDetail extends AppCompatActivity {
         bottomSheetDialog.setOnCancelListener(dialog -> {
             bottomSheetDialog.dismiss();
         });
-        db = FirebaseFirestore.getInstance();
-        Long status = 0L;
-        if(onGoing.isChecked()) {
-            status = 1L;
-        } else if (done.isChecked()) {
-            status = 2L;
-        }
-        db.collection("tasks").document(taskId).update("status", status);
-        bottomSheetDialog.dismiss();
     }
 
     private void showPopupReview(AtomicReference<Boolean> isDialogShowing) {

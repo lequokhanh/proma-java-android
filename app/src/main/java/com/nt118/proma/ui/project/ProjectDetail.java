@@ -267,13 +267,11 @@ public class ProjectDetail extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        System.out.println("99999999999999" + task.getResult().getDocuments().size());
                         if (task.getResult().getDocuments().size() == 0) {
                             loading.setVisibility(View.GONE);
                             return;
                         }
                         for (int i = 0; i < task.getResult().getDocuments().size(); i++) {
-
                             Map<String, Object> taskItem = task.getResult().getDocuments().get(i).getData();
                             View taskView = LayoutInflater.from(this).inflate(R.layout.task_card, null);
                             ImageView taskIcon = taskView.findViewById(R.id.icon);
@@ -305,7 +303,7 @@ public class ProjectDetail extends AppCompatActivity {
                             Space space = new Space(this);
                             space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 20));
                             taskView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                            if (i % 2 == 1) {
+                            if (i % 2 == 0) {
                                 leftSide.addView(taskView);
                                 leftSide.addView(space);
                             } else {
