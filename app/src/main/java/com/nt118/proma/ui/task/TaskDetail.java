@@ -108,7 +108,7 @@ public class TaskDetail extends AppCompatActivity {
         email = sharedPreferences.getString("email", "");
         taskId = intent.getStringExtra("taskId");
         projectId = intent.getStringExtra("projectId");
-        parentId = intent.getStringExtra("parentId")==null?"":intent.getStringExtra("parentId");
+        parentId = intent.getStringExtra("parentId") == null ? "" : intent.getStringExtra("parentId");
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
@@ -212,7 +212,8 @@ public class TaskDetail extends AppCompatActivity {
             });
         }
     }
-    private void loadUI(){
+
+    private void loadUI() {
         InitUI();
         if (currentTab.get().getId() == R.id.resultTab) {
             showResultTab();
@@ -377,6 +378,7 @@ public class TaskDetail extends AppCompatActivity {
             handleCreateTaskBtn(taskTitle.getText().toString(), desc.getText().toString(), leaderEmail, task_members, deadlineView.getText().toString(), categoryView.getText().toString());
         });
     }
+
     private void showDatePicker(AtomicReference<Boolean> isDatePickerShowing, TextView deadlineView, Boolean isShowTimePicker) {
         BottomSheetDialog bottomSheetDialog1 = new BottomSheetDialog(this);
         View view2 = LayoutInflater.from(this).inflate(R.layout.modal_date_picker, null);
@@ -578,8 +580,16 @@ public class TaskDetail extends AppCompatActivity {
                         }
                     });
                 }
+                memberEmails.add((String) project.get("user_created"));
+                ArrayList<String> names = memberNames.getValue();
+                db.collection("users").whereEqualTo("email", project.get("user_created")).get().addOnCompleteListener(task1 -> {
+                    if (task1.isSuccessful()) {
+                        names.add(task1.getResult().getDocuments().get(0).get("name").toString());
+                        memberNames.setValue(names);
+                    }
+                });
                 memberNames.observe(this, strings -> {
-                    if (strings.size() == members.size()) {
+                    if (strings.size() == members.size()+1) {
                         intent.putStringArrayListExtra("members", memberEmails);
                         intent.putStringArrayListExtra("name", strings);
                         intent.putExtra("task_members", task_members);
@@ -613,9 +623,17 @@ public class TaskDetail extends AppCompatActivity {
                         }
                     });
                 }
+                memberEmails.add((String) project.get("user_created"));
+                ArrayList<String> names = memberNames.getValue();
+                db.collection("users").whereEqualTo("email", project.get("user_created")).get().addOnCompleteListener(task1 -> {
+                    if (task1.isSuccessful()) {
+                        names.add(task1.getResult().getDocuments().get(0).get("name").toString());
+                        memberNames.setValue(names);
+                    }
+                });
                 memberNames.observe(this, strings -> {
 
-                    if (strings.size() == members.size()) {
+                    if (strings.size() == members.size()+1) {
                         intent.putStringArrayListExtra("members", memberEmails);
                         intent.putStringArrayListExtra("name", strings);
                         intent.putExtra("leader_email", leaderEmail);
@@ -776,7 +794,7 @@ public class TaskDetail extends AppCompatActivity {
             if (task.isSuccessful()) {
                 ArrayList<String> files = (ArrayList<String>) task.getResult().get("attachments");
                 if (files != null) {
-                    for (String file : files.subList(0,Math.min(files.size(), 2))) {
+                    for (String file : files.subList(0, Math.min(files.size(), 2))) {
                         View fileTextView = LayoutInflater.from(this).inflate(R.layout.item_attach2, null);
                         TextView item_name = fileTextView.findViewById(R.id.item_name);
                         item_name.setText(getFileName(Uri.parse(file)));
@@ -788,7 +806,7 @@ public class TaskDetail extends AppCompatActivity {
                             startActivity(intent);
                         });
                     }
-                    if (files.size() > 2){
+                    if (files.size() > 2) {
                         TextView textView = new TextView(this);
                         textView.setText("More");
                         textView.setBackgroundResource(R.drawable.rounded_corner_24_bw);
@@ -832,7 +850,7 @@ public class TaskDetail extends AppCompatActivity {
             if (task.isSuccessful()) {
                 ArrayList<String> links = (ArrayList<String>) task.getResult().get("links");
                 if (links != null) {
-                    for (String link : links.subList(0,Math.min(links.size(), 2))){
+                    for (String link : links.subList(0, Math.min(links.size(), 2))) {
                         View item_link = LayoutInflater.from(this).inflate(R.layout.item_link2, null);
                         TextView linkTV = item_link.findViewById(R.id.item_name);
                         linkTV.setText(link);
@@ -840,7 +858,7 @@ public class TaskDetail extends AppCompatActivity {
                         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) item_link.getLayoutParams();
                         layoutParams.setMargins(0, 0, 0, (int) px10);
                     }
-                    if (links.size() > 2){
+                    if (links.size() > 2) {
                         TextView textView = new TextView(this);
                         textView.setText("More");
                         textView.setBackgroundResource(R.drawable.rounded_corner_24_bw);
@@ -1031,7 +1049,7 @@ public class TaskDetail extends AppCompatActivity {
             layoutParams.setMargins(0, 0, 0, (int) px10);
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
-            StorageReference fileRef = storageRef.child("uploads/"  + getFileName(dataUpload)+  "_" +System.currentTimeMillis());
+            StorageReference fileRef = storageRef.child("uploads/" + getFileName(dataUpload) + "_" + System.currentTimeMillis());
             UploadTask uploadTask = fileRef.putFile(dataUpload);
             ProgressBar progressBar = fileTextView.findViewById(R.id.progressBar2);
             uploadTask.addOnProgressListener(taskSnapshot -> {
@@ -1111,9 +1129,16 @@ public class TaskDetail extends AppCompatActivity {
         View informationPane = LayoutInflater.from(this).inflate(R.layout.task_detail_information, null);
         TextView leader = informationPane.findViewById(R.id.leader_tv);
         LinearLayout memberList = informationPane.findViewById(R.id.memberList2);
-        TextView status = informationPane.findViewById(R.id.status);
         TextView category = informationPane.findViewById(R.id.category);
         TextView deadline = informationPane.findViewById(R.id.deadline_tv);
+        //edit status
+        Button btnEditStatus= informationPane.findViewById(R.id.editStatus);
+        TextView status = informationPane.findViewById(R.id.status);
+        //handle edit status task
+        btnEditStatus.setOnClickListener(v -> {
+            showPopupStatus(status);
+        });
+        //show status task
         db = FirebaseFirestore.getInstance();
         db.collection("tasks").document(taskId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -1155,62 +1180,61 @@ public class TaskDetail extends AppCompatActivity {
                         break;
                     }
                 }
+                if (_task.get("review") != null) {
+                    Map<String, Object> review = (Map<String, Object>) _task.get("review");
+                    reviewbtn.setVisibility(View.GONE);
+                    beforeDlTV.setVisibility(View.GONE);
+                    viewReview.setVisibility(View.VISIBLE);
+                    TextView reviewTitle = viewReview.findViewById(R.id.etDescProject);
+                    reviewTitle.setText(review.get("feedback").toString());
+                    ImageView star1 = viewReview.findViewById(R.id.img_start1);
+                    ImageView star2 = viewReview.findViewById(R.id.img_start2);
+                    ImageView star3 = viewReview.findViewById(R.id.img_start3);
+                    ImageView star4 = viewReview.findViewById(R.id.img_start4);
+                    ImageView star5 = viewReview.findViewById(R.id.img_start5);
+                    MutableLiveData<Integer> stars = new MutableLiveData<>(0);
+                    stars.observe(this, integer -> {
+                        if (integer >= 1) {
+                            star1.setImageResource(R.drawable.ic_star2);
+                        } else {
+                            star1.setImageResource(R.drawable.ic_star3);
+                        }
+                        if (integer >= 2) {
+                            star2.setImageResource(R.drawable.ic_star2);
+                        } else {
+                            star2.setImageResource(R.drawable.ic_star3);
+                        }
+                        if (integer >= 3) {
+                            star3.setImageResource(R.drawable.ic_star2);
+                        } else {
+                            star3.setImageResource(R.drawable.ic_star3);
+                        }
+                        if (integer >= 4) {
+                            star4.setImageResource(R.drawable.ic_star2);
+                        } else {
+                            star4.setImageResource(R.drawable.ic_star3);
+                        }
+                        if (integer >= 5) {
+                            star5.setImageResource(R.drawable.ic_star2);
+                        } else {
+                            star5.setImageResource(R.drawable.ic_star3);
+                        }
+                    });
+                    stars.setValue(Math.toIntExact((Long) review.get("stars")));
+                }
                 if (isLeader) {
                     try {
-                        Date deadline2 =sdf.parse(_task.get("deadline").toString());
+                        Date deadline2 = sdf.parse(_task.get("deadline").toString());
                         if (deadline2.before(new Date()) || deadline2.equals(new Date())) {
-                            if (_task.get("review") != null) {
-                                Map<String, Object> review = (Map<String, Object>) _task.get("review");
-                                reviewbtn.setVisibility(View.GONE);
-                                beforeDlTV.setVisibility(View.GONE);
-                                viewReview.setVisibility(View.VISIBLE);
-                                TextView reviewTitle = viewReview.findViewById(R.id.etDescProject);
-                                reviewTitle.setText(review.get("feedback").toString());
-                                ImageView star1 = viewReview.findViewById(R.id.img_start1);
-                                ImageView star2 = viewReview.findViewById(R.id.img_start2);
-                                ImageView star3 = viewReview.findViewById(R.id.img_start3);
-                                ImageView star4 = viewReview.findViewById(R.id.img_start4);
-                                ImageView star5 = viewReview.findViewById(R.id.img_start5);
-                                MutableLiveData<Integer> stars = new MutableLiveData<>(0);
-                                stars.observe(this, integer -> {
-                                    if (integer >= 1) {
-                                        star1.setImageResource(R.drawable.ic_star2);
-                                    } else {
-                                        star1.setImageResource(R.drawable.ic_star3);
-                                    }
-                                    if (integer >= 2) {
-                                        star2.setImageResource(R.drawable.ic_star2);
-                                    } else {
-                                        star2.setImageResource(R.drawable.ic_star3);
-                                    }
-                                    if (integer >= 3) {
-                                        star3.setImageResource(R.drawable.ic_star2);
-                                    } else {
-                                        star3.setImageResource(R.drawable.ic_star3);
-                                    }
-                                    if (integer >= 4) {
-                                        star4.setImageResource(R.drawable.ic_star2);
-                                    } else {
-                                        star4.setImageResource(R.drawable.ic_star3);
-                                    }
-                                    if (integer >= 5) {
-                                        star5.setImageResource(R.drawable.ic_star2);
-                                    } else {
-                                        star5.setImageResource(R.drawable.ic_star3);
-                                    }
-                                });
-                                stars.setValue(Math.toIntExact((Long) review.get("stars")));
-                            } else {
-                                reviewbtn.setVisibility(View.VISIBLE);
-                                beforeDlTV.setVisibility(View.GONE);
-                                viewReview.setVisibility(View.GONE);
-                            }
+                            reviewbtn.setVisibility(View.VISIBLE);
+                            beforeDlTV.setVisibility(View.GONE);
+                            viewReview.setVisibility(View.GONE);
                         } else {
                             reviewbtn.setVisibility(View.GONE);
                             beforeDlTV.setVisibility(View.VISIBLE);
                             viewReview.setVisibility(View.GONE);
                         }
-                    } catch(ParseException e){
+                    } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }
                     reviewbtn.setOnClickListener(v -> {
@@ -1228,6 +1252,55 @@ public class TaskDetail extends AppCompatActivity {
         container.addView(informationPane);
         loadingBar.setVisibility(View.GONE);
         container.setVisibility(View.VISIBLE);
+    }
+
+    private void showPopupStatus(TextView statusView) {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        View view1 = LayoutInflater.from(this).inflate(R.layout.modal_update_task_status, null);
+        bottomSheetDialog.setContentView(view1);
+        bottomSheetDialog.show();
+        LinearLayout onGoingStatus = view1.findViewById(R.id.statusOnGoing);
+        LinearLayout doneStatus = view1.findViewById(R.id.statusDone);
+        CheckBox onGoing = view1.findViewById(R.id.cbOnGoing);
+        CheckBox done = view1.findViewById(R.id.cbDone);
+        if (statusView.getText().toString().equals("On Going")) {
+            onGoing.setChecked(true);
+        } else if (statusView.getText().toString().equals("Done")) {
+            done.setChecked(true);
+        }
+        onGoingStatus.setOnClickListener(v -> {
+            onGoing.setChecked(true);
+            done.setChecked(false);
+        });
+        doneStatus.setOnClickListener(v -> {
+            done.setChecked(true);
+            onGoing.setChecked(false);
+        });
+        bottomSheetDialog.setOnDismissListener(dialog -> {
+            if (onGoing.isChecked()) {
+                statusView.setBackground(ContextCompat.getDrawable(this, R.drawable.rounded_corner_24_on_going));
+                statusView.setTextColor(Color.parseColor("#34C759"));
+                statusView.setText("On Going");
+                statusView.setVisibility(View.VISIBLE);
+            } else if (done.isChecked()) {
+                statusView.setBackground(ContextCompat.getDrawable(this, R.drawable.rounded_corner_24_blue));
+                statusView.setTextColor(Color.parseColor("#FFFFFF"));
+                statusView.setText("Done");
+                statusView.setVisibility(View.VISIBLE);
+            }
+        });
+        bottomSheetDialog.setOnCancelListener(dialog -> {
+            bottomSheetDialog.dismiss();
+        });
+        db = FirebaseFirestore.getInstance();
+        Long status = 0L;
+        if(onGoing.isChecked()) {
+            status = 1L;
+        } else if (done.isChecked()) {
+            status = 2L;
+        }
+        db.collection("tasks").document(taskId).update("status", status);
+        bottomSheetDialog.dismiss();
     }
 
     private void showPopupReview(AtomicReference<Boolean> isDialogShowing) {
@@ -1334,7 +1407,7 @@ public class TaskDetail extends AppCompatActivity {
         return textView;
     }
 
-    private void showComments(){
+    private void showComments() {
         db = FirebaseFirestore.getInstance();
         db.collection("tasks").document(taskId).collection("comments")
                 .orderBy("date", Query.Direction.ASCENDING)   // sort by date in ascending order
@@ -1356,7 +1429,7 @@ public class TaskDetail extends AppCompatActivity {
                             TextView date = item_comment.findViewById(R.id.dateCmt);
                             ImageView avatar = item_comment.findViewById(R.id.imageView123);
 
-                            String email= (String) comment.get("email");
+                            String email = (String) comment.get("email");
                             name.setText((String) comment.get("name"));
                             content.setText((String) comment.get("message"));
 
@@ -1381,6 +1454,7 @@ public class TaskDetail extends AppCompatActivity {
                     }
                 });
     }
+
     public String formatDateTime(long timestamp) {
         Date date = new Date(timestamp);
 
