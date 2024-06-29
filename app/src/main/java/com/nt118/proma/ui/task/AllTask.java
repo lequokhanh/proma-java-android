@@ -162,7 +162,7 @@ public class AllTask extends AppCompatActivity {
                         intent2.putExtra("projectId", projectId);
                         startActivity(intent2);
                     });
-                    ImageView edit_btn = taskView.findViewById(R.id.edit_btn);
+
                     // Check if the current user is a leader
                     boolean isLeader = false;
                     List<Map<String, Object>> members = (List<Map<String, Object>>) taskItem.get("members");
@@ -179,51 +179,6 @@ public class AllTask extends AppCompatActivity {
 
                     // Set visibility of edit button based on isLeader
 
-                    if (isLeader) {
-                        edit_btn.setVisibility(View.VISIBLE);
-                    } else {
-                        edit_btn.setVisibility(View.GONE);
-                    }
-                    edit_btn.setOnClickListener(v -> {
-                        PopupMenu popup = new PopupMenu(this, v, 5);
-                        popup.getMenuInflater().inflate(R.menu.task_menu, popup.getMenu());
-
-                        SpannableString s = new SpannableString(popup.getMenu().getItem(2).getTitle());
-                        s.setSpan(new ForegroundColorSpan(Color.parseColor("#FF3B30")), 0, s.length(), 0);
-                        popup.getMenu().getItem(2).setTitle(s);
-
-                        try {
-                            Field[] fields = popup.getClass().getDeclaredFields();
-                            for (Field field : fields) {
-                                if ("mPopup".equals(field.getName())) {
-                                    field.setAccessible(true);
-                                    Object menuPopupHelper = field.get(popup);
-                                    Class<?> classPopupHelper = Class.forName(menuPopupHelper
-                                            .getClass().getName());
-                                    Method setForceIcons = classPopupHelper.getMethod(
-                                            "setForceShowIcon", boolean.class);
-                                    setForceIcons.invoke(menuPopupHelper, true);
-                                    break;
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        popup.show();
-                        popup.setOnMenuItemClickListener(item -> {
-                            if (item.getItemId() == R.id.action_edit) {
-                                //show popup edit task
-                            }
-                            if (item.getItemId() == R.id.action_delete) {
-//                                        db.collection("tasks").document(taskId.get()).delete().addOnCompleteListener(task -> {
-//                                            if (task.isSuccessful()) {
-//                                                finish();
-//                                            }
-//                                        });
-                            }
-                            return true;
-                        });
-                    });
                     Space space = new Space(this);
                     space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 20));
                     taskView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));

@@ -56,7 +56,7 @@
             android:src="@drawable/ic_star2" />
     </LinearLayout>
 
-    <EditText
+    <TextView
         android:id="@+id/etDescProject"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -70,8 +70,6 @@
         android:gravity="left"
         android:textFontWeight="400"
         android:lineHeight="20dp"
-        android:text="Quite good"
-        android:inputType="text"
         android:paddingStart="14dp"
         android:paddingTop="16dp"
         android:paddingEnd="14dp"

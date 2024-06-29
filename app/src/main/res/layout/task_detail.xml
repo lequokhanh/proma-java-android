@@ -97,6 +97,7 @@
         android:layout_marginEnd="22dp"
         android:layout_marginBottom="15dp"
         android:elevation="10dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/cardView"
         app:layout_constraintEnd_toEndOf="@id/cardView">
 

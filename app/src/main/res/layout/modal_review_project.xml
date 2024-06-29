@@ -10,9 +10,9 @@
     <com.google.android.material.bottomsheet.BottomSheetDragHandleView
         android:id="@+id/bottomSheetDragHandleView"
         android:layout_width="645dp"
-        android:layout_height="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
+        android:layout_height="40dp"
         android:background="@drawable/rounded_corner_22_top"
+        app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -46,7 +46,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="40.5dp"
             android:layout_marginRight="3dp"
-            android:src="@drawable/ic_star2" />
+            android:src="@drawable/ic_star2"
+            android:visibility="visible" />
 
         <ImageView
             android:id="@+id/img_start2"

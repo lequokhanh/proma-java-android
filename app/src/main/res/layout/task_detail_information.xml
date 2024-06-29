@@ -5,7 +5,8 @@
     android:id="@+id/project_detail"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:backgroundTint="@android:color/transparent">
+    android:backgroundTint="@android:color/transparent"
+    android:paddingBottom="20dp">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -236,7 +237,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/textView44"
+                android:id="@+id/before_dl_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
@@ -248,7 +249,7 @@
                 android:paddingVertical="17dp"
                 android:text="The review date has not yet arrived !"
                 android:textSize="17sp"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/information" />
@@ -268,6 +269,17 @@
                 android:textSize="17sp"
                 android:visibility="gone"
                 app:cornerRadius="14dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/information" />
+
+            <include
+                android:id="@+id/view_review"
+                layout="@layout/view_review"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/information" />

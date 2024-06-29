@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -53,6 +54,7 @@ import com.nt118.proma.ui.member.ViewMembers;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,6 +84,7 @@ public class TaskDetail extends AppCompatActivity {
     private FirebaseFirestore db;
     private TextView leader;
     private String email;
+    AtomicReference<TextView> currentTab;
     private final MutableLiveData<ArrayList<Map<String, Object>>> comments = new MutableLiveData<>();
 
     public static void setWindowFlag(Activity activity, final int bits, boolean on) {
@@ -101,14 +104,16 @@ public class TaskDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_detail);
         Intent intent = getIntent();
-        email = intent.getStringExtra("email");
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        email = sharedPreferences.getString("email", "");
         taskId = intent.getStringExtra("taskId");
         projectId = intent.getStringExtra("projectId");
-        parentId = intent.getStringExtra("parentId");
+        parentId = intent.getStringExtra("parentId")==null?"":intent.getStringExtra("parentId");
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         InitUI();
+        handleTabClick();
     }
 
     private void InitUI() {
@@ -165,7 +170,6 @@ public class TaskDetail extends AppCompatActivity {
         imageView.setOnClickListener(v -> {
             finish();
         });
-        handleTabClick();
         db.collection("tasks").document(taskId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 title.setText(task.getResult().getString("title"));
@@ -186,7 +190,7 @@ public class TaskDetail extends AppCompatActivity {
     private void handleTabClick() {
         LinearLayout tabContainer = findViewById(R.id.tabContainer);
         showResultTab();
-        AtomicReference<TextView> currentTab = new AtomicReference<>(findViewById(R.id.resultTab));
+        currentTab = new AtomicReference<>(findViewById(R.id.resultTab));
         for (int i = 0; i < tabContainer.getChildCount(); i++) {
             TextView child = (TextView) tabContainer.getChildAt(i);
             child.setOnClickListener(v -> {
@@ -206,6 +210,18 @@ public class TaskDetail extends AppCompatActivity {
                     showTaskList();
                 }
             });
+        }
+    }
+    private void loadUI(){
+        InitUI();
+        if (currentTab.get().getId() == R.id.resultTab) {
+            showResultTab();
+        }
+        if (currentTab.get().getId() == R.id.informationTab) {
+            showInformationTab();
+        }
+        if (currentTab.get().getId() == R.id.subtaskTab) {
+            showTaskList();
         }
     }
 
@@ -1101,6 +1117,7 @@ public class TaskDetail extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         db.collection("tasks").document(taskId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                Map<String, Object> _task = task.getResult().getData();
                 if (task.getResult().getLong("status") == 0) {
                     status.setVisibility(View.GONE);
                 } else if (task.getResult().getLong("status") == 1) {
@@ -1116,8 +1133,8 @@ public class TaskDetail extends AppCompatActivity {
                 deadline.setText(task.getResult().getString("deadline"));
                 ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) task.getResult().get("members");
                 for (Map<String, Object> member : members) {
-                    String email = (String) member.get("email");
-                    db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(task2 -> {
+                    String _email = (String) member.get("email");
+                    db.collection("users").whereEqualTo("email", _email).get().addOnCompleteListener(task2 -> {
                         if (task2.isSuccessful()) {
                             Map<String, Object> user = task2.getResult().getDocuments().get(0).getData();
                             if ((boolean) member.get("isLeader"))
@@ -1126,19 +1143,170 @@ public class TaskDetail extends AppCompatActivity {
                         }
                     });
                 }
+                Button reviewbtn = informationPane.findViewById(R.id.btn_review);
+                View viewReview = informationPane.findViewById(R.id.view_review);
+                TextView beforeDlTV = informationPane.findViewById(R.id.before_dl_tv);
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy - HH.mm a", Locale.US);
+                Boolean isLeader = false;
+                for (Map<String, Object> member : members) {
+                    if ((boolean) member.get("isLeader") && member.get("email").equals(email)) {
+                        isLeader = true;
+                        break;
+                    }
+                }
+                if (isLeader) {
+                    try {
+                        Date deadline2 =sdf.parse(_task.get("deadline").toString());
+                        if (deadline2.before(new Date()) || deadline2.equals(new Date())) {
+                            if (_task.get("review") != null) {
+                                Map<String, Object> review = (Map<String, Object>) _task.get("review");
+                                reviewbtn.setVisibility(View.GONE);
+                                beforeDlTV.setVisibility(View.GONE);
+                                viewReview.setVisibility(View.VISIBLE);
+                                TextView reviewTitle = viewReview.findViewById(R.id.etDescProject);
+                                reviewTitle.setText(review.get("feedback").toString());
+                                ImageView star1 = viewReview.findViewById(R.id.img_start1);
+                                ImageView star2 = viewReview.findViewById(R.id.img_start2);
+                                ImageView star3 = viewReview.findViewById(R.id.img_start3);
+                                ImageView star4 = viewReview.findViewById(R.id.img_start4);
+                                ImageView star5 = viewReview.findViewById(R.id.img_start5);
+                                MutableLiveData<Integer> stars = new MutableLiveData<>(0);
+                                stars.observe(this, integer -> {
+                                    if (integer >= 1) {
+                                        star1.setImageResource(R.drawable.ic_star2);
+                                    } else {
+                                        star1.setImageResource(R.drawable.ic_star3);
+                                    }
+                                    if (integer >= 2) {
+                                        star2.setImageResource(R.drawable.ic_star2);
+                                    } else {
+                                        star2.setImageResource(R.drawable.ic_star3);
+                                    }
+                                    if (integer >= 3) {
+                                        star3.setImageResource(R.drawable.ic_star2);
+                                    } else {
+                                        star3.setImageResource(R.drawable.ic_star3);
+                                    }
+                                    if (integer >= 4) {
+                                        star4.setImageResource(R.drawable.ic_star2);
+                                    } else {
+                                        star4.setImageResource(R.drawable.ic_star3);
+                                    }
+                                    if (integer >= 5) {
+                                        star5.setImageResource(R.drawable.ic_star2);
+                                    } else {
+                                        star5.setImageResource(R.drawable.ic_star3);
+                                    }
+                                });
+                                stars.setValue(Math.toIntExact((Long) review.get("stars")));
+                            } else {
+                                reviewbtn.setVisibility(View.VISIBLE);
+                                beforeDlTV.setVisibility(View.GONE);
+                                viewReview.setVisibility(View.GONE);
+                            }
+                        } else {
+                            reviewbtn.setVisibility(View.GONE);
+                            beforeDlTV.setVisibility(View.VISIBLE);
+                            viewReview.setVisibility(View.GONE);
+                        }
+                    } catch(ParseException e){
+                        throw new RuntimeException(e);
+                    }
+                    reviewbtn.setOnClickListener(v -> {
+                        AtomicReference<Boolean> isDialogShowing = new AtomicReference<>(false);
+                        showPopupReview(isDialogShowing);
+                    });
+                }
             }
         });
-        memberList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(TaskDetail.this, ViewMembers.class);
-                intent.putExtra("taskId", taskId);
-                startActivity(intent);
-            }
+        memberList.setOnClickListener(v -> {
+            Intent intent = new Intent(TaskDetail.this, ViewMembers.class);
+            intent.putExtra("taskId", taskId);
+            startActivity(intent);
         });
         container.addView(informationPane);
         loadingBar.setVisibility(View.GONE);
         container.setVisibility(View.VISIBLE);
+    }
+
+    private void showPopupReview(AtomicReference<Boolean> isDialogShowing) {
+        Dialog loading = createLoadingDialog();
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        View view1 = LayoutInflater.from(this).inflate(R.layout.modal_review_project, null);
+        bottomSheetDialog.setContentView(view1);
+        if (isDialogShowing.get()) {
+            return;
+        }
+        isDialogShowing.set(true);
+        bottomSheetDialog.setOnDismissListener(dialog -> {
+            isDialogShowing.set(false);
+        });
+        bottomSheetDialog.setOnCancelListener(dialog -> {
+            isDialogShowing.set(false);
+        });
+        bottomSheetDialog.show();
+        loading.dismiss();
+        EditText reviewET = view1.findViewById(R.id.etReviewProject);
+        Button submitBtn = view1.findViewById(R.id.btn_submit);
+        ImageView star1 = view1.findViewById(R.id.img_start1);
+        ImageView star2 = view1.findViewById(R.id.img_start2);
+        ImageView star3 = view1.findViewById(R.id.img_start3);
+        ImageView star4 = view1.findViewById(R.id.img_start4);
+        ImageView star5 = view1.findViewById(R.id.img_start5);
+        MutableLiveData<Integer> stars = new MutableLiveData<>(0);
+        stars.observe(this, integer -> {
+            if (integer >= 1) {
+                star1.setImageResource(R.drawable.ic_star2);
+            } else {
+                star1.setImageResource(R.drawable.ic_star3);
+            }
+            if (integer >= 2) {
+                star2.setImageResource(R.drawable.ic_star2);
+            } else {
+                star2.setImageResource(R.drawable.ic_star3);
+            }
+            if (integer >= 3) {
+                star3.setImageResource(R.drawable.ic_star2);
+            } else {
+                star3.setImageResource(R.drawable.ic_star3);
+            }
+            if (integer >= 4) {
+                star4.setImageResource(R.drawable.ic_star2);
+            } else {
+                star4.setImageResource(R.drawable.ic_star3);
+            }
+            if (integer >= 5) {
+                star5.setImageResource(R.drawable.ic_star2);
+            } else {
+                star5.setImageResource(R.drawable.ic_star3);
+            }
+        });
+        star1.setOnClickListener(v -> stars.setValue(1));
+        star2.setOnClickListener(v -> stars.setValue(2));
+        star3.setOnClickListener(v -> stars.setValue(3));
+        star4.setOnClickListener(v -> stars.setValue(4));
+        star5.setOnClickListener(v -> stars.setValue(5));
+
+        submitBtn.setOnClickListener(v1 -> {
+            if (stars.getValue() == 0) {
+                Toast.makeText(this, "Please rate the project", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (reviewET.getText().toString().isEmpty()) {
+                Toast.makeText(this, "Feedback is required", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String review = reviewET.getText().toString();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            Map<String, Object> newReview = new HashMap<>();
+            newReview.put("feedback", review);
+            newReview.put("stars", stars.getValue());
+            db.collection("tasks").document(taskId).update("review", newReview);
+            bottomSheetDialog.dismiss();
+            loadUI();
+        });
+
     }
 
     private TextView createItemMember(String name) {
