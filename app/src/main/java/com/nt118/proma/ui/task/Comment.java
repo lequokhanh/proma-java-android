@@ -79,9 +79,8 @@ public class Comment extends AppCompatActivity {
                         if (!member.get("email").equals(email)) {
                             db.collection("users").whereEqualTo("email", member).get().addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
-                                    Map<String, Object> user = task.getResult().getDocuments().get(0).getData();
                                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                                    db.collection("tasks").document(taskId).collection("notification_logs").add(new HashMap<String, Object>() {{
+                                    db.collection("users").document(task.getResult().getDocuments().get(0).getId()).collection("notification_logs").add(new HashMap<String, Object>() {{
                                         put("type", 2);
                                         put("message", "commented on task " + taskId);
                                         put("date", sdf.format(new Date()));
