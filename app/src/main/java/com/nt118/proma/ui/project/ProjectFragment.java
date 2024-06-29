@@ -35,7 +35,6 @@ import com.nt118.proma.ui.task.TaskDetail;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ProjectFragment extends Fragment {
@@ -197,7 +196,6 @@ public class ProjectFragment extends Fragment {
         rightSide.getLayoutParams().width = (int) (getResources().getDisplayMetrics().widthPixels * 0.5 - 68);
         leftSide.removeAllViews();
         rightSide.removeAllViews();
-        AtomicInteger count = new AtomicInteger(0);
 
         Map<String, Object> member = new HashMap<>();
         member.put("email", email);
@@ -233,7 +231,6 @@ public class ProjectFragment extends Fragment {
                                     .addOnCompleteListener(task -> {
                                         if (task.isSuccessful()) {
                                             for (int i = 0; i < task.getResult().getDocuments().size(); i++) {
-                                                count.getAndIncrement();
                                                 Map<String, Object> taskItem = task.getResult().getDocuments().get(i).getData();
                                                 View taskView = LayoutInflater.from(getContext()).inflate(R.layout.task_card, null);
                                                 ImageView taskIcon = taskView.findViewById(R.id.icon);
@@ -265,7 +262,7 @@ public class ProjectFragment extends Fragment {
                                                 Space space = new Space(getContext());
                                                 space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 20));
                                                 taskView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                                                if (count.get() % 2 == 1) {
+                                                if (i % 2 == 0) {
                                                     leftSide.addView(taskView);
                                                     leftSide.addView(space);
                                                 } else {
