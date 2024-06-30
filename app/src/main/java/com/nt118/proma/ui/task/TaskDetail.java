@@ -246,25 +246,20 @@ public class TaskDetail extends AppCompatActivity {
                 categoryView.setVisibility(View.VISIBLE);
                 ArrayList<Map<String, Object>> members = (ArrayList<Map<String, Object>>) taskItem.get("members");
                 for (Map<String, Object> member : members) {
-                    if ((Boolean) member.get("isLeader")) {
-                        leaderEmail = member.get("email").toString();
-                        db.collection("users").whereEqualTo("email", leaderEmail).get().addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()) {
+                    db.collection("users").whereEqualTo("email", member.get("email")).get().addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            if ((Boolean) member.get("isLeader")) {
+                                leaderEmail = member.get("email").toString();
                                 leaderName = task1.getResult().getDocuments().get(0).get("name").toString();
                                 leader.setText(leaderName);
                                 leader.setVisibility(View.VISIBLE);
                             }
-                        });
-                    } else {
-                        task_members.add(member.get("email").toString());
-                        db.collection("users").whereEqualTo("email", member.get("email")).get().addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()) {
-                                task_names.add(task1.getResult().getDocuments().get(0).get("name").toString());
-                                TextView memberView = createItemMember(task1.getResult().getDocuments().get(0).get("name").toString());
-                                memberList.addView(memberView);
-                            }
-                        });
-                    }
+                            task_members.add(member.get("email").toString());
+                            task_names.add(task1.getResult().getDocuments().get(0).get("name").toString());
+                            TextView memberView = createItemMember(task1.getResult().getDocuments().get(0).get("name").toString());
+                            memberList.addView(memberView);
+                        }
+                    });
                 }
             }
         });
@@ -793,6 +788,7 @@ public class TaskDetail extends AppCompatActivity {
             Map<String, Object> leaderMap = new HashMap<>();
             leaderMap.put("email", leader);
             leaderMap.put("isLeader", true);
+            membersList.add(leaderMap);
         }
         db.collection("tasks").document(taskId).update("members", membersList).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -1339,8 +1335,7 @@ public class TaskDetail extends AppCompatActivity {
                             Map<String, Object> user = task2.getResult().getDocuments().get(0).getData();
                             if ((boolean) member.get("isLeader"))
                                 leader.setText((String) user.get("name"));
-                            else
-                                memberList.addView(createItemMember((String) user.get("name")));
+                            memberList.addView(createItemMember((String) user.get("name")));
                         }
                     });
                 }

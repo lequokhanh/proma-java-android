@@ -84,7 +84,7 @@ public class Comment extends AppCompatActivity {
                                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
                                     db.collection("users").document(task.getResult().getDocuments().get(0).getId()).collection("notification_logs").add(new HashMap<String, Object>() {{
                                         put("type", 2);
-                                        put("message", name + " commented on task " + documentSnapshot.get("name"));
+                                        put("message", name + " commented on task " + documentSnapshot.get("title"));
                                         put("date", sdf.format(new Date()));
                                         put("sender", email);
                                         put("taskId", taskId);
