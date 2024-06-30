@@ -770,6 +770,7 @@ public class ProjectDetail extends AppCompatActivity {
                 intent.putExtra("projectId", projectId);
                 startActivity(intent);
                 for (String member : members) {
+                    if (member.equals(email)) continue;
                     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
                     db.collection("users").whereEqualTo("email", member).get().addOnCompleteListener(task2 -> {
                         if (task2.isSuccessful()) {

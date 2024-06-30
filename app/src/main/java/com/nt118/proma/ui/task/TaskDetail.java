@@ -944,9 +944,7 @@ public class TaskDetail extends AppCompatActivity {
             startActivity(intent);
         });
         btnAtach.setOnClickListener(v -> showAttachDialog());
-        btnLink.setOnClickListener(v -> {
-            showLinkDialog();
-        });
+        btnLink.setOnClickListener(v -> showLinkDialog());
 
         showComments();
 
@@ -1086,6 +1084,10 @@ public class TaskDetail extends AppCompatActivity {
                         TextView linkTV = item_link.findViewById(R.id.item_name);
                         linkTV.setText(link);
                         ImageView deleteBtn = item_link.findViewById(R.id.deleteBtn);
+                        linkTV.setOnClickListener(v2 -> {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                            startActivity(intent);
+                        });
                         listItemAttached.addView(item_link);
                         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) item_link.getLayoutParams();
                         layoutParams.setMargins(0, 0, 0, (int) px10);
@@ -1395,26 +1397,27 @@ public class TaskDetail extends AppCompatActivity {
                         }
                     });
                     stars.setValue(Math.toIntExact((Long) review.get("stars")));
-                }
-                if (isLeader) {
-                    try {
-                        Date deadline2 = sdf.parse(_task.get("deadline").toString());
-                        if (deadline2.before(new Date()) || deadline2.equals(new Date())) {
-                            reviewbtn.setVisibility(View.VISIBLE);
-                            beforeDlTV.setVisibility(View.GONE);
-                            viewReview.setVisibility(View.GONE);
-                        } else {
-                            reviewbtn.setVisibility(View.GONE);
-                            beforeDlTV.setVisibility(View.VISIBLE);
-                            viewReview.setVisibility(View.GONE);
+                } else {
+                    if (isLeader) {
+                        try {
+                            Date deadline2 = sdf.parse(_task.get("deadline").toString());
+                            if (deadline2.before(new Date()) || deadline2.equals(new Date())) {
+                                reviewbtn.setVisibility(View.VISIBLE);
+                                beforeDlTV.setVisibility(View.GONE);
+                                viewReview.setVisibility(View.GONE);
+                            } else {
+                                reviewbtn.setVisibility(View.GONE);
+                                beforeDlTV.setVisibility(View.VISIBLE);
+                                viewReview.setVisibility(View.GONE);
+                            }
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
                         }
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
+                        reviewbtn.setOnClickListener(v -> {
+                            AtomicReference<Boolean> isDialogShowing = new AtomicReference<>(false);
+                            showPopupReview(isDialogShowing);
+                        });
                     }
-                    reviewbtn.setOnClickListener(v -> {
-                        AtomicReference<Boolean> isDialogShowing = new AtomicReference<>(false);
-                        showPopupReview(isDialogShowing);
-                    });
                 }
             }
         });
@@ -1638,6 +1641,12 @@ public class TaskDetail extends AppCompatActivity {
                         Log.d("Firestore", "Error getting comments: ", task.getException());
                     }
                 });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadUI();
     }
 
     public String formatDateTime(long timestamp) {

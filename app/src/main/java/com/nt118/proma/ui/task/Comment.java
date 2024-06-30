@@ -22,6 +22,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.nt118.proma.R;
 import com.nt118.proma.model.ImageArray;
+import com.nt118.proma.ui.member.ViewOneMember;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -119,7 +120,8 @@ public class Comment extends AppCompatActivity {
                 String email= (String) comment.get("email");
                 name.setText((String) comment.get("name"));
                 content.setText((String) comment.get("message"));
-
+                avatar.setOnClickListener(v -> showProfileMember(email));
+                name.setOnClickListener(v -> showProfileMember(email));
                 // format date
                 long timestamp = Long.parseLong((String) comment.get("date"));
                 String formattedDate = formatDateTime(timestamp);
@@ -137,6 +139,12 @@ public class Comment extends AppCompatActivity {
                 commentContainer.addView(item_comment);
             }
         });
+    }
+
+    private void showProfileMember(String email) {
+        Intent intent = new Intent(Comment.this, ViewOneMember.class);
+        intent.putExtra("email", email);
+        startActivity(intent);
     }
 
     private void showComments() {

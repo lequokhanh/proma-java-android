@@ -264,7 +264,7 @@
             android:id="@+id/commentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"></LinearLayout>
+            android:orientation="vertical" />
     </ScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -284,6 +284,7 @@
             android:layout_marginVertical="8dp"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="16dp"
+            android:autofillHints="Comment"
             android:background="@drawable/rounded_corner_8_gr"
             android:backgroundTint="#F2F2F7"
             android:drawableStart="@drawable/ic_edit"
@@ -298,7 +299,7 @@
             android:textFontWeight="400"
             android:textSize="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView"
+            app:layout_constraintEnd_toStartOf="@+id/sendBtn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
