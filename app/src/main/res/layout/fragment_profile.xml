@@ -71,7 +71,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView352"
+                android:id="@+id/num_project"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_bold"
@@ -91,9 +91,9 @@
                 android:text="Project"
                 android:textColor="#545456"
                 android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="@+id/textView352"
-                app:layout_constraintStart_toStartOf="@+id/textView352"
-                app:layout_constraintTop_toBottomOf="@+id/textView352" />
+                app:layout_constraintEnd_toEndOf="@+id/num_project"
+                app:layout_constraintStart_toStartOf="@+id/num_project"
+                app:layout_constraintTop_toBottomOf="@+id/num_project" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
@@ -109,7 +109,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView35"
+                android:id="@+id/num_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_bold"
@@ -129,9 +129,9 @@
                 android:text="Task"
                 android:textColor="#545456"
                 android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="@+id/textView35"
-                app:layout_constraintStart_toStartOf="@+id/textView35"
-                app:layout_constraintTop_toBottomOf="@+id/textView35" />
+                app:layout_constraintEnd_toEndOf="@+id/num_task"
+                app:layout_constraintStart_toStartOf="@+id/num_task"
+                app:layout_constraintTop_toBottomOf="@+id/num_task" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
@@ -147,7 +147,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView353"
+                android:id="@+id/num_done_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_bold"
@@ -167,9 +167,9 @@
                 android:text="Done Task"
                 android:textColor="#545456"
                 android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="@+id/textView353"
-                app:layout_constraintStart_toStartOf="@+id/textView353"
-                app:layout_constraintTop_toBottomOf="@+id/textView353" />
+                app:layout_constraintEnd_toEndOf="@+id/num_done_task"
+                app:layout_constraintStart_toStartOf="@+id/num_done_task"
+                app:layout_constraintTop_toBottomOf="@+id/num_done_task" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Space

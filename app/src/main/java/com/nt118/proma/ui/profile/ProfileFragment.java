@@ -25,11 +25,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nt118.proma.R;
 import com.nt118.proma.databinding.FragmentProfileBinding;
 import com.nt118.proma.model.ImageArray;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -38,9 +41,12 @@ public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
     private FirebaseUser user;
-
+    private String email;
+    private FirebaseFirestore db;
+    private int numProject,numsTask,numsDoneTask;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        db=FirebaseFirestore.getInstance();
         ProfileViewModel profileViewModel =
                 new ViewModelProvider(this).get(ProfileViewModel.class);
         binding = FragmentProfileBinding.inflate(inflater, container, false);
@@ -49,8 +55,14 @@ public class ProfileFragment extends Fragment {
         AtomicReference<Boolean> isDialogShowing = new AtomicReference<>(false);
         TextView username = binding.username;
         CircleImageView avatar = binding.avatar3;
+        TextView numPro = binding.numProject;
+        TextView numTask = binding.numTask;
+        TextView numDoneTask = binding.numDoneTask;
+
+
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("user", MODE_PRIVATE);
         String name = sharedPreferences.getString("name", "");
+        email = sharedPreferences.getString("email", "");
         avatar.setImageResource(new ImageArray().getAvatarImage().get(sharedPreferences.getInt("avatar", 0)));
         username.setText(name);
         logout.setOnClickListener(v -> {
@@ -121,6 +133,46 @@ public class ProfileFragment extends Fragment {
                 }
             }
         }
+        numProject = 0;
+        numsTask = 0;
+        numsDoneTask = 0;
+        //count project
+        Map<String, Object> member = new HashMap<>();
+        member.put("email", email);
+        member.put("isAccepted", true);
+
+        db.collection("projects")
+                .where(Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", member)))
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        numProject = task.getResult().getDocuments().size();
+                        numPro.setText(String.valueOf(numProject));
+                    }
+                });
+        //count task of this user
+        Map<String, Object> memberTask = new HashMap<>();
+        memberTask.put("email", email);
+        memberTask.put("isLeader", false);
+        Map<String, Object> memberLeader = new HashMap<>();
+        memberLeader.put("email", email);
+        memberLeader.put("isLeader", true);
+        db.collection("tasks")
+                .where(Filter.or(Filter.arrayContains("members", memberLeader),
+                        Filter.arrayContains("members", memberTask)))
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        numsTask = task.getResult().getDocuments().size();
+                        numTask.setText(String.valueOf(numsTask));
+                        for (int j = 0; j < numsTask; j++) {
+                            if (task.getResult().getDocuments().get(j).getLong("status") == 2) {
+                                numsDoneTask++;
+                            }
+                        }
+                        numDoneTask.setText(String.valueOf(numsDoneTask));
+                    }
+                });
         return root;
     }
 
