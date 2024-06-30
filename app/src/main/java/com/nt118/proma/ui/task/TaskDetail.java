@@ -826,6 +826,7 @@ public class TaskDetail extends AppCompatActivity {
             Map<String, Object> leaderMap = new HashMap<>();
             leaderMap.put("email", leader);
             leaderMap.put("isLeader", true);
+            membersList.add(leaderMap);
         }
         newTask.put("status", 0);
         newTask.put("members", membersList);
