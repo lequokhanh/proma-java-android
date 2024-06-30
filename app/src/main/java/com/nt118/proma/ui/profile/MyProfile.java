@@ -42,8 +42,8 @@ public class MyProfile extends AppCompatActivity {
     private final MutableLiveData<String> phoneNumber = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoaded = new MutableLiveData<>(false);
     private String email;
-    private EditText etFullName, etEmail, etPhoneNumber;
-    private TextView etDOB;
+    private EditText etFullName, etPhoneNumber;
+    private TextView etDOB, etEmail;
     private FirebaseFirestore db;
     private DocumentReference docRef;
     private ImageView imgBack, setAvatar;

@@ -193,7 +193,7 @@ public class ProjectDetail extends AppCompatActivity {
                                     return;
                                 }
                                 progressProjectView.setText(completed + "/" + total);
-                                progressBar.setProgress((int) ((float) completed / total));
+                                progressBar.setProgress((int) ((float) completed / total * 100));
                             }
                         });
                 loading.dismiss();
@@ -520,6 +520,7 @@ public class ProjectDetail extends AppCompatActivity {
     }
 
     private void showPopupEditProject(AtomicReference<Boolean> isDialogShowing) {
+        //init all global variable use in this function
         Dialog loading = createLoadingDialog();
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         View view1 = LayoutInflater.from(this).inflate(R.layout.modal_create_project, null);
@@ -663,6 +664,12 @@ public class ProjectDetail extends AppCompatActivity {
     }
 
     private void showPopupCreateTask(AtomicReference<Boolean> isDialogShowing) {
+        task_members = new ArrayList<>();
+        task_names = new ArrayList<>();
+        membersProject = new ArrayList<>();
+        memberNames = new ArrayList<>();
+        leaderEmail = null;
+        leaderName = null;
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         View view1 = LayoutInflater.from(this).inflate(R.layout.modal_create_task, null);
         bottomSheetDialog.setContentView(view1);

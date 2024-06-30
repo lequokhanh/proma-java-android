@@ -1554,9 +1554,15 @@ public class TaskDetail extends AppCompatActivity {
             Map<String, Object> newReview = new HashMap<>();
             newReview.put("feedback", review);
             newReview.put("stars", stars.getValue());
-            db.collection("tasks").document(taskId).update("review", newReview);
-            bottomSheetDialog.dismiss();
-            loadUI();
+            db.collection("tasks").document(taskId).update("review", newReview).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(this, "Review project successfully", Toast.LENGTH_SHORT).show();
+                    bottomSheetDialog.dismiss();
+                    loadUI();
+                } else {
+                    Toast.makeText(this, "Review project failed", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
     }
