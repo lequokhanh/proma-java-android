@@ -264,9 +264,7 @@ public class ProjectDetail extends AppCompatActivity {
         memberLeader.put("isLeader", true);
         db.collection("tasks")
                 .where(Filter.and(Filter.equalTo("status", status),
-                        Filter.and(Filter.equalTo("projectId", projectId),
-                                Filter.or(Filter.arrayContains("members", memberLeader),
-                                        Filter.arrayContains("members", memberTask)))))
+                        Filter.equalTo("projectId", projectId)))
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

@@ -196,87 +196,70 @@ public class ProjectFragment extends Fragment {
         rightSide.getLayoutParams().width = (int) (getResources().getDisplayMetrics().widthPixels * 0.5 - 68);
         leftSide.removeAllViews();
         rightSide.removeAllViews();
-
-        Map<String, Object> member = new HashMap<>();
-        member.put("email", email);
-        member.put("isAccepted", true);
-
-        db.collection("projects")
-                .where(Filter.or(Filter.equalTo("user_created", email), Filter.arrayContains("members", member)))
+        Map<String, Object> memberTask = new HashMap<>();
+        memberTask.put("email", email);
+        memberTask.put("isLeader", false);
+        Map<String, Object> memberLeader = new HashMap<>();
+        memberLeader.put("email", email);
+        memberLeader.put("isLeader", true);
+        db.collection("tasks")
+                .where(Filter.and(Filter.equalTo("status", status),
+                                Filter.or(
+                                        Filter.arrayContains("members", memberLeader),
+                                        Filter.arrayContains("members", memberTask))
+                        )
+                )
                 .get()
-                .addOnCompleteListener(task1 -> {
-                    if (task1.isSuccessful()) {
-                        if (task1.getResult().getDocuments().size() == 0) {
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().getDocuments().size() == 0) {
                             loading.setVisibility(View.GONE);
                             return;
                         }
-                        for (int j = 0; j < task1.getResult().getDocuments().size(); j++) {
-                            Map<String, Object> projectItem = task1.getResult().getDocuments().get(j).getData();
-                            String projectId = task1.getResult().getDocuments().get(j).getId();
-                            Map<String, Object> memberTask = new HashMap<>();
-                            memberTask.put("email", email);
-                            memberTask.put("isLeader", false);
-                            Map<String, Object> memberLeader = new HashMap<>();
-                            memberLeader.put("email", email);
-                            memberLeader.put("isLeader", true);
-                            db.collection("tasks")
-                                    .whereEqualTo("projectId", projectId)
-                                    .where(Filter.and(Filter.equalTo("status", status),
-                                                    Filter.or(
-                                                            Filter.arrayContains("members", memberLeader),
-                                                            Filter.arrayContains("members", memberTask))
-                                            )
-                                    )
-                                    .get()
-                                    .addOnCompleteListener(task -> {
-                                        if (task.isSuccessful()) {
-                                            for (int i = 0; i < task.getResult().getDocuments().size(); i++) {
-                                                Map<String, Object> taskItem = task.getResult().getDocuments().get(i).getData();
-                                                View taskView = LayoutInflater.from(getContext()).inflate(R.layout.task_card, null);
-                                                ImageView taskIcon = taskView.findViewById(R.id.icon);
-                                                taskIcon.setImageResource(ImageArray.getIconTaskCard().get(taskItem.get("category").toString()));
-                                                TextView taskName = taskView.findViewById(R.id.taskName);
-                                                taskName.setText(taskItem.get("title").toString());
-                                                String deadline = (String) taskItem.get("deadline");
-                                                TextView taskDeadline = taskView.findViewById(R.id.deadline);
-                                                taskDeadline.setText(deadline);
-                                                TextView taskStatus = taskView.findViewById(R.id.status);
-                                                if ((Long) taskItem.get("status") == 0) {
-                                                    taskStatus.setVisibility(View.GONE);
-                                                } else if ((Long) taskItem.get("status") == 1) {
-                                                    taskStatus.setVisibility(View.VISIBLE);
-                                                    taskStatus.setText("On going");
-                                                } else {
-                                                    taskStatus.setBackgroundResource(R.drawable.rounded_corner_24_blue);
-                                                    taskStatus.setVisibility(View.VISIBLE);
-                                                    taskStatus.setText("Done");
-                                                    taskStatus.setTextColor(getResources().getColor(R.color.white));
-                                                }
-                                                int finalI = i;
-                                                taskView.setOnClickListener(v -> {
-                                                    Intent intent = new Intent(getContext(), TaskDetail.class);
-                                                    intent.putExtra("taskId", task.getResult().getDocuments().get(finalI).getId());
-                                                    intent.putExtra("projectId", projectId);
-                                                    startActivity(intent);
-                                                });
-                                                Space space = new Space(getContext());
-                                                space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 20));
-                                                taskView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                                                if (i % 2 == 0) {
-                                                    leftSide.addView(taskView);
-                                                    leftSide.addView(space);
-                                                } else {
-                                                    rightSide.addView(taskView);
-                                                    rightSide.addView(space);
-                                                }
-                                            }
-                                        }
-                                        container.removeAllViews();
-                                        container.addView(task_list);
-                                        loading.setVisibility(View.GONE);
-                                    });
+                        for (int i = 0; i < task.getResult().getDocuments().size(); i++) {
+                            Map<String, Object> taskItem = task.getResult().getDocuments().get(i).getData();
+                            View taskView = LayoutInflater.from(getContext()).inflate(R.layout.task_card, null);
+                            ImageView taskIcon = taskView.findViewById(R.id.icon);
+                            taskIcon.setImageResource(ImageArray.getIconTaskCard().get(taskItem.get("category").toString()));
+                            TextView taskName = taskView.findViewById(R.id.taskName);
+                            taskName.setText(taskItem.get("title").toString());
+                            String deadline = (String) taskItem.get("deadline");
+                            TextView taskDeadline = taskView.findViewById(R.id.deadline);
+                            taskDeadline.setText(deadline);
+                            TextView taskStatus = taskView.findViewById(R.id.status);
+                            if ((Long) taskItem.get("status") == 0) {
+                                taskStatus.setVisibility(View.GONE);
+                            } else if ((Long) taskItem.get("status") == 1) {
+                                taskStatus.setVisibility(View.VISIBLE);
+                                taskStatus.setText("On going");
+                            } else {
+                                taskStatus.setBackgroundResource(R.drawable.rounded_corner_24_blue);
+                                taskStatus.setVisibility(View.VISIBLE);
+                                taskStatus.setText("Done");
+                                taskStatus.setTextColor(getResources().getColor(R.color.white));
+                            }
+                            int finalI = i;
+                            taskView.setOnClickListener(v -> {
+                                Intent intent = new Intent(getContext(), TaskDetail.class);
+                                intent.putExtra("taskId", task.getResult().getDocuments().get(finalI).getId());
+                                intent.putExtra("projectId", taskItem.get("projectId").toString());
+                                startActivity(intent);
+                            });
+                            Space space = new Space(getContext());
+                            space.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 20));
+                            taskView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            if (i % 2 == 0) {
+                                leftSide.addView(taskView);
+                                leftSide.addView(space);
+                            } else {
+                                rightSide.addView(taskView);
+                                rightSide.addView(space);
+                            }
                         }
                     }
+                    container.removeAllViews();
+                    container.addView(task_list);
+                    loading.setVisibility(View.GONE);
                 });
     }
 

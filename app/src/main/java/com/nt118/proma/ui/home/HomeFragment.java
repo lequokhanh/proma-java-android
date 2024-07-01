@@ -196,9 +196,8 @@ public class HomeFragment extends Fragment {
                                 }
                             });
                             db.collection("tasks")
-                                    .where(Filter.and(Filter.equalTo("projectId", projectId.get()),
-                                            Filter.or(Filter.arrayContains("members", memberLeader),
-                                                    Filter.arrayContains("members", memberTask))))
+                                    .where(Filter.or(Filter.arrayContains("members", memberLeader),
+                                            Filter.arrayContains("members", memberTask)))
                                     .get()
                                     .addOnCompleteListener(task2 -> {
                                         if (task2.isSuccessful()) {
